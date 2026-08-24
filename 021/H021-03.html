@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國小二上數學 (三) 互動學習網頁</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Noto Sans TC (思源黑體) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif, system-ui;
+            background: linear-gradient(135deg, #1a2a6c 0%, #2a5298 35%, #70a1ff 70%, #ffbe76 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+
+        /* 玻璃擬物風格卡片 */
+        .shinkai-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+            border-radius: 20px;
+        }
+
+        /* 雲朵夢幻按鈕 */
+        .tab-btn {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #48dbfb 0%, #0abde3 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(10, 189, 227, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* 自訂 Slider */
+        input[type=range] {
+            accent-color: #0abde3;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- 頁頭資訊 -->
+    <header class="max-w-5xl mx-auto mb-6 text-center text-white">
+        <div class="inline-block bg-white/20 backdrop-blur-md px-6 py-2 rounded-full mb-3 border border-white/40 shadow-lg">
+            <span class="text-yellow-300 font-bold"><i class="fa-solid fa-star mr-1"></i> 國小二上數學 (三) 互動學習網頁</span>
+        </div>
+        <h1 class="text-3xl md:text-5xl font-black drop-shadow-md tracking-wider">
+            <i class="fa-solid fa-ruler-combined text-yellow-300 mr-2"></i>第三單元：長度與公分
+        </h1>
+        <p class="mt-2 text-white/90 text-sm md:text-base font-medium">拖拉滑桿、動手量量看，探索長度的神祕奧妙！</p>
+    </header>
+
+    <!-- 主容器 -->
+    <main class="max-w-5xl mx-auto">
+        <!-- 標籤頁導覽 -->
+        <nav class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6">
+            <button onclick="switchTab('tab1')" id="btn-tab1" class="tab-btn active px-5 py-3 rounded-2xl font-bold text-sm md:text-base shadow-sm">
+                <i class="fa-solid fa-shapes mr-1.5"></i>1. 個別單位測量
+            </button>
+            <button onclick="switchTab('tab2')" id="btn-tab2" class="tab-btn px-5 py-3 rounded-2xl font-bold text-sm md:text-base text-gray-800 shadow-sm">
+                <i class="fa-solid fa-ruler-horizontal mr-1.5"></i>2. 公分尺與斷尺
+            </button>
+            <button onclick="switchTab('tab3')" id="btn-tab3" class="tab-btn px-5 py-3 rounded-2xl font-bold text-sm md:text-base text-gray-800 shadow-sm">
+                <i class="fa-solid fa-calculator mr-1.5"></i>3. 長度加減法
+            </button>
+            <button onclick="switchTab('tab4')" id="btn-tab4" class="tab-btn px-5 py-3 rounded-2xl font-bold text-sm md:text-base text-gray-800 shadow-sm">
+                <i class="fa-solid fa-pen-ruler mr-1.5"></i>4. 畫出指定長度
+            </button>
+            <button onclick="switchTab('tab5')" id="btn-tab5" class="tab-btn px-5 py-3 rounded-2xl font-bold text-sm md:text-base text-gray-800 shadow-sm">
+                <i class="fa-solid fa-graduation-cap mr-1.5"></i>5. 自我挑戰
+            </button>
+        </nav>
+
+        <!-- 主題 1: 個別單位測量 -->
+        <section id="tab1" class="tab-content shinkai-card p-6 md:p-8">
+            <div class="border-b-2 border-sky-100 pb-4 mb-6">
+                <h2 class="text-2xl font-black text-sky-800 flex items-center">
+                    <i class="fa-solid fa-lightbulb text-amber-400 text-3xl mr-3"></i>探索：為什麼測量的結果張數不一樣？
+                </h2>
+                <p class="text-gray-600 mt-1">選擇不同的貼紙或工具來量鉛筆，觀察用較長的貼紙或較短的貼紙，需要的數量有什麼變化！</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                <!-- 控制面板 -->
+                <div class="bg-sky-50/80 p-5 rounded-2xl border border-sky-100 shadow-inner space-y-4">
+                    <h3 class="font-bold text-sky-900 border-b border-sky-200 pb-2"><i class="fa-solid fa-sliders mr-2"></i>選擇測量工具與對象</h3>
+                    
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">1. 選擇要測量的物品：</label>
+                        <select id="t1-item-select" onchange="updateTab1UI()" class="w-full p-2.5 bg-white border border-sky-300 rounded-xl font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-400">
+                            <option value="12">✏️ 鉛筆 (長度 12 公分)</option>
+                            <option value="6">🐟 小魚 (長度 6 公分)</option>
+                            <option value="18">📘 數學課本 (長度 18 公分)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">2. 選擇測量使用的貼紙/單位：</label>
+                        <div class="space-y-2">
+                            <label class="flex items-center p-2.5 bg-white rounded-xl border border-sky-200 cursor-pointer hover:bg-sky-100/50">
+                                <input type="radio" name="t1-unit" value="2" checked onchange="updateTab1UI()" class="w-4 h-4 text-sky-600">
+                                <span class="ml-2 font-bold text-gray-800">🏷️ 「小香」名牌貼紙 (長 2 公分)</span>
+                            </label>
+                            <label class="flex items-center p-2.5 bg-white rounded-xl border border-sky-200 cursor-pointer hover:bg-sky-100/50">
+                                <input type="radio" name="t1-unit" value="3" onchange="updateTab1UI()" class="w-4 h-4 text-sky-600">
+                                <span class="ml-2 font-bold text-gray-800">😊 「笑臉」圓形貼紙 (長 3 公分)</span>
+                            </label>
+                            <label class="flex items-center p-2.5 bg-white rounded-xl border border-sky-200 cursor-pointer hover:bg-sky-100/50">
+                                <input type="radio" name="t1-unit" value="6" onchange="updateTab1UI()" class="w-4 h-4 text-sky-600">
+                                <span class="ml-2 font-bold text-gray-800">🖍️ 「大蠟筆」單位 (長 6 公分)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 leading-relaxed">
+                        <i class="fa-solid fa-circle-info text-amber-500 mr-1"></i><strong>觀念歸納：</strong> 用較<strong>短</strong>的單位量，量出來的張數/次數會較<strong>多</strong>；用較<strong>長</strong>的單位量，量的次數會較<strong>少</strong>。
+                    </div>
+                </div>
+
+                <!-- 動態圖示畫布區 -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-center justify-center min-h-[300px]">
+                    <!-- 被測量物品視覺 -->
+                    <div class="w-full mb-6">
+                        <div class="flex justify-between items-center mb-1 text-xs text-gray-400 font-bold px-1">
+                            <span>起點對齊</span>
+                            <span id="t1-item-name-tag">被測量物品</span>
+                            <span>終點</span>
+                        </div>
+                        <div id="t1-item-visual" class="h-16 bg-gradient-to-r from-amber-200 to-amber-400 rounded-xl border-2 border-amber-500 shadow-md flex items-center justify-between px-4 transition-all duration-300 relative">
+                            <span class="font-black text-amber-900 text-lg drop-shadow" id="t1-item-label">✏️ 鉛筆</span>
+                            <span id="t1-item-cm" class="bg-white/80 px-2 py-0.5 rounded text-xs font-bold text-amber-800">12 cm</span>
+                        </div>
+                    </div>
+
+                    <!-- 單位排排看視覺 -->
+                    <div class="w-full">
+                        <div class="text-xs text-gray-500 font-bold mb-2 flex items-center justify-between">
+                            <span><i class="fa-solid fa-arrows-left-right text-sky-500 mr-1"></i>單位排列測量結果：</span>
+                            <span class="text-sky-600 font-black text-sm" id="t1-count-badge">一共需要 6 個單位</span>
+                        </div>
+                        <div id="t1-units-container" class="flex w-full h-12 rounded-xl overflow-hidden shadow-sm border border-amber-200 bg-white">
+                            <!-- 動態生成貼紙塊 -->
+                        </div>
+                    </div>
+
+                    <!-- 算式與結論卡片 -->
+                    <div class="mt-6 w-full bg-gradient-to-r from-sky-500 to-indigo-500 text-white p-4 rounded-xl shadow flex items-center justify-between">
+                        <div>
+                            <div class="text-xs text-sky-100">測量結果對照</div>
+                            <div class="text-lg font-black" id="t1-result-text">長度相同時，貼紙越短，需要的張數越多！</div>
+                        </div>
+                        <div class="text-right bg-white/20 px-3 py-1.5 rounded-lg backdrop-blur-sm">
+                            <span class="text-xs block text-sky-100">需要總數量</span>
+                            <span class="text-2xl font-black text-yellow-300" id="t1-result-num">6 張</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 主題 2: 公分尺與斷尺測量 -->
+        <section id="tab2" class="tab-content shinkai-card p-6 md:p-8 hidden">
+            <div class="border-b-2 border-sky-100 pb-4 mb-6">
+                <h2 class="text-2xl font-black text-sky-800 flex items-center">
+                    <i class="fa-solid fa-ruler-combined text-sky-500 mr-3"></i>公分尺操作與「斷尺」測量
+                </h2>
+                <p class="text-gray-600 mt-1">動態滑動物品的「起點」與「長度」，學習看懂刻度，並掌握「斷尺」時用減法計算長度的技巧！</p>
+            </div>
+
+            <!-- 控制面板 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="bg-sky-50 p-4 rounded-xl border border-sky-200">
+                    <label class="font-bold text-sky-900 text-sm block mb-1">
+                        <i class="fa-solid fa-hand-point-right text-sky-600 mr-1"></i>調整物品起點位置 (刻度): <span id="t2-start-val" class="text-sky-600 font-black text-lg">0</span> 公分
+                    </label>
+                    <input type="range" id="t2-start-slider" min="0" max="6" value="0" step="1" oninput="renderTab2SVG()" class="w-full cursor-pointer h-2 bg-sky-200 rounded-lg">
+                    <div class="flex justify-between text-xs text-gray-400 mt-1">
+                        <span>刻度 0 (對齊零)</span>
+                        <span>刻度 3 (斷尺)</span>
+                        <span>刻度 6</span>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200">
+                    <label class="font-bold text-indigo-900 text-sm block mb-1">
+                        <i class="fa-solid fa-arrows-left-right text-indigo-600 mr-1"></i>調整物品實際長度: <span id="t2-len-val" class="text-indigo-600 font-black text-lg">7</span> 公分
+                    </label>
+                    <input type="range" id="t2-len-slider" min="1" max="9" value="7" step="1" oninput="renderTab2SVG()" class="w-full cursor-pointer h-2 bg-indigo-200 rounded-lg">
+                    <div class="flex justify-between text-xs text-gray-400 mt-1">
+                        <span>1 公分</span>
+                        <span>5 公分</span>
+                        <span>9 公分</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 刻度尺模擬視覺 -->
+            <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-md flex flex-col items-center">
+                <div class="w-full flex justify-center overflow-x-auto">
+                    <div class="w-full max-w-[700px] bg-amber-50/50 border-2 border-amber-200 rounded-xl p-3 relative shadow-inner flex justify-center">
+                        <svg id="t2-ruler-svg" class="w-full max-w-[700px] h-44" viewBox="0 0 700 170"></svg>
+                    </div>
+                </div>
+                <!-- 刻度與數格子圖例說明 -->
+                <div class="flex justify-center items-center gap-6 mt-4 text-sm font-bold text-slate-700 flex-wrap">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3.5 h-3.5 rounded-full bg-[#fffde7] border-2 border-[#f39c12] inline-block shadow-sm"></span>
+                        <span>1大格 = 1公分</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-3.5 h-3.5 rounded-full bg-rose-500 inline-block shadow-sm"></span>
+                        <span>數一數有幾個大格</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 觀念說明卡片 -->
+            <div class="mt-6 bg-gradient-to-br from-slate-800 to-indigo-900 text-white p-5 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="space-y-1">
+                    <div class="text-xs text-yellow-300 font-bold uppercase tracking-wider"><i class="fa-solid fa-key mr-1"></i>讀數與解題算式</div>
+                    <div class="text-xl font-black" id="t2-math-formula">
+                        終點刻度 (7) <i class="fa-solid fa-minus text-amber-300 mx-1"></i> 起點刻度 (0) = 7 公分
+                    </div>
+                    <p class="text-xs text-slate-300" id="t2-math-desc">當一端對齊刻度 0 時，另一端對齊數字幾，就是幾公分！</p>
+                </div>
+                <div id="t2-status-tag" class="px-4 py-2 bg-emerald-500 text-white rounded-xl font-bold text-sm shadow flex items-center gap-2 shrink-0">
+                    <i class="fa-solid fa-circle-check"></i> 標準對齊 0 刻度
+                </div>
+            </div>
+        </section>
+
+        <!-- 主題 3: 長度加減法 -->
+        <section id="tab3" class="tab-content shinkai-card p-6 md:p-8 hidden">
+            <div class="border-b-2 border-sky-100 pb-4 mb-6">
+                <h2 class="text-2xl font-black text-sky-800 flex items-center">
+                    <i class="fa-solid fa-scissors text-rose-500 mr-3"></i>長度的合成（加法）與分解（減法）
+                </h2>
+                <p class="text-gray-600 mt-1">動態調整繩子長度，體驗「接起來（加法）」與「剪掉/比較（減法）」的生活情境應用！</p>
+            </div>
+
+            <!-- 模式選擇 -->
+            <div class="flex justify-center gap-4 mb-6">
+                <button onclick="setTab3Mode('add')" id="t3-btn-add" class="px-6 py-2.5 rounded-xl font-bold border-2 border-rose-400 bg-rose-500 text-white shadow-md">
+                    <i class="fa-solid fa-plus-circle mr-1"></i>情境 A：合成
+                </button>
+                <button onclick="setTab3Mode('sub')" id="t3-btn-sub" class="px-6 py-2.5 rounded-xl font-bold border-2 border-sky-300 bg-white text-sky-700 hover:bg-sky-50 shadow-sm">
+                    <i class="fa-solid fa-minus-circle mr-1"></i>情境 B：分解
+                </button>
+            </div>
+
+            <!-- 動態繪圖與滑桿區 -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                    <h3 class="font-bold text-gray-800 border-b border-gray-200 pb-2" id="t3-panel-title">長度參數設定</h3>
+                    
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1" id="t3-label-1">紅絲帶長度 (A): <span id="t3-val1" class="text-rose-600 font-black">5</span> 公分</label>
+                        <input type="range" id="t3-slider1" min="1" max="12" value="5" oninput="renderTab3SVG()" class="w-full cursor-pointer h-2 bg-rose-200 rounded-lg">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1" id="t3-label-2">黃絲帶長度 (B): <span id="t3-val2" class="text-amber-600 font-black">4</span> 公分</label>
+                        <input type="range" id="t3-slider2" min="1" max="8" value="4" oninput="renderTab3SVG()" class="w-full cursor-pointer h-2 bg-amber-200 rounded-lg">
+                    </div>
+
+                    <div class="p-3 bg-indigo-50 rounded-xl border border-indigo-100 text-xs text-indigo-900 leading-relaxed" id="t3-tip-box">
+                        <i class="fa-solid fa-lightbulb text-indigo-500 mr-1"></i><strong>提示：</strong> 把兩條絲帶接起來，總長度會變長，用<strong>加法</strong>計算！
+                    </div>
+                </div>
+
+                <!-- 視覺圖像展示區 -->
+                <div class="lg:col-span-2 bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col items-center justify-center min-h-[340px]">
+                    <div class="w-full flex justify-center overflow-x-auto">
+                        <svg id="t3-ribbon-svg" class="w-full max-w-[680px] h-[250px]" viewBox="0 0 680 250"></svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 主題 4: 畫出指定長度 -->
+        <section id="tab4" class="tab-content shinkai-card p-6 md:p-8 hidden">
+            <div class="border-b-2 border-sky-100 pb-4 mb-6">
+                <h2 class="text-2xl font-black text-sky-800 flex items-center">
+                    <i class="fa-solid fa-pen-ruler text-sky-500 mr-3"></i>挑戰用直尺畫出指定的長度！
+                </h2>
+                <p class="text-gray-600 mt-1">請移動滑桿畫出正確長度的直線，考驗你對長度刻度的掌握度！</p>
+            </div>
+
+            <!-- 任務目標區 -->
+            <div class="bg-white p-5 rounded-2xl border border-sky-100 shadow-sm mb-6 flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center text-lg md:text-xl font-black text-slate-700">
+                    <span>任務目標：畫出一條長</span>
+                    <span id="t4-target-val" class="text-rose-500 text-3xl font-black mx-3 drop-shadow-sm">3</span>
+                    <span>公分的直線</span>
+                </div>
+                <button onclick="generateTab4Target()" class="px-5 py-2.5 bg-sky-100 hover:bg-sky-200 text-sky-700 font-bold rounded-xl border border-sky-300 transition-all shadow-sm active:scale-95">
+                    <i class="fa-solid fa-arrows-rotate mr-1.5"></i>換一題
+                </button>
+            </div>
+
+            <!-- 控制滑桿 -->
+            <div class="bg-sky-50/70 p-5 rounded-2xl border border-sky-100 mb-6">
+                <div class="flex justify-between items-center mb-2 font-bold text-gray-700 text-sm md:text-base">
+                    <span><i class="fa-solid fa-sliders text-sky-500 mr-1.5"></i>滑動滑桿畫出直線：</span>
+                    <span id="t4-readout" class="text-sky-600 font-black text-lg">3 cm</span>
+                </div>
+                <input type="range" id="t4-slider" min="0" max="12" value="3" step="1" oninput="updateTab4UI()" class="w-full cursor-pointer h-2.5 bg-sky-200 rounded-lg">
+            </div>
+
+            <!-- 畫畫區與視覺呈現 -->
+            <div class="bg-white p-6 rounded-2xl border border-gray-200 shadow-inner flex flex-col items-center justify-center min-h-[260px]">
+                <div class="w-full max-w-2xl mx-auto flex justify-center overflow-x-auto">
+                    <svg id="t4-svg" class="w-full max-w-[620px] h-36" viewBox="0 0 620 140"></svg>
+                </div>
+                <div id="t4-feedback" class="mt-4 text-center text-emerald-600 font-black text-lg md:text-xl flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-circle-check text-2xl"></i> 棒極了！成功畫出 3 公分的直線！
+                </div>
+            </div>
+        </section>
+
+        <!-- 主題 5: 自我挑戰 (測驗) -->
+        <section id="tab5" class="tab-content shinkai-card p-6 md:p-8 hidden">
+            <div class="border-b-2 border-sky-100 pb-4 mb-6 flex justify-between items-center flex-wrap gap-2">
+                <div>
+                    <h2 class="text-2xl font-black text-sky-800 flex items-center">
+                        <i class="fa-solid fa-graduation-cap text-sky-500 mr-3"></i>自我挑戰
+                    </h2>
+                    <p class="text-gray-600 mt-1">請回答以下 5 道題目，作答後點擊「提交答案」即可檢視得分與解析喔！</p>
+                </div>
+                <div id="quiz-score-badge" class="bg-sky-100 text-sky-800 font-black px-4 py-2 rounded-xl border border-sky-300 shadow-sm text-sm">
+                    總分：<span id="quiz-score" class="text-xl text-sky-600">0</span> / 100
+                </div>
+            </div>
+
+            <div id="quiz-container" class="space-y-6">
+                <!-- 題庫由 JS 自動動態渲染生成 -->
+            </div>
+
+            <div class="mt-8 flex justify-center items-center gap-4 flex-wrap">
+                <button onclick="submitQuiz()" class="px-8 py-3 bg-gradient-to-r from-emerald-400 to-teal-500 text-white font-black rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all w-40">
+                    <i class="fa-solid fa-paper-plane mr-2"></i>提交答案
+                </button>
+                <button onclick="resetQuiz()" class="px-8 py-3 bg-gradient-to-r from-sky-400 to-blue-500 text-white font-black rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all w-40">
+                    <i class="fa-solid fa-rotate-right mr-2"></i>重新測驗
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript 邏輯控管 -->
+    <script>
+        // 頁籤切換
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-gray-800');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('text-gray-800');
+        }
+
+        // ================= Tab 1 邏輯：個別單位測量 =================
+        function updateTab1UI() {
+            const itemCm = parseInt(document.getElementById('t1-item-select').value);
+            const unitCm = parseInt(document.querySelector('input[name="t1-unit"]:checked').value);
+            const selectElem = document.getElementById('t1-item-select');
+            const selectedText = selectElem.options[selectElem.selectedIndex].text;
+
+            document.getElementById('t1-item-label').innerText = selectedText.split(' ')[0] + " " + selectedText.split(' ')[1];
+            document.getElementById('t1-item-cm').innerText = itemCm + " cm";
+
+            const count = itemCm / unitCm;
+            
+            document.getElementById('t1-count-badge').innerText = `一共需要 ${count} 個單位`;
+            document.getElementById('t1-result-num').innerText = `${count} 張`;
+
+            const container = document.getElementById('t1-units-container');
+            container.innerHTML = '';
+
+            let unitName = "小香名牌";
+            let unitBg = "bg-[#faf6f0] border-r border-amber-200 text-amber-900";
+            if(unitCm === 2) { 
+                unitName = "🏷️ 小香名牌"; 
+                unitBg = "bg-[#faf6f0] border-r border-amber-200 text-amber-900"; 
+            }
+            else if(unitCm === 3) { 
+                unitName = "😊 笑臉貼"; 
+                unitBg = "bg-amber-100 border-r border-amber-300 text-amber-900"; 
+            }
+            else if(unitCm === 6) { 
+                unitName = "🖍️ 蠟筆"; 
+                unitBg = "bg-rose-100 border-r border-rose-300 text-rose-900"; 
+            }
+
+            for (let i = 0; i < count; i++) {
+                const block = document.createElement('div');
+                const isLast = (i === count - 1);
+                const borderClass = isLast ? 'border-r-0' : '';
+                block.className = `h-full flex items-center justify-center font-bold text-xs truncate px-1 ${unitBg} ${borderClass} transition-all hover:brightness-95`;
+                block.style.width = `${(unitCm / itemCm) * 100}%`;
+                block.innerText = `${unitName} (${i+1})`;
+                container.appendChild(block);
+            }
+
+            if(unitCm <= 2) {
+                document.getElementById('t1-result-text').innerText = "使用的單位比較短，所以需要的數量比較多！";
+            } else if(unitCm >= 6) {
+                document.getElementById('t1-result-text').innerText = "使用的單位比較長，所以需要的數量比較少！";
+            } else {
+                document.getElementById('t1-result-text').innerText = "用相同東西量，才能公平比較長短喔！";
+            }
+        }
+
+        // ================= Tab 2 邏輯：直尺與斷尺 =================
+        function renderTab2SVG() {
+            const start = parseInt(document.getElementById('t2-start-slider').value);
+            const len = parseInt(document.getElementById('t2-len-slider').value);
+            const end = start + len;
+
+            document.getElementById('t2-start-val').innerText = start;
+            document.getElementById('t2-len-val').innerText = len;
+
+            const mathFormula = document.getElementById('t2-math-formula');
+            const mathDesc = document.getElementById('t2-math-desc');
+            const statusTag = document.getElementById('t2-status-tag');
+
+            if (start === 0) {
+                mathFormula.innerHTML = `終點對齊刻度 <span class="text-yellow-300 font-black">${end}</span> <i class="fa-solid fa-arrow-right text-xs mx-1"></i> 長度就是 <span class="text-yellow-300 font-black">${len}</span> 公分`;
+                mathDesc.innerText = "一端成功對齊 0 刻度，可以直接看另一端的刻度數字報讀！";
+                statusTag.className = "px-4 py-2 bg-emerald-500 text-white rounded-xl font-bold text-sm shadow flex items-center gap-2 shrink-0";
+                statusTag.innerHTML = `<i class="fa-solid fa-circle-check"></i> 標準對齊 0 刻度`;
+            } else {
+                mathFormula.innerHTML = `終點 (${end}) <i class="fa-solid fa-minus text-amber-300 mx-1"></i> 起點 (${start}) = <span class="text-yellow-300 font-black">${len}</span> 公分`;
+                mathDesc.innerText = "這是「斷尺」測量！起點沒有對齊 0，要用【終點刻度 減 起點刻度】計算！";
+                statusTag.className = "px-4 py-2 bg-amber-500 text-white rounded-xl font-bold text-sm shadow flex items-center gap-2 shrink-0";
+                statusTag.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> 斷尺情境（起點非 0）`;
+            }
+
+            const svg = document.getElementById('t2-ruler-svg');
+            if (!svg) return;
+            svg.innerHTML = '';
+
+            const zeroX = 65;
+            const step = 55; // 1cm = 55px -> 11cm = 605px
+            const objLeftX = zeroX + start * step;
+            const objWidth = len * step;
+            const objRightX = objLeftX + objWidth;
+
+            // 1. 直尺背景
+            const rulerBg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rulerBg.setAttribute("x", "35");
+            rulerBg.setAttribute("y", "75");
+            rulerBg.setAttribute("width", "630");
+            rulerBg.setAttribute("height", "60");
+            rulerBg.setAttribute("fill", "#fffde7");
+            rulerBg.setAttribute("stroke", "#f39c12");
+            rulerBg.setAttribute("stroke-width", "2");
+            rulerBg.setAttribute("rx", "6");
+            svg.appendChild(rulerBg);
+
+            // 2. 刻度 (0~11)
+            for (let i = 0; i <= 11; i++) {
+                const x = zeroX + i * step;
+
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x);
+                line.setAttribute("y1", "75");
+                line.setAttribute("x2", x);
+                line.setAttribute("y2", "100");
+                line.setAttribute("stroke", "#333");
+                line.setAttribute("stroke-width", "2");
+                svg.appendChild(line);
+
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", x);
+                text.setAttribute("y", "120");
+                text.setAttribute("text-anchor", "middle");
+                text.setAttribute("font-size", "14");
+                text.setAttribute("font-weight", "bold");
+                text.setAttribute("fill", "#2d3436");
+                text.textContent = i;
+                svg.appendChild(text);
+
+                if (i < 11) {
+                    const midX = x + step / 2;
+                    const midLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    midLine.setAttribute("x1", midX);
+                    midLine.setAttribute("y1", "75");
+                    midLine.setAttribute("x2", midX);
+                    midLine.setAttribute("y2", "90");
+                    midLine.setAttribute("stroke", "#777");
+                    midLine.setAttribute("stroke-width", "1");
+                    svg.appendChild(midLine);
+                }
+            }
+
+            // 3. 物件
+            const objGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+            const objRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            objRect.setAttribute("x", objLeftX);
+            objRect.setAttribute("y", "30");
+            objRect.setAttribute("width", objWidth);
+            objRect.setAttribute("height", "36");
+            objRect.setAttribute("fill", "#10b981");
+            objRect.setAttribute("stroke", "#047857");
+            objRect.setAttribute("stroke-width", "2");
+            objRect.setAttribute("rx", "8");
+            objGroup.appendChild(objRect);
+
+            if (objWidth >= 60) {
+                const labelText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                labelText.setAttribute("x", objLeftX + 12);
+                labelText.setAttribute("y", "53");
+                labelText.setAttribute("fill", "#ffffff");
+                labelText.setAttribute("font-size", "13");
+                labelText.setAttribute("font-weight", "bold");
+                labelText.textContent = "✏️ 木夾 / 筆";
+                objGroup.appendChild(labelText);
+            }
+
+            if (objWidth >= 50) {
+                const badgeRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                const badgeW = 45;
+                badgeRect.setAttribute("x", objRightX - badgeW - 6);
+                badgeRect.setAttribute("y", "36");
+                badgeRect.setAttribute("width", badgeW);
+                badgeRect.setAttribute("height", "24");
+                badgeRect.setAttribute("fill", "rgba(255,255,255,0.3)");
+                badgeRect.setAttribute("rx", "4");
+                objGroup.appendChild(badgeRect);
+
+                const badgeText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                badgeText.setAttribute("x", objRightX - badgeW / 2 - 6);
+                badgeText.setAttribute("y", "52");
+                badgeText.setAttribute("fill", "#ffffff");
+                badgeText.setAttribute("font-size", "12");
+                badgeText.setAttribute("font-weight", "bold");
+                badgeText.setAttribute("text-anchor", "middle");
+                badgeText.textContent = `${len} cm`;
+                objGroup.appendChild(badgeText);
+            }
+
+            svg.appendChild(objGroup);
+
+            // 4. 起終點虛線標籤
+            const drawRedLineAndTag = (x, label) => {
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x);
+                line.setAttribute("y1", "0");
+                line.setAttribute("x2", x);
+                line.setAttribute("y2", "75");
+                line.setAttribute("stroke", "#ef4444");
+                line.setAttribute("stroke-width", "2");
+                line.setAttribute("stroke-dasharray", "4,3");
+                svg.appendChild(line);
+
+                const tagBg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                tagBg.setAttribute("x", x - 14);
+                tagBg.setAttribute("y", "2");
+                tagBg.setAttribute("width", "28");
+                tagBg.setAttribute("height", "18");
+                tagBg.setAttribute("fill", "#ef4444");
+                tagBg.setAttribute("rx", "4");
+                svg.appendChild(tagBg);
+
+                const tagTxt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                tagTxt.setAttribute("x", x);
+                tagTxt.setAttribute("y", "15");
+                tagTxt.setAttribute("fill", "#ffffff");
+                tagTxt.setAttribute("font-size", "11");
+                tagTxt.setAttribute("font-weight", "bold");
+                tagTxt.setAttribute("text-anchor", "middle");
+                tagTxt.textContent = label;
+                svg.appendChild(tagTxt);
+            };
+
+            drawRedLineAndTag(objLeftX, "起點");
+            drawRedLineAndTag(objRightX, "終點");
+
+            // 5. 弧線數格子
+            for (let i = start; i < end; i++) {
+                const x1 = zeroX + i * step;
+                const x2 = zeroX + (i + 1) * step;
+                const midX = (x1 + x2) / 2;
+
+                const arc = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                arc.setAttribute("d", `M ${x1} 75 Q ${midX} 88 ${x2} 75`);
+                arc.setAttribute("stroke", "#ef4444");
+                arc.setAttribute("stroke-width", "2.5");
+                arc.setAttribute("fill", "none");
+                arc.setAttribute("stroke-linecap", "round");
+                svg.appendChild(arc);
+            }
+        }
+
+        // ================= Tab 3 邏輯：長度加減法 =================
+        let t3Mode = 'add';
+
+        function setTab3Mode(mode) {
+            t3Mode = mode;
+            const btnAdd = document.getElementById('t3-btn-add');
+            const btnSub = document.getElementById('t3-btn-sub');
+            const slider1 = document.getElementById('t3-slider1');
+            const slider2 = document.getElementById('t3-slider2');
+
+            if (mode === 'add') {
+                btnAdd.className = "px-6 py-2.5 rounded-xl font-bold border-2 border-rose-400 bg-rose-500 text-white shadow-md";
+                btnSub.className = "px-6 py-2.5 rounded-xl font-bold border-2 border-sky-300 bg-white text-sky-700 hover:bg-sky-50 shadow-sm";
+                document.getElementById('t3-panel-title').innerText = "合成情境：絲帶拼接";
+                document.getElementById('t3-label-1').innerHTML = `紅絲帶長度 (A): <span id="t3-val1" class="text-rose-600 font-black">5</span> 公分`;
+                document.getElementById('t3-label-2').innerHTML = `黃絲帶長度 (B): <span id="t3-val2" class="text-amber-600 font-black">4</span> 公分`;
+                document.getElementById('t3-tip-box').innerHTML = `<i class="fa-solid fa-lightbulb text-indigo-500 mr-1"></i><strong>提示：</strong> 把兩條絲帶接起來，總長度會變長，用<strong>加法</strong>計算！`;
+                
+                slider1.max = 12;
+                if (parseInt(slider1.value) > 12) slider1.value = 12;
+                slider2.max = 8;
+                if (parseInt(slider2.value) > 8) slider2.value = 8;
+            } else {
+                btnSub.className = "px-6 py-2.5 rounded-xl font-bold border-2 border-rose-400 bg-rose-500 text-white shadow-md";
+                btnAdd.className = "px-6 py-2.5 rounded-xl font-bold border-2 border-sky-300 bg-white text-sky-700 hover:bg-sky-50 shadow-sm";
+                document.getElementById('t3-panel-title').innerText = "分解情境：剪下剩餘";
+                document.getElementById('t3-label-1').innerHTML = `原來的總長度: <span id="t3-val1" class="text-rose-600 font-black">10</span> 公分`;
+                document.getElementById('t3-label-2').innerHTML = `剪下/用掉長度: <span id="t3-val2" class="text-amber-600 font-black">4</span> 公分`;
+                document.getElementById('t3-tip-box').innerHTML = `<i class="fa-solid fa-scissors text-rose-500 mr-1"></i><strong>提示：</strong> 剪掉或拿走一部分，剩下的長度會變短，用<strong>減法</strong>計算！`;
+                
+                slider1.max = 15;
+                if (parseInt(slider1.value) > 15) slider1.value = 15;
+                slider2.max = 14;
+                if (parseInt(slider2.value) > 14) slider2.value = 14;
+            }
+            renderTab3SVG();
+        }
+
+        function renderTab3SVG() {
+            const v1 = parseInt(document.getElementById('t3-slider1').value);
+            let v2 = parseInt(document.getElementById('t3-slider2').value);
+
+            if(t3Mode === 'sub' && v2 > v1) {
+                v2 = v1;
+                document.getElementById('t3-slider2').value = v2;
+            }
+
+            document.getElementById('t3-val1').innerText = v1;
+            document.getElementById('t3-val2').innerText = v2;
+
+            const svg = document.getElementById('t3-ribbon-svg');
+            if (!svg) return;
+            svg.innerHTML = '';
+
+            const zeroX = 65;
+            const step = 28; // 20cm * 28 = 560px
+            const ribbonAWidth = v1 * step;
+            const ribbonBWidth = v2 * step;
+
+            // 1. 0 刻度垂直虛線與標籤
+            const alignZeroLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            alignZeroLine.setAttribute("x1", zeroX);
+            alignZeroLine.setAttribute("y1", "10");
+            alignZeroLine.setAttribute("x2", zeroX);
+            alignZeroLine.setAttribute("y2", "150");
+            alignZeroLine.setAttribute("stroke", "#ef4444");
+            alignZeroLine.setAttribute("stroke-width", "2");
+            alignZeroLine.setAttribute("stroke-dasharray", "4,3");
+            svg.appendChild(alignZeroLine);
+
+            const tag0Bg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            tag0Bg.setAttribute("x", zeroX - 18);
+            tag0Bg.setAttribute("y", "0");
+            tag0Bg.setAttribute("width", "36");
+            tag0Bg.setAttribute("height", "18");
+            tag0Bg.setAttribute("fill", "#ef4444");
+            tag0Bg.setAttribute("rx", "4");
+            svg.appendChild(tag0Bg);
+
+            const tag0Text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            tag0Text.setAttribute("x", zeroX);
+            tag0Text.setAttribute("y", "13");
+            tag0Text.setAttribute("fill", "#ffffff");
+            tag0Text.setAttribute("font-size", "11");
+            tag0Text.setAttribute("font-weight", "bold");
+            tag0Text.setAttribute("text-anchor", "middle");
+            tag0Text.textContent = "0 cm";
+            svg.appendChild(tag0Text);
+
+            // 2. 紅絲帶 A
+            const gA = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            const rectA = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rectA.setAttribute("x", zeroX);
+            rectA.setAttribute("y", "20");
+            rectA.setAttribute("width", ribbonAWidth);
+            rectA.setAttribute("height", "32");
+            rectA.setAttribute("fill", "#fda4af");
+            rectA.setAttribute("fill-opacity", "0.85");
+            rectA.setAttribute("stroke", "#f43f5e");
+            rectA.setAttribute("stroke-width", "1.5");
+            rectA.setAttribute("rx", "6");
+            gA.appendChild(rectA);
+
+            const textA = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            textA.setAttribute("x", zeroX + 8);
+            textA.setAttribute("y", "41");
+            textA.setAttribute("fill", "#881337");
+            textA.setAttribute("font-size", "13");
+            textA.setAttribute("font-weight", "bold");
+            textA.textContent = `🎀 紅絲帶 (${v1} cm)`;
+            gA.appendChild(textA);
+            svg.appendChild(gA);
+
+            // 3. 黃絲帶 B
+            const gB = document.createElementNS("http://www.w3.org/2000/svg", "g");
+            const rectB = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rectB.setAttribute("x", zeroX);
+            rectB.setAttribute("y", "58");
+            rectB.setAttribute("width", ribbonBWidth);
+            rectB.setAttribute("height", "32");
+            rectB.setAttribute("fill", "#fef08a");
+            rectB.setAttribute("fill-opacity", "0.85");
+            rectB.setAttribute("stroke", "#eab308");
+            rectB.setAttribute("stroke-width", "1.5");
+            rectB.setAttribute("rx", "6");
+            gB.appendChild(rectB);
+
+            const textB = document.createElementNS("http://www.w3.org/2000/svg", "text");
+            textB.setAttribute("x", zeroX + 8);
+            textB.setAttribute("y", "79");
+            textB.setAttribute("fill", "#713f12");
+            textB.setAttribute("font-size", "13");
+            textB.setAttribute("font-weight", "bold");
+            textB.textContent = `🎗️ 黃絲帶 (${v2} cm)`;
+            gB.appendChild(textB);
+            svg.appendChild(gB);
+
+            // 4. 公分尺 (0~20)
+            const rulerBg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rulerBg.setAttribute("x", "30");
+            rulerBg.setAttribute("y", "98");
+            rulerBg.setAttribute("width", "620");
+            rulerBg.setAttribute("height", "52");
+            rulerBg.setAttribute("fill", "#fffde7");
+            rulerBg.setAttribute("stroke", "#f39c12");
+            rulerBg.setAttribute("stroke-width", "2");
+            rulerBg.setAttribute("rx", "8");
+            svg.appendChild(rulerBg);
+
+            for (let i = 0; i <= 20; i++) {
+                const x = zeroX + i * step;
+
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x);
+                line.setAttribute("y1", "98");
+                line.setAttribute("x2", x);
+                line.setAttribute("y2", "120");
+                line.setAttribute("stroke", "#333");
+                line.setAttribute("stroke-width", "1.5");
+                svg.appendChild(line);
+
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", x);
+                text.setAttribute("y", "138");
+                text.setAttribute("text-anchor", "middle");
+                text.setAttribute("font-size", "12");
+                text.setAttribute("font-weight", "bold");
+                text.setAttribute("fill", "#2d3436");
+                text.textContent = i;
+                svg.appendChild(text);
+
+                if (i < 20) {
+                    const midX = x + step / 2;
+                    const midLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    midLine.setAttribute("x1", midX);
+                    midLine.setAttribute("y1", "98");
+                    midLine.setAttribute("x2", midX);
+                    midLine.setAttribute("y2", "109");
+                    midLine.setAttribute("stroke", "#777");
+                    midLine.setAttribute("stroke-width", "1");
+                    svg.appendChild(midLine);
+                }
+            }
+
+            // 5. 分隔虛線
+            const sepLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            sepLine.setAttribute("x1", "15");
+            sepLine.setAttribute("y1", "160");
+            sepLine.setAttribute("x2", "665");
+            sepLine.setAttribute("y2", "160");
+            sepLine.setAttribute("stroke", "#cbd5e1");
+            sepLine.setAttribute("stroke-width", "1");
+            sepLine.setAttribute("stroke-dasharray", "4,4");
+            svg.appendChild(sepLine);
+
+            // 6. 結果圖形與下方標題
+            if (t3Mode === 'add') {
+                const total = v1 + v2;
+                const totalW = total * step;
+
+                const resG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+                const rA = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rA.setAttribute("x", zeroX);
+                rA.setAttribute("y", "172");
+                rA.setAttribute("width", ribbonAWidth);
+                rA.setAttribute("height", "32");
+                rA.setAttribute("fill", "#fda4af");
+                rA.setAttribute("stroke", "#f43f5e");
+                rA.setAttribute("stroke-width", "1.5");
+                rA.setAttribute("rx", "6");
+                resG.appendChild(rA);
+
+                const rAText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                rAText.setAttribute("x", zeroX + 8);
+                rAText.setAttribute("y", "193");
+                rAText.setAttribute("fill", "#881337");
+                rAText.setAttribute("font-size", "12");
+                rAText.setAttribute("font-weight", "bold");
+                rAText.textContent = `🎀 A (${v1}cm)`;
+                resG.appendChild(rAText);
+
+                const rB = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rB.setAttribute("x", zeroX + ribbonAWidth);
+                rB.setAttribute("y", "172");
+                rB.setAttribute("width", ribbonBWidth);
+                rB.setAttribute("height", "32");
+                rB.setAttribute("fill", "#fef08a");
+                rB.setAttribute("stroke", "#eab308");
+                rB.setAttribute("stroke-width", "1.5");
+                rB.setAttribute("rx", "6");
+                resG.appendChild(rB);
+
+                const rBText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                rBText.setAttribute("x", zeroX + ribbonAWidth + 8);
+                rBText.setAttribute("y", "193");
+                rBText.setAttribute("fill", "#713f12");
+                rBText.setAttribute("font-size", "12");
+                rBText.setAttribute("font-weight", "bold");
+                rBText.textContent = `🎗️ B (${v2}cm)`;
+                resG.appendChild(rBText);
+
+                const boxX = zeroX + totalW + 15;
+                const resultBox = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                resultBox.setAttribute("x", boxX);
+                resultBox.setAttribute("y", "170");
+                resultBox.setAttribute("width", "82");
+                resultBox.setAttribute("height", "36");
+                resultBox.setAttribute("fill", "#faf6f0");
+                resultBox.setAttribute("fill-opacity", "0.9");
+                resultBox.setAttribute("stroke", "#0284c7");
+                resultBox.setAttribute("stroke-width", "2");
+                resultBox.setAttribute("rx", "8");
+                resG.appendChild(resultBox);
+
+                const resultText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                resultText.setAttribute("x", boxX + 41);
+                resultText.setAttribute("y", "193");
+                resultText.setAttribute("fill", "#0284c7");
+                resultText.setAttribute("font-size", "15");
+                resultText.setAttribute("font-weight", "black");
+                resultText.setAttribute("text-anchor", "middle");
+                resultText.textContent = `${total} cm`;
+                resG.appendChild(resultText);
+
+                svg.appendChild(resG);
+
+                const labelText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                labelText.setAttribute("x", zeroX);
+                labelText.setAttribute("y", "230");
+                labelText.setAttribute("fill", "#1e293b");
+                labelText.setAttribute("font-size", "13");
+                labelText.setAttribute("font-weight", "bold");
+                labelText.textContent = "兩條接起來的總長度 (紅絲帶與黃絲帶相接)：";
+                svg.appendChild(labelText);
+
+            } else {
+                const cutW = ribbonBWidth;
+                const remainCm = v1 - v2;
+                const remainW = remainCm * step;
+
+                const resG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+
+                const rCut = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rCut.setAttribute("x", zeroX);
+                rCut.setAttribute("y", "172");
+                rCut.setAttribute("width", cutW);
+                rCut.setAttribute("height", "32");
+                rCut.setAttribute("fill", "#fef9c3");
+                rCut.setAttribute("stroke", "#eab308");
+                rCut.setAttribute("stroke-width", "1.5");
+                rCut.setAttribute("stroke-dasharray", "3,3");
+                rCut.setAttribute("rx", "6");
+                resG.appendChild(rCut);
+
+                const cutText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                cutText.setAttribute("x", zeroX + 8);
+                cutText.setAttribute("y", "193");
+                cutText.setAttribute("fill", "#a16207");
+                cutText.setAttribute("font-size", "12");
+                cutText.setAttribute("font-weight", "bold");
+                cutText.textContent = `✂️ 剪下 (${v2} cm)`;
+                resG.appendChild(cutText);
+
+                const rRemain = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                rRemain.setAttribute("x", zeroX + cutW);
+                rRemain.setAttribute("y", "172");
+                rRemain.setAttribute("width", remainW);
+                rRemain.setAttribute("height", "32");
+                rRemain.setAttribute("fill", "#fda4af");
+                rRemain.setAttribute("stroke", "#f43f5e");
+                rRemain.setAttribute("stroke-width", "1.5");
+                rRemain.setAttribute("rx", "6");
+                resG.appendChild(rRemain);
+
+                const remainText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                remainText.setAttribute("x", zeroX + cutW + 8);
+                remainText.setAttribute("y", "193");
+                remainText.setAttribute("fill", "#881337");
+                remainText.setAttribute("font-size", "12");
+                remainText.setAttribute("font-weight", "bold");
+                remainText.textContent = `剩下 (${remainCm} cm)`;
+                resG.appendChild(remainText);
+
+                const boxX = zeroX + ribbonAWidth + 15;
+                const resultBox = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+                resultBox.setAttribute("x", boxX);
+                resultBox.setAttribute("y", "170");
+                resultBox.setAttribute("width", "82");
+                resultBox.setAttribute("height", "36");
+                resultBox.setAttribute("fill", "#faf6f0");
+                resultBox.setAttribute("fill-opacity", "0.9");
+                resultBox.setAttribute("stroke", "#0284c7");
+                resultBox.setAttribute("stroke-width", "2");
+                resultBox.setAttribute("rx", "8");
+                resG.appendChild(resultBox);
+
+                const resultText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                resultText.setAttribute("x", boxX + 41);
+                resultText.setAttribute("y", "193");
+                resultText.setAttribute("fill", "#0284c7");
+                resultText.setAttribute("font-size", "15");
+                resultText.setAttribute("font-weight", "black");
+                resultText.setAttribute("text-anchor", "middle");
+                resultText.textContent = `${remainCm} cm`;
+                resG.appendChild(resultText);
+
+                svg.appendChild(resG);
+
+                const labelText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                labelText.setAttribute("x", zeroX);
+                labelText.setAttribute("y", "230");
+                labelText.setAttribute("fill", "#1e293b");
+                labelText.setAttribute("font-size", "13");
+                labelText.setAttribute("font-weight", "bold");
+                labelText.textContent = "剩下的長度 (紅絲帶剪去黃絲帶長度)：";
+                svg.appendChild(labelText);
+            }
+        }
+
+        // ================= Tab 4 邏輯：畫出指定長度 =================
+        let t4Target = 3;
+
+        function generateTab4Target() {
+            let newTarget;
+            do {
+                newTarget = Math.floor(Math.random() * 10) + 2;
+            } while (newTarget === t4Target);
+            t4Target = newTarget;
+            document.getElementById('t4-target-val').innerText = t4Target;
+            updateTab4UI();
+        }
+
+        function updateTab4UI() {
+            const val = parseInt(document.getElementById('t4-slider').value);
+            document.getElementById('t4-readout').innerText = val + " cm";
+
+            renderTab4SVG(val);
+
+            const fb = document.getElementById('t4-feedback');
+            if (val === t4Target) {
+                fb.className = "mt-4 text-center text-emerald-600 font-black text-lg md:text-xl flex items-center justify-center gap-2 animate-bounce";
+                fb.innerHTML = `<i class="fa-solid fa-circle-check text-2xl"></i> 棒極了！成功畫出 ${t4Target} 公分的直線！`;
+            } else {
+                fb.className = "mt-4 text-center text-slate-400 font-bold text-base flex items-center justify-center gap-2";
+                fb.innerHTML = `<i class="fa-solid fa-ruler mr-1"></i> 再試試看，移動滑桿把線段調整成 ${t4Target} 公分！`;
+            }
+        }
+
+        function renderTab4SVG(val) {
+            const svg = document.getElementById('t4-svg');
+            if (!svg) return;
+            svg.innerHTML = '';
+
+            const zeroX = 60;
+            const step = 43; // 12 * 43 = 516px
+
+            const rulerBg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rulerBg.setAttribute("x", zeroX - 20);
+            rulerBg.setAttribute("y", "75");
+            rulerBg.setAttribute("width", (12 * step) + 40);
+            rulerBg.setAttribute("height", "55");
+            rulerBg.setAttribute("fill", "#e2e8f0");
+            rulerBg.setAttribute("stroke", "#94a3b8");
+            rulerBg.setAttribute("stroke-width", "2");
+            rulerBg.setAttribute("rx", "10");
+            svg.appendChild(rulerBg);
+
+            for (let i = 0; i <= 12; i++) {
+                const x = zeroX + i * step;
+
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", x);
+                line.setAttribute("y1", "75");
+                line.setAttribute("x2", x);
+                line.setAttribute("y2", "98");
+                line.setAttribute("stroke", "#475569");
+                line.setAttribute("stroke-width", "2");
+                svg.appendChild(line);
+
+                const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                text.setAttribute("x", x);
+                text.setAttribute("y", "116");
+                text.setAttribute("text-anchor", "middle");
+                text.setAttribute("font-size", "13");
+                text.setAttribute("font-weight", "bold");
+                text.setAttribute("fill", "#334155");
+                text.textContent = i;
+                svg.appendChild(text);
+
+                if (i < 12) {
+                    const midX = x + step / 2;
+                    const midLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                    midLine.setAttribute("x1", midX);
+                    midLine.setAttribute("y1", "75");
+                    midLine.setAttribute("x2", midX);
+                    midLine.setAttribute("y2", "88");
+                    midLine.setAttribute("stroke", "#94a3b8");
+                    midLine.setAttribute("stroke-width", "1");
+                    svg.appendChild(midLine);
+                }
+            }
+
+            if (val > 0) {
+                const lineX2 = zeroX + val * step;
+
+                const drawLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                drawLine.setAttribute("x1", zeroX);
+                drawLine.setAttribute("y1", "35");
+                drawLine.setAttribute("x2", lineX2);
+                drawLine.setAttribute("y2", "35");
+                drawLine.setAttribute("stroke", "#ef4444");
+                drawLine.setAttribute("stroke-width", "6");
+                drawLine.setAttribute("stroke-linecap", "round");
+                svg.appendChild(drawLine);
+
+                const dot1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                dot1.setAttribute("cx", zeroX);
+                dot1.setAttribute("cy", "35");
+                dot1.setAttribute("r", "7");
+                dot1.setAttribute("fill", "#dc2626");
+                svg.appendChild(dot1);
+
+                const dot2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                dot2.setAttribute("cx", lineX2);
+                dot2.setAttribute("cy", "35");
+                dot2.setAttribute("r", "7");
+                dot2.setAttribute("fill", "#dc2626");
+                svg.appendChild(dot2);
+            }
+        }
+
+        // ================= Tab 5 邏輯：自我挑戰 (5題) =================
+        const quizData = [
+            {
+                id: 1,
+                question: "小香用「短貼紙」量鉛筆量了 6 次，阿和用「長貼紙」量同一枝鉛筆，阿和量的次數會怎樣？",
+                options: [
+                    "比 6 次多",
+                    "比 6 次少",
+                    "剛好也是 6 次"
+                ],
+                answer: 1,
+                explain: "用比較『長』的個別單位測量時，需要的涵蓋次數/張數會比較少喔！"
+            },
+            {
+                id: 2,
+                question: "用公分直尺測量髮夾，髮夾的一端對齊刻度 0，另一端對齊刻度 8，請問髮夾長幾公分？",
+                options: [
+                    "7 公分",
+                    "8 公分",
+                    "9 公分"
+                ],
+                answer: 1,
+                explain: "只要一端正確對齊刻度 0，另一端指向數字幾，長度就是幾公分！"
+            },
+            {
+                id: 3,
+                question: "【斷尺挑戰】一枝木筆的一端對齊直尺上的數字 4，另一端對齊數字 11，這枝筆有多長？",
+                options: [
+                    "11 公分",
+                    "15 公分",
+                    "7 公分"
+                ],
+                answer: 2,
+                explain: "斷尺計算公式：終點刻度 (11) - 起點刻度 (4) = 7 公分。"
+            },
+            {
+                id: 4,
+                question: "有一雙筷子的長度在直尺的 13 公分和 14 公分之間，但『非常接近 14 公分』，我們應該怎麼報讀？",
+                options: [
+                    "剛好 13 公分",
+                    "大約 14 公分",
+                    "大約 15 公分"
+                ],
+                answer: 1,
+                explain: "當長度非整公分時，看它比較接近哪一個刻度，就報讀『大約幾公分』。"
+            },
+            {
+                id: 5,
+                question: "紅絲帶長 8 公分，藍絲帶長 12 公分，藍絲帶比紅絲帶長幾公分？要用什麼算式？",
+                options: [
+                    "12 - 8 = 4 (公分)",
+                    "12 + 8 = 20 (公分)",
+                    "8 + 4 = 12 (公分)"
+                ],
+                answer: 0,
+                explain: "比較兩條絲帶相差多少，要用減法：12 - 8 = 4 (公分)。"
+            }
+        ];
+
+        let userAnswers = {};
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            quizData.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl border border-sky-100 shadow-sm relative";
+                
+                let optionsHTML = '';
+                q.options.forEach((opt, optIdx) => {
+                    const checked = (userAnswers[q.id] === optIdx) ? 'checked' : '';
+                    optionsHTML += `
+                        <label class="flex items-center p-3 rounded-xl border border-gray-200 cursor-pointer hover:bg-sky-50 transition-all mb-2">
+                            <input type="radio" name="q_${q.id}" value="${optIdx}" ${checked} onchange="userAnswers[${q.id}] = ${optIdx}" class="w-4 h-4 text-sky-600">
+                            <span class="ml-3 font-bold text-gray-700">${opt}</span>
+                        </label>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="flex items-start justify-between mb-3">
+                        <span class="bg-sky-500 text-white font-black text-xs px-2.5 py-1 rounded-lg">第 ${idx + 1} 題</span>
+                        <div id="result_badge_${q.id}" class="hidden"></div>
+                    </div>
+                    <h3 class="font-bold text-gray-800 text-base md:text-lg mb-4">${q.question}</h3>
+                    <div class="space-y-2 mb-3">${optionsHTML}</div>
+                    <div id="explain_${q.id}" class="hidden p-3 rounded-xl text-xs leading-relaxed"></div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            quizData.forEach(q => {
+                const badge = document.getElementById(`result_badge_${q.id}`);
+                const explain = document.getElementById(`explain_${q.id}`);
+                badge.classList.remove('hidden');
+                explain.classList.remove('hidden');
+
+                if (userAnswers[q.id] === undefined) {
+                    badge.className = "bg-amber-100 text-amber-800 font-black text-xs px-3 py-1 rounded-lg border border-amber-300 flex items-center";
+                    badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-1"></i> 未作答`;
+                    
+                    explain.className = "p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed";
+                    explain.innerHTML = `<i class="fa-solid fa-circle-info text-amber-500 mr-1"></i><strong>未作答。</strong>`;
+                } else if (userAnswers[q.id] === q.answer) {
+                    score += 20;
+                    badge.className = "bg-emerald-100 text-emerald-700 font-black text-xs px-3 py-1 rounded-lg border border-emerald-300 flex items-center";
+                    badge.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500 mr-1"></i> 答對了！`;
+
+                    explain.className = "p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed";
+                    explain.innerHTML = `<i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i><strong>解析：</strong> ${q.explain}`;
+                } else {
+                    badge.className = "bg-rose-100 text-rose-700 font-black text-xs px-3 py-1 rounded-lg border border-rose-300 flex items-center";
+                    badge.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-500 mr-1"></i> 再想一下喔！`;
+
+                    explain.className = "p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed";
+                    explain.innerHTML = `<i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i><strong>解析：</strong> ${q.explain}`;
+                }
+            });
+            document.getElementById('quiz-score').innerText = score;
+        }
+
+        function resetQuiz() {
+            userAnswers = {};
+            document.getElementById('quiz-score').innerText = '0';
+            renderQuiz();
+        }
+
+        // 頁面初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            updateTab1UI();
+            renderTab2SVG();
+            renderTab3SVG();
+            updateTab4UI();
+            renderQuiz();
+        });
+    </script>
+</body>
+</html>

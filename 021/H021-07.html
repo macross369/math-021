@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國小數學 乘法(一) - 幾的幾倍與乘法探究</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icon CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(160deg, #6baed6 0%, #9ecae1 30%, #c6dbef 60%, #fdd0a2 100%);
+            min-height: 100vh;
+            color: #2d3748;
+            overflow-x: hidden;
+        }
+
+        /* 新海誠風格動態雲朵與光暈 background overlays */
+        .shinkai-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                radial-gradient(circle at 80% 20%, rgba(255, 236, 179, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 20% 80%, rgba(255, 182, 193, 0.3) 0%, transparent 50%);
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 50px;
+            filter: blur(12px);
+            animation: floatCloud 45s infinite linear;
+        }
+
+        @keyframes floatCloud {
+            0% { transform: translateX(-200px); }
+            100% { transform: translateX(100vw); }
+        }
+
+        /* 玻璃擬物卡片 Glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 15px 35px rgba(31, 38, 135, 0.12);
+        }
+
+        .glass-tab {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(6px);
+            transition: all 0.3s ease;
+        }
+
+        .glass-tab.active {
+            background: rgba(255, 255, 255, 0.95);
+            color: #2b6cb0;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        /* 國小標準直式分數 CSS 元件 */
+        .vert-frac {
+            display: inline-flex;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+            font-size: 1.1em;
+        }
+
+        .vert-frac .frac-body {
+            display: inline-flex;
+            flex-direction: column;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .vert-frac .numerator {
+            border-bottom: 2px solid currentColor;
+            padding: 0 4px;
+            font-weight: 600;
+        }
+
+        .vert-frac .denominator {
+            padding: 0 4px;
+            font-weight: 600;
+        }
+
+        /* 填空輸入框動態效果 */
+        .table-input {
+            width: 52px;
+            height: 38px;
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #d97706;
+            border: 2px solid #fcd34d;
+            border-radius: 10px;
+            background-color: #fffbeb;
+            transition: all 0.2s ease;
+        }
+
+        .table-input:focus {
+            outline: none;
+            border-color: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+            background-color: #ffffff;
+        }
+
+        .table-input.correct {
+            border-color: #10b981;
+            background-color: #ecfdf5;
+            color: #047857;
+        }
+
+        .table-input.wrong {
+            border-color: #f43f5e;
+            background-color: #fff1f2;
+            color: #be123c;
+        }
+    </style>
+</head>
+<body class="relative flex flex-col justify-between min-h-screen">
+
+<div class="shinkai-bg">
+    <div class="cloud top-12 left-0 w-72 h-20" style="animation-duration: 55s;"></div>
+    <div class="cloud top-48 left-1/3 w-96 h-28" style="animation-duration: 70s; animation-delay: -20s;"></div>
+    <div class="cloud top-96 right-10 w-80 h-24" style="animation-duration: 60s; animation-delay: -10s;"></div>
+</div>
+
+<div class="relative z-10 container mx-auto px-4 py-6">
+    <!-- 頂部標題區 -->
+    <header class="glass-card rounded-3xl p-6 mb-6 text-center border-b-4 border-sky-300">
+        <!-- 學科標籤 Pill Badge -->
+        <div class="inline-flex items-center justify-center space-x-2 px-4 py-0.5 mb-2 rounded-full bg-sky-200/50 backdrop-blur-sm border border-sky-300/60 text-sky-900 shadow-sm text-sm sm:text-base font-bold tracking-wide">
+            <i class="fa-solid fa-graduation-cap text-sky-600 text-lg"></i>
+            <span>國小二上數學 (七) 互動學習網頁</span>
+        </div>
+
+        <div class="flex items-center justify-center space-x-3 mb-2">
+            <span class="bg-sky-500 text-white rounded-full w-10 h-10 flex items-center justify-center text-xl shadow-md">
+                <i class="fa-solid fa-shapes"></i>
+            </span>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-sky-900 tracking-wide">
+                第七單元：乘法(一)
+            </h1>
+        </div>
+        <p class="text-slate-600 text-base sm:text-lg">
+            透過觀察與動態操作，探索「幾的幾倍」、「連加與乘法」及「2、5、4、8乘法表」規律！
+        </p>
+    </header>
+
+    <nav class="flex flex-wrap justify-center gap-3 mb-8">
+        <button onclick="switchTab('tab1')" id="btn-tab1" class="glass-tab active px-5 py-3 rounded-2xl text-slate-700 hover:text-sky-600 font-semibold flex items-center space-x-2">
+            <i class="fa-solid fa-cookie-bite text-amber-500"></i>
+            <span>幾的幾倍與連加</span>
+        </button>
+        <button onclick="switchTab('tab2')" id="btn-tab2" class="glass-tab px-5 py-3 rounded-2xl text-slate-700 hover:text-sky-600 font-semibold flex items-center space-x-2">
+            <i class="fa-solid fa-square-poll-vertical text-emerald-500"></i>
+            <span>2,5,4,8乘法與規律</span>
+        </button>
+        <button onclick="switchTab('tab3')" id="btn-tab3" class="glass-tab px-5 py-3 rounded-2xl text-slate-700 hover:text-sky-600 font-semibold flex items-center space-x-2">
+            <i class="fa-solid fa-table text-indigo-500"></i>
+            <span>乘法表填空</span>
+        </button>
+        <button onclick="switchTab('tabBingo')" id="btn-tabBingo" class="glass-tab px-5 py-3 rounded-2xl text-slate-700 hover:text-sky-600 font-semibold flex items-center space-x-2">
+            <i class="fa-solid fa-gamepad text-purple-600"></i>
+            <span>乘法賓果</span>
+        </button>
+        <button onclick="switchTab('tab4')" id="btn-tab4" class="glass-tab px-5 py-3 rounded-2xl text-slate-700 hover:text-sky-600 font-semibold flex items-center space-x-2">
+            <i class="fa-solid fa-trophy text-rose-500"></i>
+            <span>自我挑戰</span>
+        </button>
+    </nav>
+
+    <!-- 主內容區塊 Container -->
+    <main id="main-content">
+        <section id="tab1" class="space-y-6">
+            <div class="glass-card rounded-3xl p-6 sm:p-8">
+                <div class="flex items-center space-x-3 border-b border-sky-100 pb-4 mb-6">
+                    <span class="bg-amber-400 text-white rounded-xl p-3 shadow">
+                        <i class="fa-solid fa-utensils text-xl"></i>
+                    </span>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">美食餐廳點心籠：連加與「幾倍」觀念</h2>
+                        <p class="text-slate-500 text-sm">請選擇點心種類並拉動滑桿，觀察裝籠數量、加法算式與「幾的幾倍」說明！</p>
+                    </div>
+                </div>
+
+                <!-- 控制項面板 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-sky-50/70 p-6 rounded-2xl border border-sky-100">
+                    <div>
+                        <label class="block text-slate-700 font-bold mb-2">
+                            <i class="fa-solid fa-store text-sky-600 mr-1"></i> 選擇點心種類 (單位量)：
+                        </label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="setTab1Unit(2, '包子', 'baozi')" id="t1-u2" class="t1-unit-btn py-2 px-4 rounded-xl border-2 border-sky-400 bg-sky-500 text-white font-bold flex items-center justify-center space-x-2 shadow-sm">
+                                <svg class="w-6 h-6 inline-block drop-shadow-sm" viewBox="0 0 64 64"><ellipse cx="32" cy="38" rx="26" ry="20" fill="#FFFDF8" stroke="#D1A153" stroke-width="2.5"/><path d="M 32 20 Q 26 28 20 34 M 32 20 Q 32 29 32 36 M 32 20 Q 38 28 44 34 M 32 20 Q 22 24 16 28 M 32 20 Q 42 24 48 28" stroke="#E6C280" stroke-width="2" stroke-linecap="round"/><circle cx="32" cy="20" r="2.5" fill="#C8963E"/></svg>
+                                <span>一籠 2 個包子</span>
+                            </button>
+                            <button onclick="setTab1Unit(5, '蝦餃', 'hargow')" id="t1-u5" class="t1-unit-btn py-2 px-4 rounded-xl border-2 border-slate-200 bg-white text-slate-700 font-bold hover:bg-sky-50 flex items-center justify-center space-x-2">
+                                <svg class="w-6 h-6 inline-block drop-shadow-sm" viewBox="0 0 64 64"><path d="M 12 38 C 12 18, 52 18, 52 38 C 52 48, 12 48, 12 38 Z" fill="#FFEAE6" stroke="#F87171" stroke-width="2"/><ellipse cx="32" cy="38" rx="14" ry="8" fill="#FCA5A5" opacity="0.85"/><path d="M 18 28 Q 24 34 32 34 Q 40 34 46 28 M 22 24 Q 28 30 32 30 Q 36 30 42 24" stroke="#F87171" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+                                <span>一籠 5 個蝦餃</span>
+                            </button>
+                            <button onclick="setTab1Unit(4, '燒賣', 'siumai')" id="t1-u4" class="t1-unit-btn py-2 px-4 rounded-xl border-2 border-slate-200 bg-white text-slate-700 font-bold hover:bg-sky-50 flex items-center justify-center space-x-2">
+                                <svg class="w-6 h-6 inline-block drop-shadow-sm" viewBox="0 0 64 64"><path d="M 16 26 Q 12 46 32 50 Q 52 46 48 26 Q 32 28 16 26 Z" fill="#FDE047" stroke="#CA8A04" stroke-width="2"/><ellipse cx="32" cy="25" rx="16" ry="7" fill="#B45309"/><circle cx="28" cy="24" r="2" fill="#EA580C"/><circle cx="32" cy="26" r="2.2" fill="#F97316"/><circle cx="36" cy="24" r="2" fill="#EA580C"/><path d="M 20 28 Q 22 40 26 46 M 44 28 Q 42 40 38 46" stroke="#EAB308" stroke-width="1.8" fill="none"/></svg>
+                                <span>一籠 4 個燒賣</span>
+                            </button>
+                            <button onclick="setTab1Unit(8, '小籠包', 'xiaolongbao')" id="t1-u8" class="t1-unit-btn py-2 px-4 rounded-xl border-2 border-slate-200 bg-white text-slate-700 font-bold hover:bg-sky-50 flex items-center justify-center space-x-2">
+                                <svg class="w-6 h-6 inline-block drop-shadow-sm" viewBox="0 0 64 64"><path d="M 32 16 C 22 24 14 32 16 44 C 18 50 46 50 48 44 C 50 32 42 24 32 16 Z" fill="#FFFDF5" stroke="#D97706" stroke-width="2"/><path d="M 32 16 L 24 38 M 32 16 L 28 42 M 32 16 L 32 44 M 32 16 L 36 42 M 32 16 L 40 38" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/><circle cx="32" cy="16" r="2" fill="#B45309"/></svg>
+                                <span>一籠 8 個小籠包</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col justify-center">
+                        <div class="flex justify-between items-center mb-2">
+                            <label for="t1-slider" class="text-slate-700 font-bold">
+                                <i class="fa-solid fa-boxes-stacked text-amber-600 mr-1"></i> 點心籠數 (組數)：
+                            </label>
+                            <span id="t1-count-display" class="text-2xl font-black text-amber-600 bg-amber-100 px-4 py-1 rounded-full">3 籠</span>
+                        </div>
+                        <input type="range" id="t1-slider" min="1" max="10" value="3" oninput="updateTab1()" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                        <div class="flex justify-between text-xs text-slate-400 px-1 mt-1 font-semibold">
+                            <span>1 籠</span>
+                            <span>5 籠</span>
+                            <span>10 籠</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 視覺圖像動態呈現區 -->
+                <div class="mb-8">
+                    <h3 class="text-slate-700 font-bold mb-3 flex items-center">
+                        <i class="fa-solid fa-eye text-sky-500 mr-2"></i> 蒸籠畫面展示：
+                    </h3>
+                    <div id="t1-steamer-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-x-4 gap-y-8 bg-amber-50/60 p-6 rounded-2xl border border-amber-200 min-h-[220px] items-start justify-items-center">
+                        <!-- Dynamic Steamer Baskets JS rendered -->
+                    </div>
+                </div>
+
+                <!-- 數學邏輯轉換與解說區 -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white p-5 rounded-2xl border-2 border-amber-200 shadow-sm text-center">
+                        <p class="text-xs font-bold text-amber-600 uppercase tracking-wider mb-1">加法算式 (連加)</p>
+                        <p id="t1-add-expr" class="text-lg font-black text-slate-800 break-all">2 + 2 + 2 = 6</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border-2 border-sky-200 shadow-sm text-center">
+                        <p class="text-xs font-bold text-sky-600 uppercase tracking-wider mb-1">倍數語言說法</p>
+                        <p id="t1-times-lang" class="text-lg font-black text-slate-800">2 有 3 個，是 2 的 3 倍</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl border-2 border-emerald-200 shadow-sm text-center bg-gradient-to-br from-emerald-50 to-teal-50">
+                        <p class="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1">乘法算式記作</p>
+                        <p id="t1-mult-expr" class="text-2xl font-black text-emerald-700">2 × 3 = 6</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab2" class="space-y-6 hidden">
+            <div class="glass-card rounded-3xl p-6 sm:p-8">
+                <div class="flex items-center space-x-3 border-b border-sky-100 pb-4 mb-6">
+                    <span class="bg-emerald-500 text-white rounded-xl p-3 shadow">
+                        <i class="fa-solid fa-calculator text-xl"></i>
+                    </span>
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">乘法表與「乘數多 1」變化規律探究</h2>
+                        <p class="text-slate-500 text-sm">切換被乘數 (2, 5, 4, 8)，拉動乘數，觀察圖形累積與「多1個被乘數」的數學規律！</p>
+                    </div>
+                </div>
+
+                <!-- 切換被乘數 -->
+                <div class="flex flex-wrap gap-3 justify-center mb-6">
+                    <button onclick="setTab2Base(2)" id="t2-b2" class="t2-base-btn px-5 py-2.5 rounded-2xl font-bold text-lg bg-emerald-600 text-white shadow-md flex items-center space-x-2">
+                        <span>🍣 2 的乘法 (壽司)</span>
+                    </button>
+                    <button onclick="setTab2Base(5)" id="t2-b5" class="t2-base-btn px-5 py-2.5 rounded-2xl font-bold text-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-emerald-50 flex items-center space-x-2">
+                        <span>🌸 5 的乘法 (花瓣)</span>
+                    </button>
+                    <button onclick="setTab2Base(4)" id="t2-b4" class="t2-base-btn px-5 py-2.5 rounded-2xl font-bold text-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-emerald-50 flex items-center space-x-2">
+                        <span>🍀 4 的乘法 (四葉草)</span>
+                    </button>
+                    <button onclick="setTab2Base(8)" id="t2-b8" class="t2-base-btn px-5 py-2.5 rounded-2xl font-bold text-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-emerald-50 flex items-center space-x-2">
+                        <span>🥚 8 的乘法 (雞蛋盒)</span>
+                    </button>
+                </div>
+
+                <!-- 乘數調整 slider -->
+                <div class="bg-emerald-50/60 p-6 rounded-2xl border border-emerald-100 mb-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="text-slate-700 font-bold">
+                            <i class="fa-solid fa-arrow-up-right-dots text-emerald-600 mr-1"></i> 設定乘數 (個數/倍數)：
+                        </label>
+                        <span id="t2-mult-display" class="text-2xl font-black text-emerald-700 bg-white px-4 py-1 rounded-full border border-emerald-200">5 倍</span>
+                    </div>
+                    <input type="range" id="t2-slider" min="1" max="10" value="5" oninput="updateTab2()" class="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+                    <div class="flex justify-between text-xs text-slate-400 px-1 mt-1 font-semibold">
+                        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                    </div>
+                </div>
+
+                <!-- 圖形集展示 -->
+                <div class="mb-6">
+                    <div id="t2-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 bg-white p-6 rounded-2xl border border-slate-200 min-h-[180px]">
+                        <!-- Dynamic items -->
+                    </div>
+                </div>
+
+                <!-- 特效體驗：乘數差 1 探索專區 -->
+                <div class="bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-2xl border-2 border-amber-200 shadow-sm">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-amber-900 flex items-center">
+                                <i class="fa-solid fa-lightbulb text-amber-500 mr-2"></i> 核心思考：如果乘數「再多 1」，會增加多少？
+                            </h3>
+                            <p class="text-sm text-amber-700">點擊右側按鈕，觀察乘數多 1 時的算式變化規律！</p>
+                        </div>
+                        <button onclick="toggleTab2Compare()" id="t2-compare-btn" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow transition flex items-center space-x-2 whitespace-nowrap">
+                            <i class="fa-solid fa-plus-circle"></i>
+                            <span>比較 +1 組的變化</span>
+                        </button>
+                    </div>
+
+                    <div id="t2-compare-box" class="bg-white p-5 rounded-xl border border-amber-300 font-bold text-slate-800 text-base sm:text-lg space-y-2">
+                        <!-- JS Dynamic comparison logic -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab3" class="space-y-6 hidden">
+            <div class="glass-card rounded-3xl p-6 sm:p-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-sky-100 pb-4 mb-6 gap-4">
+                    <div class="flex items-center space-x-3">
+                        <span class="bg-indigo-500 text-white rounded-xl p-3 shadow">
+                            <i class="fa-solid fa-pen-to-square text-xl"></i>
+                        </span>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800">2、5、4、8 乘法表填空練習挑戰</h2>
+                            <p class="text-slate-500 text-sm">每次隨機挑選 10 個欄位空白，請填入正確答案後點擊「提交答案」進行批改！</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 分數展示區 -->
+                    <div class="flex items-center space-x-3">
+                        <span id="t3-score-badge" class="bg-indigo-50 text-indigo-700 font-extrabold text-lg sm:text-xl px-4 py-2 rounded-2xl border border-indigo-200 shadow-sm">
+                            得分：— / 100
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 乘法表小標籤頁 (Sub-tabs: 2, 5, 4, 8) -->
+                <div class="flex flex-wrap gap-2 justify-center mb-6">
+                    <button onclick="setTab3Table(2)" id="t3-sub-2" class="t3-subtab px-5 py-2 rounded-xl font-bold text-base bg-indigo-600 text-white shadow-sm">
+                        2 的乘法表
+                    </button>
+                    <button onclick="setTab3Table(5)" id="t3-sub-5" class="t3-subtab px-5 py-2 rounded-xl font-bold text-base bg-white border border-slate-200 text-slate-700 hover:bg-indigo-50">
+                        5 的乘法表
+                    </button>
+                    <button onclick="setTab3Table(4)" id="t3-sub-4" class="t3-subtab px-5 py-2 rounded-xl font-bold text-base bg-white border border-slate-200 text-slate-700 hover:bg-indigo-50">
+                        4 的乘法表
+                    </button>
+                    <button onclick="setTab3Table(8)" id="t3-sub-8" class="t3-subtab px-5 py-2 rounded-xl font-bold text-base bg-white border border-slate-200 text-slate-700 hover:bg-indigo-50">
+                        8 的乘法表
+                    </button>
+                </div>
+
+                <!-- 表格主體區塊 -->
+                <div class="max-w-2xl mx-auto bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden mb-6">
+                    <div class="p-4 bg-indigo-50/80 border-b border-indigo-100 flex justify-between items-center">
+                        <span id="t3-table-title" class="font-extrabold text-indigo-900 text-lg sm:text-xl">
+                            2 的乘法表 (填空挑戰)
+                        </span>
+                        <span class="text-xs font-bold text-indigo-600 bg-indigo-100 px-3 py-1 rounded-full">
+                            共有 10 個空白欄位
+                        </span>
+                    </div>
+
+                    <div class="p-4 sm:p-6">
+                        <table class="w-full text-center border-collapse">
+                            <thead>
+                                <tr class="border-b-2 border-indigo-100 text-slate-500 font-bold text-sm sm:text-base">
+                                    <th class="py-2">被乘數</th>
+                                    <th class="py-2 w-8"></th>
+                                    <th class="py-2">乘數</th>
+                                    <th class="py-2 w-8"></th>
+                                    <th class="py-2">積</th>
+                                    <th class="py-2">核對結果</th>
+                                </tr>
+                            </thead>
+                            <tbody id="t3-table-body" class="divide-y divide-slate-100 font-bold text-slate-700 text-base sm:text-lg">
+                                <!-- Dynamic rendered by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 操作按鈕區 -->
+                <div class="flex flex-wrap justify-center items-center gap-4 pt-2">
+                    <button onclick="submitTab3Answers()" class="px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-lg rounded-2xl shadow-md transition flex items-center space-x-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>提交答案</span>
+                    </button>
+                    <button onclick="resetTab3Challenge()" class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg rounded-2xl shadow-md transition flex items-center space-x-2">
+                        <i class="fa-solid fa-shuffle"></i>
+                        <span>重新挑戰</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="tabBingo" class="space-y-6 hidden">
+            <div class="glass-card rounded-3xl p-6 sm:p-8">
+                <!-- 標題區 -->
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center space-x-2 text-2xl sm:text-3xl font-black text-indigo-900 mb-2">
+                        <span class="text-amber-500"><i class="fa-solid fa-trophy"></i></span>
+                        <h2>2、5、4、8 九九乘法賓果挑戰</h2>
+                    </div>
+                    <p class="text-slate-600 font-semibold text-sm sm:text-base">
+                        抽出一張乘法卡，算出答案並在下方賓果盤點擊正確數字，連成一線即獲得勝利！
+                    </p>
+                </div>
+
+                <!-- 賓果主要遊戲區 -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start max-w-6xl mx-auto">
+                    <!-- 左側：抽取題目卡區塊 -->
+                    <div class="lg:col-span-4 bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-700 text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col justify-between items-center text-center min-h-[360px] relative overflow-hidden border border-indigo-400/40">
+                        <div class="w-full">
+                            <div class="flex items-center justify-center space-x-2 mb-2">
+                                <span class="inline-block text-xs sm:text-sm font-bold tracking-wider text-indigo-200 bg-white/10 px-3 py-1 rounded-full backdrop-blur-md border border-white/20">
+                                    當前抽出的乘法卡
+                                </span>
+                                <!-- 即時計時器顯示 -->
+                                <span class="inline-flex items-center space-x-1 text-xs sm:text-sm font-bold text-amber-300 bg-black/20 px-3 py-1 rounded-full border border-white/10">
+                                    <i class="fa-solid fa-stopwatch text-amber-400"></i>
+                                    <span id="bingo-timer-display">00:00</span>
+                                </span>
+                            </div>
+
+                            <div id="bingo-card-display" class="text-4xl sm:text-5xl font-black tracking-widest my-4 py-2 text-white drop-shadow-md min-h-[60px] flex items-center justify-center">
+                                點擊抽卡
+                            </div>
+                        </div>
+
+                        <div class="w-full space-y-3">
+                            <button onclick="drawBingoCard()" id="bingo-draw-btn" class="w-full py-3.5 px-6 bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold text-lg sm:text-xl rounded-2xl shadow-lg hover:shadow-amber-400/50 transition transform hover:-translate-y-0.5 flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-shuffle"></i>
+                                <span>抽取下一張題目卡</span>
+                            </button>
+                            
+                            <p id="bingo-status-hint" class="text-xs sm:text-sm text-indigo-100 font-semibold min-h-[32px] my-2 py-1 leading-relaxed">
+                                點擊抽卡開始遊戲！
+                            </p>
+
+                            <!-- 提示文字（連線成功後會隱藏） -->
+                            <p id="bingo-hint-text" class="text-sm sm:text-base text-rose-300 font-bold pt-1.5 border-t border-white/10">
+                                💡 如找不到答案時，請直接抽取下一張題目卡
+                            </p>
+
+                            <!-- 挑戰完成時間顯示（完成時自動顯示） -->
+                            <p id="bingo-time-result" class="hidden text-base sm:text-lg text-amber-300 font-black pt-1.5 border-t border-white/10 animate-pulse">
+                                ⏱️ 挑戰完成！總用時：0 分 0 秒
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 中間：4x4 賓果盤 -->
+                    <div class="lg:col-span-5 bg-white/80 backdrop-blur-md p-4 sm:p-6 rounded-3xl border border-indigo-100 shadow-md">
+                        <div id="bingo-board-grid" class="grid grid-cols-4 gap-3">
+                            <!-- JS 動態渲染 16 格賓果按鈕 -->
+                        </div>
+
+                        <!-- 底部重置選項 -->
+                        <div class="flex justify-between items-center mt-5 pt-3 border-t border-slate-100">
+                            <span id="bingo-lines-count" class="text-sm font-bold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-xl">
+                                目前連線：0 條
+                            </span>
+                            <button onclick="resetBingoGame()" class="text-xs sm:text-sm text-slate-500 hover:text-indigo-600 font-bold flex items-center space-x-1.5 transition">
+                                <i class="fa-solid fa-rotate-right"></i>
+                                <span>重置賓果盤</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 右側：前五名時間排行榜 -->
+                    <div class="lg:col-span-3 bg-white/80 backdrop-blur-md p-5 rounded-3xl border border-indigo-100 shadow-md">
+                        <div class="flex items-center space-x-2 border-b border-indigo-100 pb-3 mb-3 text-indigo-900 font-extrabold text-base sm:text-lg">
+                            <i class="fa-solid fa-trophy text-amber-500"></i>
+                            <span>前五名時間排行榜</span>
+                        </div>
+                        <ol id="bingo-leaderboard-list" class="space-y-2 font-bold text-sm">
+                            <!-- JS 動態渲染排行榜清單 -->
+                        </ol>
+                        <div class="mt-4 pt-2 border-t border-slate-100 text-right">
+                            <button onclick="clearBingoLeaderboard()" class="text-xs text-slate-400 hover:text-rose-500 transition font-semibold">
+                                <i class="fa-solid fa-trash-can mr-1"></i>清除紀錄
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tab4" class="space-y-6 hidden">
+            <div class="glass-card rounded-3xl p-6 sm:p-8">
+                <div class="flex items-center justify-between border-b border-sky-100 pb-4 mb-6">
+                    <div class="flex items-center space-x-3">
+                        <span class="bg-rose-500 text-white rounded-xl p-3 shadow">
+                            <i class="fa-solid fa-circle-question text-xl"></i>
+                        </span>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800">自我挑戰</h2>
+                            <p class="text-slate-500 text-sm">測試你對連加、倍數語言與乘法算式的理解！</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span id="quiz-score-badge" class="bg-rose-100 text-rose-700 font-black text-xl px-4 py-2 rounded-2xl border border-rose-200">
+                            得分：— / 100
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 測驗問題卡片區 -->
+                <div id="quiz-container" class="space-y-6">
+                    <!-- Questions rendered by JavaScript -->
+                </div>
+
+                <!-- 操作按鈕區：提交答案與重新測驗兩按鈕同等大小並排置中 -->
+                <div class="flex flex-wrap justify-center items-center gap-4 pt-6">
+                    <button onclick="submitQuiz()" class="w-44 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-lg rounded-2xl shadow-md transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>提交答案</span>
+                    </button>
+                    <button onclick="resetQuiz()" class="w-44 py-3 bg-sky-600 hover:bg-sky-700 text-white font-black text-lg rounded-2xl shadow-md transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-rotate-right"></i>
+                        <span>重新測驗</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    /* ================= 頁籤切換邏輯 Tab Switching ================= */
+    function switchTab(tabId) {
+        ['tab1', 'tab2', 'tab3', 'tabBingo', 'tab4'].forEach(id => {
+            const el = document.getElementById(id);
+            const btn = document.getElementById('btn-' + id);
+            if (el) el.classList.add('hidden');
+            if (btn) btn.classList.remove('active');
+        });
+        const targetTab = document.getElementById(tabId);
+        const targetBtn = document.getElementById('btn-' + tabId);
+        if (targetTab) targetTab.classList.remove('hidden');
+        if (targetBtn) targetBtn.classList.add('active');
+    }
+
+    /* ================= TAB 1: 幾的幾倍與連加 State & Logic ================= */
+    const dimSumIcons = {
+        baozi: `<svg class="w-6 h-6 inline-block drop-shadow-sm" viewBox="0 0 64 64"><ellipse cx="32" cy="38" rx="26" ry="20" fill="#FFFDF8" stroke="#D1A153" stroke-width="2.5"/><path d="M 32 20 Q 26 28 20 34 M 32 20 Q 32 29 32 36 M 32 20 Q 38 28 44 34 M 32 20 Q 22 24 16 28 M 32 20 Q 42 24 48 28" stroke="#E6C280" stroke-width="2" stroke-linecap="round"/><circle cx="32" cy="20" r="2.5" fill="#C8963E"/></svg>`,
+        hargow: `<svg class="w-6 h-6 inline-block drop-shadow-sm" viewBox="0 0 64 64"><path d="M 12 38 C 12 18, 52 18, 52 38 C 52 48, 12 48, 12 38 Z" fill="#FFEAE6" stroke="#F87171" stroke-width="2"/><ellipse cx="32" cy="38" rx="14" ry="8" fill="#FCA5A5" opacity="0.85"/><path d="M 18 28 Q 24 34 32 34 Q 40 34 46 28 M 22 24 Q 28 30 32 30 Q 36 30 42 24" stroke="#F87171" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>`,
+        siumai: `<svg class="w-6 h-6 inline-block drop-shadow-sm" viewBox="0 0 64 64"><path d="M 16 26 Q 12 46 32 50 Q 52 46 48 26 Q 32 28 16 26 Z" fill="#FDE047" stroke="#CA8A04" stroke-width="2"/><ellipse cx="32" cy="25" rx="16" ry="7" fill="#B45309"/><circle cx="28" cy="24" r="2" fill="#EA580C"/><circle cx="32" cy="26" r="2.2" fill="#F97316"/><circle cx="36" cy="24" r="2" fill="#EA580C"/><path d="M 20 28 Q 22 40 26 46 M 44 28 Q 42 40 38 46" stroke="#EAB308" stroke-width="1.8" fill="none"/></svg>`,
+        xiaolongbao: `<svg class="w-5 h-5 inline-block drop-shadow-sm" viewBox="0 0 64 64"><path d="M 32 16 C 22 24 14 32 16 44 C 18 50 46 50 48 44 C 50 32 42 24 32 16 Z" fill="#FFFDF5" stroke="#D97706" stroke-width="2"/><path d="M 32 16 L 24 38 M 32 16 L 28 42 M 32 16 L 32 44 M 32 16 L 36 42 M 32 16 L 40 38" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/><circle cx="32" cy="16" r="2" fill="#B45309"/></svg>`
+    };
+
+    let t1State = {
+        unit: 2,
+        name: '包子',
+        iconKey: 'baozi',
+        count: 3
+    };
+
+    function setTab1Unit(unit, name, iconKey) {
+        t1State.unit = unit;
+        t1State.name = name;
+        t1State.iconKey = iconKey;
+
+        document.querySelectorAll('.t1-unit-btn').forEach(btn => {
+            btn.className = 't1-unit-btn py-2 px-4 rounded-xl border-2 border-slate-200 bg-white text-slate-700 font-bold hover:bg-sky-50 flex items-center justify-center space-x-2';
+        });
+        const activeBtn = document.getElementById(`t1-u${unit}`);
+        if(activeBtn) {
+            activeBtn.className = 't1-unit-btn py-2 px-4 rounded-xl border-2 border-sky-400 bg-sky-500 text-white font-bold flex items-center justify-center space-x-2 shadow-sm';
+        }
+
+        updateTab1();
+    }
+
+    function updateTab1() {
+        const slider = document.getElementById('t1-slider');
+        t1State.count = parseInt(slider.value);
+
+        document.getElementById('t1-count-display').innerText = `${t1State.count} 籠`;
+
+        const container = document.getElementById('t1-steamer-container');
+        container.innerHTML = '';
+
+        for (let i = 0; i < t1State.count; i++) {
+            const basket = document.createElement('div');
+            basket.className = 'bg-amber-100/90 border-2 border-amber-400 rounded-2xl p-2.5 flex flex-col items-center justify-between shadow-md w-32 h-36 min-h-[145px] relative transform hover:scale-105 transition';
+            
+            let itemIcons = '';
+            for(let j=0; j < t1State.unit; j++) {
+                itemIcons += `<span class="m-0.5 inline-block">${dimSumIcons[t1State.iconKey]}</span>`;
+            }
+
+            basket.innerHTML = `
+                <div class="text-xs font-bold text-amber-800">第 ${i+1} 籠</div>
+                <div class="flex flex-wrap justify-center items-center my-auto max-w-[100px] gap-0.5">
+                    ${itemIcons}
+                </div>
+                <div class="text-[10px] bg-amber-200 text-amber-900 font-bold px-2.5 py-0.5 rounded-full">${t1State.unit} 個</div>
+            `;
+            container.appendChild(basket);
+        }
+
+        const total = t1State.unit * t1State.count;
+        const addArr = Array(t1State.count).fill(t1State.unit);
+        document.getElementById('t1-add-expr').innerText = addArr.join(' + ') + ' = ' + total;
+        document.getElementById('t1-times-lang').innerText = `${t1State.unit} 有 ${t1State.count} 個，是 ${t1State.unit} 的 ${t1State.count} 倍`;
+        document.getElementById('t1-mult-expr').innerText = `${t1State.unit} × ${t1State.count} = ${total}`;
+    }
+
+    /* ================= TAB 2: 2, 5, 4, 8 乘法規律 State & Logic ================= */
+    let t2State = {
+        base: 2,
+        multiplier: 5,
+        compareActive: false
+    };
+
+    const t2Configs = {
+        2: { name: '壽司', unitText: '一盤 2 個壽司', unitName: '盤', icon: '🍣', color: 'emerald' },
+        5: { name: '花瓣', unitText: '一朵花 5 片花瓣', unitName: '朵', icon: '🌸', color: 'rose' },
+        4: { name: '四葉草', unitText: '一株 4 片葉子', unitName: '株', icon: '🍀', color: 'green' },
+        8: { name: '雞蛋', unitText: '一盒 8 顆雞蛋', unitName: '盒', icon: '🥚', color: 'amber' }
+    };
+
+    function setTab2Base(base) {
+        t2State.base = base;
+        
+        document.querySelectorAll('.t2-base-btn').forEach(btn => {
+            btn.className = 't2-base-btn px-5 py-2.5 rounded-2xl font-bold text-lg bg-white border-2 border-slate-200 text-slate-700 hover:bg-emerald-50 flex items-center space-x-2';
+        });
+        const activeBtn = document.getElementById(`t2-b${base}`);
+        if(activeBtn) {
+            activeBtn.className = 't2-base-btn px-5 py-2.5 rounded-2xl font-bold text-lg bg-emerald-600 text-white shadow-md flex items-center space-x-2';
+        }
+
+        updateTab2();
+    }
+
+    function updateTab2() {
+        t2State.multiplier = parseInt(document.getElementById('t2-slider').value);
+        document.getElementById('t2-mult-display').innerText = `${t2State.multiplier} 倍`;
+
+        const config = t2Configs[t2State.base];
+        const grid = document.getElementById('t2-grid');
+        grid.innerHTML = '';
+
+        for (let i = 0; i < t2State.multiplier; i++) {
+            const card = document.createElement('div');
+            card.className = 'bg-slate-50 border-2 border-slate-200 rounded-2xl p-3 flex flex-col items-center justify-center text-center shadow-sm hover:border-emerald-400 transition';
+            
+            let iconsHtml = '';
+            for (let j = 0; j < t2State.base; j++) {
+                iconsHtml += `<span class="text-xl m-0.5">${config.icon}</span>`;
+            }
+
+            card.innerHTML = `
+                <div class="text-xs font-bold text-slate-500 mb-1">第 ${i + 1} 組</div>
+                <div class="flex flex-wrap justify-center my-1">${iconsHtml}</div>
+                <div class="text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-md">${t2State.base}</div>
+            `;
+            grid.appendChild(card);
+        }
+
+        renderTab2Compare();
+    }
+
+    function toggleTab2Compare() {
+        t2State.compareActive = !t2State.compareActive;
+        renderTab2Compare();
+    }
+
+    function renderTab2Compare() {
+        const box = document.getElementById('t2-compare-box');
+        const b = t2State.base;
+        const k = t2State.multiplier;
+        const currAns = b * k;
+        const nextAns = b * (k + 1);
+        const config = t2Configs[b] || { unitName: '組' };
+        const uName = config.unitName || '組';
+
+        if (!t2State.compareActive) {
+            box.innerHTML = `
+                <div class="flex items-center justify-between text-slate-600">
+                    <span>目前算式：<span class="text-emerald-600 font-extrabold text-xl">${b} × ${k} = ${currAns}</span></span>
+                    <span class="text-xs text-amber-700 bg-amber-100 px-3 py-1 rounded-full">👈 點擊右上方按鈕開啟「+1 組對比」</span>
+                </div>
+            `;
+        } else {
+            box.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-100 flex flex-col md:flex-row items-center justify-around gap-4 text-center">
+                        <div class="flex flex-col items-center">
+                            <span class="text-slate-500 font-bold text-sm sm:text-base mb-1">${b} 的 ${k} 倍 (${k}${uName})</span>
+                            <span class="text-emerald-600 font-black text-2xl sm:text-3xl tracking-wide">${b} × ${k} = ${currAns}</span>
+                        </div>
+
+                        <div class="flex items-center space-x-1.5 text-amber-500 font-extrabold text-base sm:text-lg my-1 md:my-0">
+                            <i class="fa-solid fa-arrow-right"></i>
+                            <span>多 1 ${uName} (多 1 個 ${b})</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+
+                        <div class="flex flex-col items-center">
+                            <span class="text-slate-500 font-bold text-sm sm:text-base mb-1">${b} 的 ${k+1} 倍 (${k+1}${uName})</span>
+                            <span class="text-blue-600 font-black text-2xl sm:text-3xl tracking-wide">${b} × ${k+1} = ${nextAns}</span>
+                        </div>
+                    </div>
+
+                    <div class="text-center text-amber-900 font-bold text-base sm:text-xl pt-1">
+                        結論：${b} × ${k+1} 比 ${b} × ${k} 多了 <span class="text-rose-600 font-black text-xl sm:text-2xl">1</span> 個 ${b}，也就是多 <span class="text-rose-600 font-black text-xl sm:text-2xl">${b}</span> ！
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    /* ================= TAB 3: 2, 5, 4, 8 乘法表填空挑戰 State & Logic ================= */
+    let t3State = {
+        currentBase: 2,
+        blankPositions: [],
+        submitted: false
+    };
+
+    function setTab3Table(base) {
+        t3State.currentBase = base;
+        t3State.submitted = false;
+
+        document.querySelectorAll('.t3-subtab').forEach(btn => {
+            btn.className = 't3-subtab px-5 py-2 rounded-xl font-bold text-base bg-white border border-slate-200 text-slate-700 hover:bg-indigo-50';
+        });
+        const activeSub = document.getElementById(`t3-sub-${base}`);
+        if(activeSub) {
+            activeSub.className = 't3-subtab px-5 py-2 rounded-xl font-bold text-base bg-indigo-600 text-white shadow-sm';
+        }
+
+        document.getElementById('t3-table-title').innerText = `${base} 的乘法表 (填空挑戰)`;
+        document.getElementById('t3-score-badge').innerText = '得分：— / 100';
+
+        generateTab3Blanks();
+        renderTab3Table();
+    }
+
+    function generateTab3Blanks() {
+        t3State.blankPositions = [];
+        for (let i = 0; i < 10; i++) {
+            t3State.blankPositions.push(Math.random() < 0.5 ? 1 : 2);
+        }
+    }
+
+    function renderTab3Table() {
+        const tbody = document.getElementById('t3-table-body');
+        tbody.innerHTML = '';
+
+        const base = t3State.currentBase;
+
+        for (let r = 1; r <= 10; r++) {
+            const rowIdx = r - 1;
+            const targetBlank = t3State.blankPositions[rowIdx];
+
+            const expectedVal2 = r;
+            const expectedVal3 = base * r;
+
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-slate-50/80 transition';
+
+            const td1 = document.createElement('td');
+            td1.className = 'py-3';
+            td1.innerText = base;
+
+            const td2 = document.createElement('td');
+            td2.className = 'py-3 text-slate-400 font-normal';
+            td2.innerText = '×';
+
+            const td3 = document.createElement('td');
+            td3.className = 'py-3';
+            if (targetBlank === 1) {
+                td3.innerHTML = `<input type="number" id="t3-input-${rowIdx}-1" data-expected="${expectedVal2}" class="table-input" placeholder="?">`;
+            } else {
+                td3.innerText = expectedVal2;
+            }
+
+            const td4 = document.createElement('td');
+            td4.className = 'py-3 text-slate-400 font-normal';
+            td4.innerText = '=';
+
+            const td5 = document.createElement('td');
+            td5.className = 'py-3';
+            if (targetBlank === 2) {
+                td5.innerHTML = `<input type="number" id="t3-input-${rowIdx}-2" data-expected="${expectedVal3}" class="table-input" placeholder="?">`;
+            } else {
+                td5.innerText = expectedVal3;
+            }
+
+            const td6 = document.createElement('td');
+            td6.className = 'py-3 text-sm sm:text-base';
+            td6.id = `t3-verify-row-${r}`;
+            td6.innerHTML = `<span class="text-slate-300 font-normal">—</span>`;
+
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            tr.appendChild(td4);
+            tr.appendChild(td5);
+            tr.appendChild(td6);
+
+            tbody.appendChild(tr);
+        }
+    }
+
+    function submitTab3Answers() {
+        t3State.submitted = true;
+        let correctCount = 0;
+        const totalBlanks = 10;
+
+        for (let r = 1; r <= 10; r++) {
+            const rowIdx = r - 1;
+            const targetBlank = t3State.blankPositions[rowIdx];
+            const inputEl = document.getElementById(`t3-input-${rowIdx}-${targetBlank}`);
+            const verifyCell = document.getElementById(`t3-verify-row-${r}`);
+
+            if (inputEl) {
+                const userVal = parseInt(inputEl.value.trim());
+                const expected = parseInt(inputEl.getAttribute('data-expected'));
+
+                if (userVal === expected) {
+                    inputEl.className = 'table-input correct';
+                    correctCount++;
+                    verifyCell.innerHTML = `<span class="text-emerald-600 font-extrabold flex items-center justify-center space-x-1"><i class="fa-solid fa-circle-check text-emerald-500"></i><span>正確</span></span>`;
+                } else {
+                    inputEl.className = 'table-input wrong';
+                    verifyCell.innerHTML = `<span class="text-rose-600 font-extrabold flex items-center justify-center space-x-1"><i class="fa-solid fa-circle-xmark text-rose-500"></i><span>錯誤</span></span>`;
+                }
+            }
+        }
+
+        const finalScore = Math.round((correctCount / totalBlanks) * 100);
+        document.getElementById('t3-score-badge').innerText = `得分：${finalScore} / 100`;
+    }
+
+    function resetTab3Challenge() {
+        t3State.submitted = false;
+        document.getElementById('t3-score-badge').innerText = '得分：— / 100';
+        generateTab3Blanks();
+        renderTab3Table();
+    }
+
+    /* ================= TAB BINGO: 乘法賓果遊戲 State & Logic ================= */
+    const presetBingoValues = [
+        12, 2, 8, 24,
+        16, 35, 40, 28,
+        32, 4, 14, 10,
+        48, 25, 6, 20
+    ];
+
+    let bingoState = {
+        board: [],
+        currentCard: null,
+        deck: [],
+        linesCompleted: 0,
+        completed: false
+    };
+
+    let bingoTimer = null;
+    let bingoSeconds = 0;
+    let bingoTimerRunning = false;
+
+    function startBingoTimer() {
+        if (bingoTimerRunning) return;
+        bingoTimerRunning = true;
+        bingoSeconds = 0;
+        updateBingoTimerDisplay();
+        bingoTimer = setInterval(() => {
+            bingoSeconds++;
+            updateBingoTimerDisplay();
+        }, 1000);
+    }
+
+    function stopBingoTimer() {
+        if (bingoTimer) {
+            clearInterval(bingoTimer);
+            bingoTimer = null;
+        }
+        bingoTimerRunning = false;
+    }
+
+    function resetBingoTimer() {
+        stopBingoTimer();
+        bingoSeconds = 0;
+        updateBingoTimerDisplay();
+    }
+
+    function updateBingoTimerDisplay() {
+        const mins = Math.floor(bingoSeconds / 60);
+        const secs = bingoSeconds % 60;
+        const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        const el = document.getElementById('bingo-timer-display');
+        if (el) el.innerText = formatted;
+    }
+
+    function formatTimeChinese(totalSeconds) {
+        const mins = Math.floor(totalSeconds / 60);
+        const secs = totalSeconds % 60;
+        if (mins > 0) {
+            return `${mins} 分 ${secs} 秒`;
+        }
+        return `${secs} 秒`;
+    }
+
+    function getBingoLeaderboard() {
+        try {
+            const data = localStorage.getItem('bingo_top5_scores');
+            return data ? JSON.parse(data) : [];
+        } catch(e) {
+            return [];
+        }
+    }
+
+    function saveBingoScore(seconds) {
+        let board = getBingoLeaderboard();
+        const formatted = formatTimeChinese(seconds);
+        const now = new Date();
+        const dateStr = `${now.getMonth()+1}/${now.getDate()}`;
+        board.push({ seconds, formatted, date: dateStr });
+        board.sort((a, b) => a.seconds - b.seconds);
+        board = board.slice(0, 5);
+        try {
+            localStorage.setItem('bingo_top5_scores', JSON.stringify(board));
+        } catch(e) {}
+        renderBingoLeaderboard();
+    }
+
+    function renderBingoLeaderboard() {
+        const list = document.getElementById('bingo-leaderboard-list');
+        if (!list) return;
+        const board = getBingoLeaderboard();
+        if (board.length === 0) {
+            list.innerHTML = `<li class="text-slate-400 font-normal text-xs text-center py-6">尚無連線紀錄<br>快來挑戰排行榜！</li>`;
+            return;
+        }
+        list.innerHTML = board.map((item, idx) => {
+            const medalColors = ['text-amber-500', 'text-slate-400', 'text-amber-700'];
+            const badge = idx < 3 
+                ? `<i class="fa-solid fa-medal ${medalColors[idx]} text-base"></i>` 
+                : `<span class="w-4 text-center text-slate-400 font-bold">${idx + 1}.</span>`;
+            return `
+                <li class="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                    <div class="flex items-center space-x-2">
+                        ${badge}
+                        <span class="text-indigo-900">${item.formatted}</span>
+                    </div>
+                    <span class="text-[10px] text-slate-400 font-normal">${item.date}</span>
+                </li>
+            `;
+        }).join('');
+    }
+
+    function clearBingoLeaderboard() {
+        try {
+            localStorage.removeItem('bingo_top5_scores');
+        } catch(e) {}
+        renderBingoLeaderboard();
+    }
+
+    function initBingoGame() {
+        bingoState.deck = [];
+        const bases = [2, 5, 4, 8];
+        bases.forEach(b => {
+            for (let m = 1; m <= 10; m++) {
+                bingoState.deck.push({ base: b, mult: m, ans: b * m });
+            }
+        });
+
+        bingoState.deck.sort(() => Math.random() - 0.5);
+
+        bingoState.board = presetBingoValues.map(v => ({ val: v, marked: false }));
+        bingoState.currentCard = null;
+        bingoState.linesCompleted = 0;
+        bingoState.completed = false;
+
+        resetBingoTimer();
+
+        document.getElementById('bingo-card-display').innerText = '點擊抽卡';
+        
+        const hint = document.getElementById('bingo-status-hint');
+        if (hint) {
+            hint.className = 'text-xs sm:text-sm text-indigo-100 font-semibold min-h-[32px] my-2 py-1 leading-relaxed';
+            hint.innerText = '點擊抽卡開始遊戲！';
+        }
+
+        const hintText = document.getElementById('bingo-hint-text');
+        if (hintText) hintText.classList.remove('hidden');
+
+        const timeResult = document.getElementById('bingo-time-result');
+        if (timeResult) timeResult.classList.add('hidden');
+
+        const btn = document.getElementById('bingo-draw-btn');
+        if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            const btnSpan = btn.querySelector('span');
+            if (btnSpan) btnSpan.innerText = '抽取下一張題目卡';
+        }
+
+        document.getElementById('bingo-lines-count').innerText = '目前連線：0 條';
+
+        renderBingoBoard();
+        renderBingoLeaderboard();
+    }
+
+    function drawBingoCard() {
+        if (bingoState.completed) return;
+
+        if (!bingoTimerRunning) {
+            startBingoTimer();
+        }
+
+        if (bingoState.deck.length === 0) {
+            initBingoGame();
+            return;
+        }
+
+        bingoState.currentCard = bingoState.deck.pop();
+        const card = bingoState.currentCard;
+
+        document.getElementById('bingo-card-display').innerText = `${card.base} × ${card.mult}`;
+        document.getElementById('bingo-status-hint').innerText = `請在賓果盤找出 ${card.base} × ${card.mult} 的答案！`;
+    }
+
+    function renderBingoBoard() {
+        const grid = document.getElementById('bingo-board-grid');
+        grid.innerHTML = '';
+
+        bingoState.board.forEach((cell, idx) => {
+            const btn = document.createElement('button');
+            btn.onclick = () => clickBingoCell(idx);
+
+            if (cell.marked) {
+                btn.className = 'h-16 sm:h-20 bg-gradient-to-tr from-purple-500 to-indigo-500 text-white font-black text-xl sm:text-2xl rounded-2xl shadow-inner border-2 border-purple-300 flex items-center justify-center transform scale-95 transition relative';
+                btn.innerHTML = `
+                    <span>${cell.val}</span>
+                    <i class="fa-solid fa-circle-check absolute top-1.5 right-1.5 text-xs text-amber-300"></i>
+                `;
+            } else {
+                btn.className = 'h-16 sm:h-20 bg-indigo-50/70 hover:bg-indigo-100/80 text-indigo-900 font-extrabold text-xl sm:text-2xl rounded-2xl border-2 border-indigo-100 shadow-sm transition hover:scale-105 active:scale-95 flex items-center justify-center';
+                btn.innerText = cell.val;
+            }
+
+            grid.appendChild(btn);
+        });
+    }
+
+    function clickBingoCell(idx) {
+        if (bingoState.completed) return;
+
+        if (!bingoState.currentCard) {
+            document.getElementById('bingo-status-hint').innerText = '⚠️ 請先點擊「抽取下一張題目卡」！';
+            return;
+        }
+
+        const cell = bingoState.board[idx];
+        const card = bingoState.currentCard;
+
+        if (cell.val === card.ans) {
+            if (!cell.marked) {
+                cell.marked = true;
+                document.getElementById('bingo-status-hint').innerText = `🎉 太棒了！答對了！${card.base} × ${card.mult} = ${card.ans}`;
+                renderBingoBoard();
+                checkBingoLines();
+            } else {
+                document.getElementById('bingo-status-hint').innerText = `這個數字 (${cell.val}) 已經圈過囉！請抽下一張卡。`;
+            }
+        } else {
+            document.getElementById('bingo-status-hint').innerText = `❌ 不對喔！${card.base} × ${card.mult} 等於 ${card.ans}，再找找看！`;
+        }
+    }
+
+    function checkBingoLines() {
+        let lines = 0;
+        const b = bingoState.board;
+
+        for (let r = 0; r < 4; r++) {
+            if (b[r*4].marked && b[r*4+1].marked && b[r*4+2].marked && b[r*4+3].marked) lines++;
+        }
+        for (let c = 0; c < 4; c++) {
+            if (b[c].marked && b[c+4].marked && b[c+8].marked && b[c+12].marked) lines++;
+        }
+        if (b[0].marked && b[5].marked && b[10].marked && b[15].marked) lines++;
+        if (b[3].marked && b[6].marked && b[9].marked && b[12].marked) lines++;
+
+        bingoState.linesCompleted = lines;
+        document.getElementById('bingo-lines-count').innerText = `目前連線：${lines} 條`;
+
+        if (lines > 0) {
+            bingoState.completed = true;
+            stopBingoTimer();
+
+            saveBingoScore(bingoSeconds);
+
+            const hint = document.getElementById('bingo-status-hint');
+            if (hint) {
+                hint.className = 'text-base sm:text-xl text-amber-300 font-black animate-bounce drop-shadow-lg min-h-[32px] my-3 py-2 leading-relaxed';
+                hint.innerText = `🏆 太強了！成功連線！完成挑戰！`;
+            }
+
+            const hintText = document.getElementById('bingo-hint-text');
+            if (hintText) hintText.classList.add('hidden');
+
+            const timeResult = document.getElementById('bingo-time-result');
+            if (timeResult) {
+                timeResult.innerText = `⏱️ 挑戰完成！總用時：${formatTimeChinese(bingoSeconds)}`;
+                timeResult.classList.remove('hidden');
+            }
+
+            const btn = document.getElementById('bingo-draw-btn');
+            if (btn) {
+                btn.disabled = true;
+                btn.classList.add('opacity-75', 'cursor-not-allowed');
+                const btnSpan = btn.querySelector('span');
+                if (btnSpan) btnSpan.innerText = '完成挑戰';
+            }
+        }
+    }
+
+    function resetBingoGame() {
+        const shuffledValues = [...presetBingoValues].sort(() => Math.random() - 0.5);
+        bingoState.board = shuffledValues.map(v => ({ val: v, marked: false }));
+        bingoState.deck = [];
+        const bases = [2, 5, 4, 8];
+        bases.forEach(b => {
+            for (let m = 1; m <= 10; m++) {
+                bingoState.deck.push({ base: b, mult: m, ans: b * m });
+            }
+        });
+        bingoState.deck.sort(() => Math.random() - 0.5);
+        bingoState.currentCard = null;
+        bingoState.linesCompleted = 0;
+        bingoState.completed = false;
+
+        resetBingoTimer();
+
+        document.getElementById('bingo-card-display').innerText = '點擊抽卡';
+        
+        const hint = document.getElementById('bingo-status-hint');
+        if (hint) {
+            hint.className = 'text-xs sm:text-sm text-indigo-100 font-semibold min-h-[32px] my-2 py-1 leading-relaxed';
+            hint.innerText = '賓果盤已重置！點擊抽卡開始遊戲！';
+        }
+
+        const hintText = document.getElementById('bingo-hint-text');
+        if (hintText) hintText.classList.remove('hidden');
+
+        const timeResult = document.getElementById('bingo-time-result');
+        if (timeResult) timeResult.classList.add('hidden');
+
+        const btn = document.getElementById('bingo-draw-btn');
+        if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            const btnSpan = btn.querySelector('span');
+            if (btnSpan) btnSpan.innerText = '抽取下一張題目卡';
+        }
+
+        document.getElementById('bingo-lines-count').innerText = '目前連線：0 條';
+
+        renderBingoBoard();
+    }
+
+    /* ================= TAB 4: 自我挑戰 5 題 State & Logic ================= */
+    const quizData = [
+        {
+            id: 1,
+            question: "【圖形觀念】一籠包子有 2 個，小明買了 4 籠，請問共有幾個包子？",
+            options: [
+                "2 + 4 = 6 個",
+                "2 × 4 = 8 個",
+                "4 × 2 = 8 個",
+                "2 + 2 = 4 個"
+            ],
+            correct: 1,
+            explanation: "一籠有 2 個 (被乘數為 2)，買了 4 籠 (乘數為 4)，算式記作 2 × 4 = 8 個。"
+        },
+        {
+            id: 2,
+            question: "【乘法名詞】在乘法算式「5 × 6 = 30」中，關於數字與名稱的敘述，哪一個正確？",
+            options: [
+                "5 是乘數，6 是被乘數",
+                "30 叫作「和」",
+                "5 是被乘數，6 是乘數，30 叫作「積」",
+                "5 代表一共有 5 盒"
+            ],
+            correct: 2,
+            explanation: "在 5 × 6 = 30 中，前面被乘的 5 是「被乘數」，6 是「乘數」，計算出的結果 30 叫作「積」。"
+        },
+        {
+            id: 3,
+            question: "【規律推論】已知 8 × 5 = 40，請問 8 × 6 比 8 × 5 多多少？",
+            options: [
+                "多 1 個 8，也就是多 8",
+                "多 1 個 5，也就是多 5",
+                "多 6",
+                "多 10"
+            ],
+            correct: 0,
+            explanation: "8 × 6 是 8 有 6 個，8 × 5 是 8 有 5 個，所以 8 × 6 比 8 × 5 多 1 個 8，答案多 8。"
+        },
+        {
+            id: 4,
+            question: "【情境理解】公園的桌上有 3 籃蘋果，每一籃有 5 顆蘋果，用「倍的語言」來說應該怎麼表達？",
+            options: [
+                "3 有 5 個，是 3 的 5 倍",
+                "5 有 3 個，是 5 的 3 倍",
+                "5 有 5 個，是 5 的 5 倍",
+                "3 有 3 個，是 3 的 3 倍"
+            ],
+            correct: 1,
+            explanation: "一籃有 5 顆，共有 3 籃，表示 5 有 3 個，也就是 5 的 3 倍！"
+        },
+        {
+            id: 5,
+            question: "【綜合應用】教室桌上有 4 個花瓶，每個花瓶裡面插有 7 朵花，請問一共插了幾朵花？",
+            options: [
+                "4 × 7 = 28 朵",
+                "7 × 4 = 28 朵",
+                "4 + 7 = 11 朵",
+                "7 + 7 = 14 朵"
+            ],
+            correct: 1,
+            explanation: "每個花瓶有 7 朵花 (被乘數為 7)，共有 4 個花瓶 (乘數為 4)，算式記作 7 × 4 = 28 朵。"
+        }
+    ];
+
+    let userAnswers = {};
+    let quizSubmitted = false;
+
+    function renderQuiz() {
+        const container = document.getElementById('quiz-container');
+        if (!container) return;
+        container.innerHTML = '';
+
+        quizData.forEach((q, idx) => {
+            const card = document.createElement('div');
+            card.className = 'bg-white/90 p-6 rounded-2xl border border-slate-200 shadow-sm relative';
+            
+            let optionsHtml = '';
+            q.options.forEach((opt, optIdx) => {
+                const isSelected = userAnswers[q.id] === optIdx;
+                optionsHtml += `
+                    <button onclick="selectQuestionOption(${q.id}, ${optIdx})" class="w-full text-left p-3.5 rounded-xl border-2 transition flex items-center justify-between ${
+                        isSelected 
+                            ? 'border-sky-500 bg-sky-50 font-bold text-sky-900 shadow-sm' 
+                            : 'border-slate-200 hover:border-sky-300 hover:bg-slate-50 text-slate-700'
+                    }">
+                        <span>${String.fromCharCode(65 + optIdx)}. ${opt}</span>
+                        ${isSelected ? '<i class="fa-solid fa-circle-check text-sky-500 text-lg"></i>' : '<i class="fa-regular fa-circle text-slate-300"></i>'}
+                    </button>
+                `;
+            });
+
+            let feedbackHtml = '';
+            if (quizSubmitted) {
+                if (userAnswers[q.id] === undefined) {
+                    // 未作答：黃色系，僅顯示未作答。，不顯示其他說明與答案
+                    feedbackHtml = `
+                        <div class="mt-4 p-4 rounded-xl font-bold flex items-center space-x-3 bg-amber-50 text-amber-800 border border-amber-200">
+                            <i class="fa-solid fa-triangle-exclamation text-amber-500 text-xl"></i>
+                            <div>未作答。</div>
+                        </div>
+                    `;
+                } else {
+                    const isCorrect = userAnswers[q.id] === q.correct;
+                    feedbackHtml = `
+                        <div class="mt-4 p-4 rounded-xl font-bold flex items-start space-x-3 ${isCorrect ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' : 'bg-rose-50 text-rose-800 border border-rose-200'}">
+                            <i class="${isCorrect ? 'fa-solid fa-circle-check text-emerald-600' : 'fa-solid fa-circle-xmark text-rose-600'} text-xl mt-0.5"></i>
+                            <div>
+                                <div>${isCorrect ? '回答正確！' : '回答錯誤！'}</div>
+                                <div class="text-xs font-normal mt-1 text-slate-600">${q.explanation}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            card.innerHTML = `
+                <div class="flex items-center space-x-2 mb-3">
+                    <span class="bg-sky-100 text-sky-800 font-black text-xs px-2.5 py-1 rounded-lg">第 ${idx + 1} 題</span>
+                    <h3 class="text-base sm:text-lg font-bold text-slate-800">${q.question}</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
+                    ${optionsHtml}
+                </div>
+                ${feedbackHtml}
+            `;
+            container.appendChild(card);
+        });
+
+        if (quizSubmitted) {
+            updateQuizScore();
+        } else {
+            const scoreBadge = document.getElementById('quiz-score-badge');
+            if (scoreBadge) scoreBadge.innerText = '得分：— / 100';
+        }
+    }
+
+    function selectQuestionOption(qId, optIdx) {
+        if (quizSubmitted) return;
+        userAnswers[qId] = optIdx;
+        renderQuiz();
+    }
+
+    function submitQuiz() {
+        quizSubmitted = true;
+        renderQuiz();
+    }
+
+    function updateQuizScore() {
+        let correctCount = 0;
+        quizData.forEach(q => {
+            if (userAnswers[q.id] === q.correct) {
+                correctCount++;
+            }
+        });
+        const score = correctCount * 20; // 5 questions * 20 = 100
+        const scoreBadge = document.getElementById('quiz-score-badge');
+        if (scoreBadge) scoreBadge.innerText = `得分：${score} / 100`;
+    }
+
+    function resetQuiz() {
+        userAnswers = {};
+        quizSubmitted = false;
+        renderQuiz();
+    }
+
+    /* ================= 頁面初始化 Load Event ================= */
+    window.onload = function() {
+        updateTab1();
+        updateTab2();
+        setTab3Table(2);
+        initBingoGame();
+        renderQuiz();
+    };
+</script>
+</body>
+</html>

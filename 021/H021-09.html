@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3、6、7、9 的乘法魔法工坊</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #1A1C2E 0%, #393E6A 35%, #8B6B91 70%, #D49B9B 100%);
+            min-height: 100vh;
+            color: #2D3748;
+        }
+
+        /* 新海誠風格天空與光束效果 */
+        .shinkai-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .shinkai-glow {
+            text-shadow: 0 0 10px rgba(255, 223, 186, 0.8), 0 0 20px rgba(255, 182, 193, 0.6);
+        }
+
+        .shinkai-btn {
+            background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+            transition: all 0.3s ease;
+        }
+
+        .shinkai-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 115, 255, 0.5);
+        }
+
+        .tab-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #4A00E0 0%, #8E2DE2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(142, 45, 226, 0.4);
+            transform: scale(1.03);
+        }
+
+        /* 國小課本標準直式分數樣式規範 */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.9em;
+            line-height: 1;
+            margin: 0 4px;
+        }
+        .fraction .numerator {
+            border-bottom: 2px solid currentColor;
+            padding-bottom: 2px;
+            display: block;
+        }
+        .fraction .denominator {
+            padding-top: 2px;
+            display: block;
+        }
+        .mixed-fraction {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* 動態陣列圖案格線 */
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+        }
+
+        .item-box {
+            background: linear-gradient(145deg, #ffffff, #f0f4f8);
+            border-radius: 12px;
+            border: 2px solid #E2E8F0;
+            transition: all 0.25s ease;
+        }
+
+        .item-box:hover {
+            border-color: #93C5FD;
+            transform: scale(1.04);
+        }
+
+        /* 自訂滑桿樣式 */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: #E2E8F0;
+            border-radius: 8px;
+            height: 10px;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .fb-sub-btn {
+            background-color: #ffffff;
+            color: #4B5563;
+            border: 1px solid #E5E7EB;
+        }
+
+        .fb-sub-btn.active-fb {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+        }
+    </style>
+</head>
+<body class="p-3 md:p-6 min-h-screen">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- 頂部新海誠風標題列 -->
+        <header class="shinkai-card rounded-2xl p-6 mb-6 text-center text-gray-800 relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-pink-300 rounded-full blur-3xl opacity-50"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-blue-300 rounded-full blur-3xl opacity-50"></div>
+            <div class="relative z-10">
+                <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 inline-block">
+                    <i class="fa-solid fa-graduation-cap mr-1"></i> 國小二上數學 (九) 互動學習網頁
+                </span>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-900 via-purple-800 to-pink-700 tracking-wide mb-2">
+                    第九單元：乘法(二)
+                </h1>
+                <p class="text-gray-600 text-sm md:text-base">
+                    移動滑桿觀察「單位量」與「倍數」累積的變化，探索乘法表的奧秘！
+                </p>
+            </div>
+        </header>
+
+        <!-- 頁籤導覽列 (多於2個主題以頁籤呈現) -->
+        <nav class="flex flex-wrap gap-2 mb-6 justify-center">
+            <button onclick="switchTab('tab3')" id="btn-tab3" class="tab-btn active px-4 py-2.5 rounded-xl text-sm font-bold bg-white text-gray-700 shadow-sm flex items-center gap-2">
+                <span>🍮</span> 3 的乘法 (布丁)
+            </button>
+            <button onclick="switchTab('tab6')" id="btn-tab6" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-white text-gray-700 shadow-sm flex items-center gap-2">
+                <span>🧁</span> 6 的乘法 (蛋糕)
+            </button>
+            <button onclick="switchTab('tab7')" id="btn-tab7" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-white text-gray-700 shadow-sm flex items-center gap-2">
+                <span>🍡</span> 7 的乘法 (湯圓)
+            </button>
+            <button onclick="switchTab('tab9')" id="btn-tab9" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-white text-gray-700 shadow-sm flex items-center gap-2">
+                <span>📿</span> 9 的乘法 (手鍊)
+            </button>
+            <button onclick="switchTab('tabMarket')" id="btn-tabMarket" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-white text-gray-700 shadow-sm flex items-center gap-2">
+                <span>🏪</span> 綜合觀察市場
+            </button>
+            <button onclick="switchTab('tabFillBlank')" id="btn-tabFillBlank" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-white text-gray-700 shadow-sm flex items-center gap-2">
+                <span>📝</span> 乘法表填空
+            </button>
+            <button onclick="switchTab('tabBingo')" id="btn-tabBingo" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-white text-gray-700 shadow-sm flex items-center gap-2">
+                <span>🎯</span> 乘法賓果
+            </button>
+            <button onclick="switchTab('tabRing')" id="btn-tabRing" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-white text-gray-700 shadow-sm flex items-center gap-2">
+                <span>💫</span> 乘法星環
+            </button>
+            <button onclick="switchTab('tabQuiz')" id="btn-tabQuiz" class="tab-btn px-4 py-2.5 rounded-xl text-sm font-bold bg-amber-400 text-gray-900 shadow-sm flex items-center gap-2">
+                <i class="fa-solid fa-pen-to-square"></i> 自我挑戰
+            </button>
+        </nav>
+
+        <!-- 主體內容區塊：3 的乘法 -->
+        <main id="tab3" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- 左側控制區 -->
+                <div class="shinkai-card rounded-2xl p-6 lg:col-span-1 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-xl">3</div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800">一盒布丁有 3 個</h3>
+                                <p class="text-xs text-gray-500">被乘數固定為 3</p>
+                            </div>
+                        </div>
+
+                        <!-- 滑桿控制器 -->
+                        <div class="my-6 bg-indigo-50/50 p-4 rounded-xl border border-indigo-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <label for="slider3" class="font-bold text-gray-700">盒數 (倍數)：</label>
+                                <span id="val3-display" class="text-2xl font-black text-indigo-600">5 盒</span>
+                            </div>
+                            <input type="range" id="slider3" min="1" max="10" value="5" class="w-full cursor-pointer" oninput="updateTab3(this.value)">
+                            <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                <span>1盒</span>
+                                <span>5盒</span>
+                                <span>10盒</span>
+                            </div>
+                        </div>
+
+                        <!-- 算式總覽看板 -->
+                        <div class="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl p-4 text-center shadow-lg mb-4">
+                            <div class="text-xs font-bold text-amber-100 mb-2 tracking-wide">乘法算式（被乘數 × 乘數 = 積）</div>
+                            <div class="bg-[#FFFDF2] rounded-xl p-3 shadow-inner">
+                                <div id="formula3" class="text-3xl font-black tracking-wider mb-2"></div>
+                                <div id="meaning3" class="text-xs font-medium text-gray-600 mb-1"></div>
+                                <div id="addition3" class="text-sm font-bold tracking-wide my-1 text-gray-700"></div>
+                                <div id="times3" class="text-xs font-bold text-gray-700 mt-1"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 規律提示小卡 -->
+                    <div id="tip3" class="bg-white/80 p-3 rounded-xl border border-amber-200 text-xs text-gray-600">
+                        <i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i>
+                        <span>3 × 6 比 3 × 5 多 1 個 3，也就是多 3 個布丁。</span>
+                    </div>
+                </div>
+
+                <!-- 右側動態圖像展演區 -->
+                <div class="shinkai-card rounded-2xl p-6 lg:col-span-2">
+                    <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-shapes text-indigo-500"></i> 動態具體表徵 (布丁盒視圖)
+                    </h4>
+                    <div id="grid3" class="item-grid min-h-[220px] p-2 border-2 border-dashed border-gray-200 rounded-xl bg-slate-50/50">
+                        <!-- 動態生成 3 的布丁盒 -->
+                    </div>
+
+                    <!-- 3的乘法表動態高亮列 -->
+                    <div class="mt-6">
+                        <h5 class="text-xs font-bold text-gray-500 mb-2">3 的乘法表對照</h5>
+                        <div id="table3" class="grid grid-cols-5 md:grid-cols-10 gap-1.5 text-center text-xs font-medium">
+                            <!-- JS 動態填入 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 主體內容區塊：6 的乘法 -->
+        <main id="tab6" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- 左側控制區 -->
+                <div class="shinkai-card rounded-2xl p-6 lg:col-span-1 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-xl">6</div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800">一個蛋糕有 6 顆草莓</h3>
+                                <p class="text-xs text-gray-500">被乘數固定為 6</p>
+                            </div>
+                        </div>
+
+                        <div class="my-6 bg-rose-50/50 p-4 rounded-xl border border-rose-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <label for="slider6" class="font-bold text-gray-700">蛋糕數量 (倍數)：</label>
+                                <span id="val6-display" class="text-2xl font-black text-rose-600">4 個</span>
+                            </div>
+                            <input type="range" id="slider6" min="1" max="10" value="4" class="w-full cursor-pointer" oninput="updateTab6(this.value)">
+                            <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                <span>1個</span>
+                                <span>5個</span>
+                                <span>10個</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-rose-500 to-pink-500 text-white rounded-xl p-4 text-center shadow-lg mb-4">
+                            <div class="text-xs font-bold text-rose-100 mb-2 tracking-wide">乘法算式（被乘數 × 乘數 = 積）</div>
+                            <div class="bg-[#FFFDF2] rounded-xl p-3 shadow-inner">
+                                <div id="formula6" class="text-3xl font-black tracking-wider mb-2"></div>
+                                <div id="meaning6" class="text-xs font-medium text-gray-600 mb-1"></div>
+                                <div id="addition6" class="text-sm font-bold tracking-wide my-1 text-gray-700"></div>
+                                <div id="times6" class="text-xs font-bold text-gray-700 mt-1"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tip6" class="bg-white/80 p-3 rounded-xl border border-rose-200 text-xs text-gray-600">
+                        <i class="fa-solid fa-lightbulb text-rose-500 mr-1"></i>
+                        <span>6 × 7 比 6 × 5 多 2 個 6，也就是多 12 顆草莓。</span>
+                    </div>
+                </div>
+
+                <div class="shinkai-card rounded-2xl p-6 lg:col-span-2">
+                    <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-shapes text-rose-500"></i> 動態具體表徵 (草莓蛋糕視圖)
+                    </h4>
+                    <div id="grid6" class="item-grid min-h-[220px] p-2 border-2 border-dashed border-gray-200 rounded-xl bg-slate-50/50">
+                        <!-- 動態生成 6 的草莓蛋糕 -->
+                    </div>
+
+                    <div class="mt-6">
+                        <h5 class="text-xs font-bold text-gray-500 mb-2">6 的乘法表對照</h5>
+                        <div id="table6" class="grid grid-cols-5 md:grid-cols-10 gap-1.5 text-center text-xs font-medium">
+                            <!-- JS 動態填入 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 主體內容區塊：7 的乘法 -->
+        <main id="tab7" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- 左側控制區 -->
+                <div class="shinkai-card rounded-2xl p-6 lg:col-span-1 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center font-bold text-xl">7</div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800">一碗湯圓有 7 顆</h3>
+                                <p class="text-xs text-gray-500">被乘數固定為 7</p>
+                            </div>
+                        </div>
+
+                        <div class="my-6 bg-teal-50/50 p-4 rounded-xl border border-teal-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <label for="slider7" class="font-bold text-gray-700">湯圓碗數 (倍數)：</label>
+                                <span id="val7-display" class="text-2xl font-black text-teal-600">3 碗</span>
+                            </div>
+                            <input type="range" id="slider7" min="1" max="10" value="3" class="w-full cursor-pointer" oninput="updateTab7(this.value)">
+                            <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                <span>1碗</span>
+                                <span>5碗</span>
+                                <span>10碗</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-xl p-4 text-center shadow-lg mb-4">
+                            <div class="text-xs font-bold text-teal-100 mb-2 tracking-wide">乘法算式（被乘數 × 乘數 = 積）</div>
+                            <div class="bg-[#FFFDF2] rounded-xl p-3 shadow-inner">
+                                <div id="formula7" class="text-3xl font-black tracking-wider mb-2"></div>
+                                <div id="meaning7" class="text-xs font-medium text-gray-600 mb-1"></div>
+                                <div id="addition7" class="text-sm font-bold tracking-wide my-1 text-gray-700"></div>
+                                <div id="times7" class="text-xs font-bold text-gray-700 mt-1"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tip7" class="bg-white/80 p-3 rounded-xl border border-teal-200 text-xs text-gray-600">
+                        <i class="fa-solid fa-lightbulb text-teal-500 mr-1"></i>
+                        <span>每多 1 碗湯圓，總顆數就增加 7 顆！</span>
+                    </div>
+                </div>
+
+                <div class="shinkai-card rounded-2xl p-6 lg:col-span-2">
+                    <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-shapes text-teal-500"></i> 動態具體表徵 (湯圓碗視圖)
+                    </h4>
+                    <div id="grid7" class="item-grid min-h-[220px] p-2 border-2 border-dashed border-gray-200 rounded-xl bg-slate-50/50">
+                        <!-- 動態生成 7 的湯圓 -->
+                    </div>
+
+                    <div class="mt-6">
+                        <h5 class="text-xs font-bold text-gray-500 mb-2">7 的乘法表對照</h5>
+                        <div id="table7" class="grid grid-cols-5 md:grid-cols-10 gap-1.5 text-center text-xs font-medium">
+                            <!-- JS 動態填入 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 主體內容區塊：9 的乘法 -->
+        <main id="tab9" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- 左側控制區 -->
+                <div class="shinkai-card rounded-2xl p-6 lg:col-span-1 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xl">9</div>
+                            <div>
+                                <h3 class="font-bold text-lg text-gray-800">一條手鍊有 9 顆藍珠</h3>
+                                <p class="text-xs text-gray-500">被乘數固定為 9</p>
+                            </div>
+                        </div>
+
+                        <div class="my-6 bg-purple-50/50 p-4 rounded-xl border border-purple-100">
+                            <div class="flex justify-between items-center mb-2">
+                                <label for="slider9" class="font-bold text-gray-700">手鍊條數 (倍數)：</label>
+                                <span id="val9-display" class="text-2xl font-black text-purple-600">2 條</span>
+                            </div>
+                            <input type="range" id="slider9" min="1" max="10" value="2" class="w-full cursor-pointer" oninput="updateTab9(this.value)">
+                            <div class="flex justify-between text-xs text-gray-400 mt-1">
+                                <span>1條</span>
+                                <span>5條</span>
+                                <span>10條</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl p-4 text-center shadow-lg mb-4">
+                            <div class="text-xs font-bold text-purple-200 mb-2 tracking-wide">乘法算式（被乘數 × 乘數 = 積）</div>
+                            <div class="bg-[#FFFDF2] rounded-xl p-3 shadow-inner">
+                                <div id="formula9" class="text-3xl font-black tracking-wider mb-2"></div>
+                                <div id="meaning9" class="text-xs font-medium text-gray-600 mb-1"></div>
+                                <div id="addition9" class="text-sm font-bold tracking-wide my-1 text-gray-700"></div>
+                                <div id="times9" class="text-xs font-bold text-gray-700 mt-1"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tip9" class="bg-white/80 p-3 rounded-xl border border-purple-200 text-xs text-gray-600">
+                        <i class="fa-solid fa-lightbulb text-purple-500 mr-1"></i>
+                        <span>神奇規律：9 的乘法答案，個位數字與十位數字相加都是 9 喔！</span>
+                    </div>
+                </div>
+
+                <div class="shinkai-card rounded-2xl p-6 lg:col-span-2">
+                    <h4 class="font-bold text-gray-700 mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-shapes text-purple-500"></i> 動態具體表徵 (藍珠手鍊視圖)
+                    </h4>
+                    <div id="grid9" class="item-grid min-h-[220px] p-2 border-2 border-dashed border-gray-200 rounded-xl bg-slate-50/50">
+                        <!-- 動態生成 9 的藍珠手鍊 -->
+                    </div>
+
+                    <div class="mt-6">
+                        <h5 class="text-xs font-bold text-gray-500 mb-2">9 的乘法表對照</h5>
+                        <div id="table9" class="grid grid-cols-5 md:grid-cols-10 gap-1.5 text-center text-xs font-medium">
+                            <!-- JS 動態填入 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 主體內容區塊：綜合觀察市場 -->
+        <main id="tabMarket" class="tab-content hidden">
+            <div class="shinkai-card rounded-2xl p-6">
+                <div class="text-center mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">🏪 幸福蔬果與點心小市集</h3>
+                    <p class="text-sm text-gray-500">點選不同種類的食材，自由選擇數量，觀察單位量與總數！</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <!-- 選擇食材卡片 3 -->
+                    <div onclick="selectMarketItem(3, '黃瓜盤', '🥒')" id="mCard3" class="market-card p-4 rounded-xl border-2 border-amber-400 bg-amber-50 cursor-pointer text-center hover:shadow-md transition-all">
+                        <div class="text-3xl mb-1">🥒</div>
+                        <div class="font-bold text-gray-800">黃瓜盤</div>
+                        <div class="text-xs text-amber-700 font-medium">一盤有 3 條</div>
+                    </div>
+                    <!-- 選擇食材卡片 6 -->
+                    <div onclick="selectMarketItem(6, '番茄盤', '🍅')" id="mCard6" class="market-card p-4 rounded-xl border-2 border-gray-200 bg-white cursor-pointer text-center hover:shadow-md transition-all">
+                        <div class="text-3xl mb-1">🍅</div>
+                        <div class="font-bold text-gray-800">番茄盤</div>
+                        <div class="text-xs text-rose-700 font-medium">一盤有 6 個</div>
+                    </div>
+                    <!-- 選擇食材卡片 7 -->
+                    <div onclick="selectMarketItem(7, '口香糖', '🍬')" id="mCard7" class="market-card p-4 rounded-xl border-2 border-gray-200 bg-white cursor-pointer text-center hover:shadow-md transition-all">
+                        <div class="text-3xl mb-1">🍬</div>
+                        <div class="font-bold text-gray-800">口香糖</div>
+                        <div class="text-xs text-teal-700 font-medium">一條有 7 片</div>
+                    </div>
+                    <!-- 選擇食材卡片 9 -->
+                    <div onclick="selectMarketItem(9, '章魚燒', '🐙')" id="mCard9" class="market-card p-4 rounded-xl border-2 border-gray-200 bg-white cursor-pointer text-center hover:shadow-md transition-all">
+                        <div class="text-3xl mb-1">🐙</div>
+                        <div class="font-bold text-gray-800">章魚燒</div>
+                        <div class="text-xs text-purple-700 font-medium">一盒有 9 個</div>
+                    </div>
+                </div>
+
+                <!-- 互動調整 -->
+                <div class="bg-indigo-50/70 rounded-xl p-4 mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <span id="marketSelectedIcon" class="text-3xl">🥒</span>
+                        <div>
+                            <span id="marketSelectedName" class="font-bold text-gray-800">黃瓜盤 (一盤 3 條)</span>
+                            <div class="text-xs text-gray-500">請設定您要購買的盤數/盒數：</div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <button onclick="changeMarketQty(-1)" class="w-10 h-10 rounded-lg bg-white shadow font-bold text-indigo-600 text-lg hover:bg-indigo-100">-</button>
+                        <span id="marketQtyText" class="font-black text-xl text-indigo-900 w-16 text-center">4 盤</span>
+                        <button onclick="changeMarketQty(1)" class="w-10 h-10 rounded-lg bg-white shadow font-bold text-indigo-600 text-lg hover:bg-indigo-100">+</button>
+                    </div>
+                </div>
+
+                <!-- 總結與展示 -->
+                <div class="p-4 bg-white rounded-xl border border-gray-200">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-sm font-bold text-gray-700"><i class="fa-solid fa-basket-shopping text-indigo-500"></i> 購物車陳列</span>
+                        <span id="marketFormula" class="text-lg font-black text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg">3 × 4 = 12</span>
+                    </div>
+                    <div id="marketGrid" class="item-grid min-h-[160px] p-2 bg-slate-50 rounded-xl border border-dashed border-gray-200">
+                        <!-- 動態生成市集物品 -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 主體內容區塊：乘法表填空練習挑戰 -->
+        <main id="tabFillBlank" class="tab-content hidden">
+            <div class="shinkai-card rounded-2xl p-6">
+                <!-- 標題列與得分看板 -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-4 border-b border-gray-200/80 gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-xl shadow-md">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-extrabold text-gray-800">3、6、7、9 乘法表填空練習挑戰</h3>
+                            <p class="text-xs text-gray-500">每次隨機挑選 10 個空白，請填入正確答案後點擊「提交答案」進行批改！</p>
+                        </div>
+                    </div>
+                    <div class="bg-indigo-50 border border-indigo-200 px-4 py-2 rounded-xl text-right self-end md:self-auto shadow-sm">
+                        <span class="text-xs text-indigo-600 font-bold">得分：</span>
+                        <span id="fillBlankScore" class="text-2xl font-black text-indigo-700">-- / 100</span>
+                    </div>
+                </div>
+
+                <!-- 數字切換頁籤 (3, 6, 7, 9) -->
+                <div class="flex flex-wrap justify-center gap-2 mb-6">
+                    <button onclick="selectFillBlankTable(3)" id="fb-sub-3" class="fb-sub-btn active-fb px-4 py-2 rounded-xl text-sm font-bold transition-all">3 的乘法表</button>
+                    <button onclick="selectFillBlankTable(6)" id="fb-sub-6" class="fb-sub-btn px-4 py-2 rounded-xl text-sm font-bold transition-all">6 的乘法表</button>
+                    <button onclick="selectFillBlankTable(7)" id="fb-sub-7" class="fb-sub-btn px-4 py-2 rounded-xl text-sm font-bold transition-all">7 的乘法表</button>
+                    <button onclick="selectFillBlankTable(9)" id="fb-sub-9" class="fb-sub-btn px-4 py-2 rounded-xl text-sm font-bold transition-all">9 的乘法表</button>
+                </div>
+
+                <!-- 填空表格主區塊 -->
+                <div class="max-w-2xl mx-auto bg-slate-50/70 rounded-2xl p-4 md:p-6 border border-gray-200/80 shadow-inner">
+                    <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-200">
+                        <h4 id="fbTableTitle" class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                            <span>3 的乘法表 (填空挑戰)</span>
+                        </h4>
+                        <span class="text-xs bg-indigo-100 text-indigo-700 font-bold px-3 py-1 rounded-full">共有 10 個空白欄位</span>
+                    </div>
+
+                    <!-- 填空對照表格 -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-center text-sm border-collapse">
+                            <thead>
+                                <tr class="text-gray-500 font-bold border-b border-gray-200/80">
+                                    <th class="py-2">被乘數</th>
+                                    <th class="py-2"></th>
+                                    <th class="py-2">乘數</th>
+                                    <th class="py-2"></th>
+                                    <th class="py-2">積</th>
+                                    <th class="py-2">核對結果</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fillBlankTableBody" class="divide-y divide-gray-100">
+                                <!-- JS 動態填入 10 列題目 -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 按鈕列 -->
+                    <div class="flex justify-center items-center gap-4 mt-6 pt-4 border-t border-gray-200">
+                        <button onclick="checkFillBlank()" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow-md transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> 提交答案
+                        </button>
+                        <button onclick="resetFillBlank()" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-md transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> 重新挑戰
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 主體內容區塊：乘法賓果遊戲 -->
+        <main id="tabBingo" class="tab-content hidden">
+            <div class="shinkai-card rounded-2xl p-6">
+                <!-- 標題與簡介 -->
+                <div class="text-center mb-6">
+                    <h3 class="text-2xl font-black text-indigo-900 tracking-wide flex items-center justify-center gap-2">
+                        <span>🏆</span> 3、6、7、9 九九乘法賓果挑戰
+                    </h3>
+                    <p class="text-xs md:text-sm text-gray-600 mt-1">
+                        抽出一張乘法卡，算出答案並在下方賓果盤點擊正確數字，達成一線即獲得勝利！
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    <!-- 左側抽卡區 -->
+                    <div class="lg:col-span-4 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 rounded-2xl p-6 text-white shadow-xl flex flex-col justify-between min-h-[380px] relative overflow-hidden">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white tracking-wider">當前抽出的乘法卡</span>
+                            <span id="bingoTimer" class="bg-black/30 px-3 py-1 rounded-full text-xs font-mono font-bold text-amber-300">
+                                <i class="fa-regular fa-clock mr-1"></i> 00:00
+                            </span>
+                        </div>
+
+                        <!-- 題目卡卡牌 -->
+                        <div class="my-auto text-center py-6">
+                            <div id="bingoCardDisplay" onclick="drawBingoCard()" class="text-4xl md:text-5xl font-black tracking-wider drop-shadow-md cursor-pointer select-none py-6 px-2 bg-white/10 rounded-2xl border border-white/20 hover:bg-white/20 transition-all active:scale-95">
+                                點擊抽卡
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <button onclick="drawBingoCard()" class="w-full py-3 px-4 bg-amber-400 hover:bg-amber-300 text-gray-900 font-extrabold rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-base active:scale-95">
+                                <i class="fa-solid fa-shuffle"></i> 抽取下一張題目卡
+                            </button>
+                            <p class="text-[11px] text-amber-100/90 text-center flex items-center justify-center gap-1">
+                                <span>💡</span> 如找不到答案時，請直接抽取下一張題目卡
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 中間 4x4 賓果棋盤 -->
+                    <div class="lg:col-span-5 bg-white/80 rounded-2xl p-5 border border-indigo-100 shadow-md flex flex-col justify-between min-h-[380px]">
+                        <div id="bingoBoard" class="grid grid-cols-4 gap-3 mb-4">
+                            <!-- JS 動態生成 16 格賓果盤 -->
+                        </div>
+                        <div class="flex justify-between items-center pt-3 border-t border-gray-100">
+                            <span id="bingoLinesText" class="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-lg text-xs font-bold">目前連線：0 條</span>
+                            <button onclick="resetBingoGame()" class="text-xs text-gray-500 hover:text-indigo-600 font-bold flex items-center gap-1 transition-colors">
+                                <i class="fa-solid fa-rotate-right"></i> 重置賓果盤
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 右側排行榜 -->
+                    <div class="lg:col-span-3 bg-white/80 rounded-2xl p-5 border border-indigo-100 shadow-md flex flex-col justify-between min-h-[380px]">
+                        <div>
+                            <h4 class="font-extrabold text-gray-800 border-b border-gray-200 pb-3 mb-3 flex items-center gap-2 text-sm">
+                                <span class="text-amber-500 text-base">🏆</span> 前五名時間排行榜
+                            </h4>
+                            <div id="bingoLeaderboard" class="space-y-2 text-xs text-gray-500 py-6 text-center">
+                                尚無連線紀錄<br>快來挑戰排行榜！
+                            </div>
+                        </div>
+                        <div class="text-right pt-3 border-t border-gray-100">
+                            <button onclick="clearBingoLeaderboard()" class="text-[11px] text-gray-400 hover:text-rose-500 flex items-center gap-1 ml-auto font-medium transition-colors">
+                                <i class="fa-solid fa-trash-can"></i> 清除紀錄
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 主體內容區塊：乘法九九個位數星環圓陣 -->
+        <main id="tabRing" class="tab-content hidden">
+            <div class="shinkai-card rounded-2xl p-6">
+                <!-- 標題與簡介 -->
+                <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-200">
+                    <div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-xl shadow-md">
+                        <span>💫</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-extrabold text-gray-800">乘法九九個位數星環圓陣</h3>
+                        <p class="text-xs text-gray-500">取九九乘法積的 <b class="text-purple-700">個位數字</b>，在圓周 0~9 的點上依序連線，會畫出令人驚豔的幾何圖案！</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                    <!-- 左側星環繪製區塊 -->
+                    <div class="lg:col-span-8 bg-slate-50/80 rounded-2xl p-6 border border-indigo-100 shadow-inner flex flex-col items-center justify-center min-h-[420px]">
+                        <div class="w-full max-w-[360px] aspect-square relative flex items-center justify-center my-2">
+                            <svg id="ringSvg" viewBox="0 0 400 400" class="w-full h-full drop-shadow-md">
+                                <!-- SVG 動態生成圓圈、點位與連線 -->
+                            </svg>
+                        </div>
+                        <div class="mt-2 p-3 bg-white/90 rounded-xl border border-indigo-100 shadow-sm text-center w-full">
+                            <span id="ringTitleText" class="font-bold text-indigo-900 text-sm md:text-base">【 3 的乘法星環規律 】</span>
+                            <div id="ringSeqText" class="text-xs md:text-sm font-extrabold text-indigo-600 mt-1 tracking-wider">
+                                個位數變化：3 → 6 → 9 → 2 → 5 → 8 → 1 → 4 → 7 → 0
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右側選擇區與規律發現卡 -->
+                    <div class="lg:col-span-4 space-y-5">
+                        <div class="bg-white/80 rounded-2xl p-5 border border-indigo-100 shadow-sm">
+                            <h4 class="font-bold text-gray-800 mb-3 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-sliders text-indigo-600"></i> 選擇乘法表：
+                            </h4>
+                            <div id="ringNumBtns" class="grid grid-cols-4 gap-2">
+                                <!-- JS 動態生成 2~9 的按鈕 -->
+                            </div>
+                        </div>
+
+                        <div class="bg-purple-50/80 rounded-2xl p-5 border border-purple-200 shadow-sm">
+                            <h4 class="font-extrabold text-purple-900 mb-2 text-sm flex items-center gap-1.5">
+                                <span>💡</span> 發現奇妙對稱與規律：
+                            </h4>
+                            <ul class="text-xs text-purple-800 space-y-2 leading-relaxed font-medium">
+                                <li class="flex items-start gap-1.5">
+                                    <span class="text-purple-500 font-bold">•</span>
+                                    <span><b>2 的乘法與 8 的乘法：</b>形狀完全相同！</span>
+                                </li>
+                                <li class="flex items-start gap-1.5">
+                                    <span class="text-purple-500 font-bold">•</span>
+                                    <span><b>3 的乘法與 7 的乘法：</b>畫出相同的十角星！</span>
+                                </li>
+                                <li class="flex items-start gap-1.5">
+                                    <span class="text-purple-500 font-bold">•</span>
+                                    <span><b>5 的乘法：</b>只會在 0 與 5 之間畫直線。</span>
+                                </li>
+                                <li class="flex items-start gap-1.5">
+                                    <span class="text-purple-500 font-bold">•</span>
+                                    <span><b>9 的乘法：</b>會逆時針依序繞圓一圈！</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 主體內容區塊：自我挑戰 -->
+        <main id="tabQuiz" class="tab-content hidden">
+            <div class="shinkai-card rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+                    <div>
+                        <h3 class="text-xl font-bold text-gray-800"><i class="fa-solid fa-clipboard-check text-indigo-600"></i> 自我挑戰</h3>
+                        <p class="text-xs text-gray-500">回答以下 5 道題目，獲得即時反饋！</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-gray-500">目前得分</span>
+                        <div id="quizScore" class="text-2xl font-black text-indigo-600">0 / 100</div>
+                    </div>
+                </div>
+
+                <form id="quizForm" class="space-y-6" onsubmit="event.preventDefault();">
+                    <!-- 第一題 -->
+                    <div class="p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                        <div class="font-bold text-gray-800 mb-2">1. 一盒布丁有 3 個，媽媽買了 7 盒，共有幾個布丁？</div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q1" value="A"> A. 3 × 7 = 21 個
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q1" value="B"> B. 3 + 7 = 10 個
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q1" value="C"> C. 7 × 3 = 21 個
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q1" value="D"> D. 3 × 6 = 18 個
+                            </label>
+                        </div>
+                        <div id="feedback-q1" class="mt-2 text-xs font-bold hidden"></div>
+                    </div>
+
+                    <!-- 第二題 -->
+                    <div class="p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                        <div class="font-bold text-gray-800 mb-2">2. 觀察乘法規律：6 × 8 比 6 × 6 多幾個 6？是多少？</div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm">
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q2" value="A"> A. 多 1 個 6，多 6
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q2" value="B"> B. 多 2 個 6，多 12
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q2" value="C"> C. 多 3 個 6，多 18
+                            </label>
+                        </div>
+                        <div id="feedback-q2" class="mt-2 text-xs font-bold hidden"></div>
+                    </div>
+
+                    <!-- 第三題 -->
+                    <div class="p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                        <div class="font-bold text-gray-800 mb-2">3. 一碗湯圓有 7 顆，丹丹買了 5 碗，寫成乘法算式為：</div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-sm">
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q3" value="A"> A. 7 × 5 = 35
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q3" value="B"> B. 5 × 7 = 35
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q3" value="C"> C. 7 + 5 = 12
+                            </label>
+                        </div>
+                        <div id="feedback-q3" class="mt-2 text-xs font-bold hidden"></div>
+                    </div>
+
+                    <!-- 第四題 -->
+                    <div class="p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                        <div class="font-bold text-gray-800 mb-2">4. 拔河比賽每隊 9 人，有 4 支隊伍參賽，共有多少人？</div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q4" value="A"> A. 27 人
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q4" value="B"> B. 36 人
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q4" value="C"> C. 45 人
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q4" value="D"> D. 54 人
+                            </label>
+                        </div>
+                        <div id="feedback-q4" class="mt-2 text-xs font-bold hidden"></div>
+                    </div>
+
+                    <!-- 第五題 -->
+                    <div class="p-4 rounded-xl bg-white border border-gray-200 shadow-sm">
+                        <div class="font-bold text-gray-800 mb-2">5. 【應用思考】一盒蛋糕有 6 個，姐姐買了 9 盒，共是多少個蛋糕？</div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q5" value="A"> A. 42 個
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q5" value="B"> B. 48 個
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q5" value="C"> C. 54 個
+                            </label>
+                            <label class="flex items-center gap-2 p-2 border rounded-lg hover:bg-indigo-50 cursor-pointer">
+                                <input type="radio" name="q5" value="D"> D. 60 個
+                            </label>
+                        </div>
+                        <div id="feedback-q5" class="mt-2 text-xs font-bold hidden"></div>
+                    </div>
+
+                    <!-- 提交與重測按鈕 -->
+                    <div class="flex justify-center items-center gap-4 pt-4">
+                        <button type="button" onclick="checkQuiz()" class="shinkai-btn px-8 py-3 rounded-xl text-white font-bold shadow-lg text-base flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> 提交答案
+                        </button>
+                        <button type="button" onclick="resetQuiz()" class="bg-indigo-600 hover:bg-indigo-700 transition-all px-8 py-3 rounded-xl text-white font-bold shadow-lg text-base flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> 重新測驗
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <!-- 頁尾區塊（已移除所有內容） -->
+        <footer class="mt-8"></footer>
+    </div>
+
+    <!-- JavaScript 互動邏輯 -->
+    <script>
+        // 當前市場選取狀態
+        let currentMarketUnit = 3;
+        let currentMarketName = "黃瓜盤";
+        let currentMarketIcon = "🥒";
+        let currentMarketQty = 4;
+
+        let currentFBTable = 3;
+        // 定義每一列填空類型 (multiplier 或 product)
+        let fbPatterns = {};
+
+        // 乘法賓果遊戲變數
+        let bingoGrid = [];
+        let currentBingoCard = null;
+        let bingoTimerInterval = null;
+        let bingoTimeSeconds = 0;
+        let bingoGameStarted = false;
+        let bingoGameFinished = false;
+        let bingoLeaderboardData = [];
+
+        // 乘法星環當前選擇數字
+        let currentRingNum = 3;
+
+        // 頁籤切換
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(tabId).classList.remove('hidden');
+            document.getElementById('btn-' + tabId).classList.add('active');
+        }
+
+        // 更新 3 的乘法
+        function updateTab3(val) {
+            val = parseInt(val);
+            const base = 3;
+            const product = base * val;
+
+            document.getElementById('val3-display').innerText = val + " 盒";
+            
+            // 乘法算式（藍色被乘數、粉紅乘數、橘黃積）
+            document.getElementById('formula3').innerHTML = `
+                <span class="text-blue-600">${base}</span>
+                <span class="text-slate-700">×</span>
+                <span class="text-pink-600">${val}</span>
+                <span class="text-slate-700">=</span>
+                <span class="text-amber-600">${product}</span>
+            `;
+
+            // 第一行：表示有 5 個 3，也就是 3 連加 5 次
+            document.getElementById('meaning3').innerHTML = `
+                表示有 <span class="text-pink-600 font-bold">${val}</span> 個 <span class="text-blue-600 font-bold">${base}</span>，也就是 <span class="text-blue-600 font-bold">${base}</span> 連加 <span class="text-pink-600 font-bold">${val}</span> 次
+            `;
+
+            // 第二行：3+3+3+3+3=15 連加算式
+            const addItems = Array(val).fill(`<span class="text-blue-600 font-bold">${base}</span>`).join(' <span class="text-slate-500">+</span> ');
+            document.getElementById('addition3').innerHTML = `${addItems} <span class="text-slate-500">=</span> <span class="text-amber-600 font-bold">${product}</span>`;
+
+            // 第三行：亦表示 3 的 5 倍是 15
+            document.getElementById('times3').innerHTML = `
+                亦表示 <span class="text-blue-600 font-bold">${base}</span> 的 <span class="text-pink-600 font-bold">${val}</span> 倍是 <span class="text-amber-600 font-bold">${product}</span>
+            `;
+
+            // 提示字串
+            if (val > 1) {
+                document.getElementById('tip3').innerHTML = `<i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> 3 × ${val} 比 3 × ${val-1} 多 1 個 3，也就是多 3 個布丁。`;
+            } else {
+                document.getElementById('tip3').innerHTML = `<i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> 3 的 1 倍就是 3。`;
+            }
+
+            // 渲染布丁盒視覺圖案
+            const grid = document.getElementById('grid3');
+            grid.innerHTML = '';
+            for (let i = 1; i <= val; i++) {
+                grid.innerHTML += `
+                    <div class="item-box p-3 text-center shadow-sm">
+                        <div class="text-xs font-bold text-gray-400 mb-1">第 ${i} 盒</div>
+                        <div class="text-2xl tracking-widest my-1">🍮 🍮 🍮</div>
+                        <div class="text-[11px] font-bold text-amber-600 bg-amber-50 rounded py-0.5">3 個</div>
+                    </div>
+                `;
+            }
+
+            // 更新乘法表對照高亮
+            renderTable('table3', 3, val);
+        }
+
+        // 更新 6 的乘法
+        function updateTab6(val) {
+            val = parseInt(val);
+            const base = 6;
+            const product = base * val;
+
+            document.getElementById('val6-display').innerText = val + " 個";
+
+            document.getElementById('formula6').innerHTML = `
+                <span class="text-blue-600">${base}</span>
+                <span class="text-slate-700">×</span>
+                <span class="text-pink-600">${val}</span>
+                <span class="text-slate-700">=</span>
+                <span class="text-amber-600">${product}</span>
+            `;
+
+            document.getElementById('meaning6').innerHTML = `
+                表示有 <span class="text-pink-600 font-bold">${val}</span> 個 <span class="text-blue-600 font-bold">${base}</span>，也就是 <span class="text-blue-600 font-bold">${base}</span> 連加 <span class="text-pink-600 font-bold">${val}</span> 次
+            `;
+
+            const addItems = Array(val).fill(`<span class="text-blue-600 font-bold">${base}</span>`).join(' <span class="text-slate-500">+</span> ');
+            document.getElementById('addition6').innerHTML = `${addItems} <span class="text-slate-500">=</span> <span class="text-amber-600 font-bold">${product}</span>`;
+
+            document.getElementById('times6').innerHTML = `
+                亦表示 <span class="text-blue-600 font-bold">${base}</span> 的 <span class="text-pink-600 font-bold">${val}</span> 倍是 <span class="text-amber-600 font-bold">${product}</span>
+            `;
+
+            if (val > 1) {
+                document.getElementById('tip6').innerHTML = `<i class="fa-solid fa-lightbulb text-rose-500 mr-1"></i> 6 × ${val} 比 6 × ${val-1} 多 1 個 6，也就是多 6 顆草莓。`;
+            } else {
+                document.getElementById('tip6').innerHTML = `<i class="fa-solid fa-lightbulb text-rose-500 mr-1"></i> 6 的 1 倍就是 6。`;
+            }
+
+            const grid = document.getElementById('grid6');
+            grid.innerHTML = '';
+            for (let i = 1; i <= val; i++) {
+                grid.innerHTML += `
+                    <div class="item-box p-3 text-center shadow-sm">
+                        <div class="text-xs font-bold text-gray-400 mb-1">第 ${i} 個蛋糕</div>
+                        <div class="text-xl tracking-tight my-1">🧁 (🍓×6)</div>
+                        <div class="text-[11px] font-bold text-rose-600 bg-rose-50 rounded py-0.5">6 顆草莓</div>
+                    </div>
+                `;
+            }
+
+            renderTable('table6', 6, val);
+        }
+
+        // 更新 7 的乘法
+        function updateTab7(val) {
+            val = parseInt(val);
+            const base = 7;
+            const product = base * val;
+
+            document.getElementById('val7-display').innerText = val + " 碗";
+
+            document.getElementById('formula7').innerHTML = `
+                <span class="text-blue-600">${base}</span>
+                <span class="text-slate-700">×</span>
+                <span class="text-pink-600">${val}</span>
+                <span class="text-slate-700">=</span>
+                <span class="text-amber-600">${product}</span>
+            `;
+
+            document.getElementById('meaning7').innerHTML = `
+                表示有 <span class="text-pink-600 font-bold">${val}</span> 個 <span class="text-blue-600 font-bold">${base}</span>，也就是 <span class="text-blue-600 font-bold">${base}</span> 連加 <span class="text-pink-600 font-bold">${val}</span> 次
+            `;
+
+            const addItems = Array(val).fill(`<span class="text-blue-600 font-bold">${base}</span>`).join(' <span class="text-slate-500">+</span> ');
+            document.getElementById('addition7').innerHTML = `${addItems} <span class="text-slate-500">=</span> <span class="text-amber-600 font-bold">${product}</span>`;
+
+            document.getElementById('times7').innerHTML = `
+                亦表示 <span class="text-blue-600 font-bold">${base}</span> 的 <span class="text-pink-600 font-bold">${val}</span> 倍是 <span class="text-amber-600 font-bold">${product}</span>
+            `;
+
+            if (val > 1) {
+                document.getElementById('tip7').innerHTML = `<i class="fa-solid fa-lightbulb text-teal-500 mr-1"></i> 7 × ${val} 比 7 × ${val-1} 多 1 個 7，也就是多 7 顆湯圓。`;
+            } else {
+                document.getElementById('tip7').innerHTML = `<i class="fa-solid fa-lightbulb text-teal-500 mr-1"></i> 7 的 1 倍就是 7。`;
+            }
+
+            const grid = document.getElementById('grid7');
+            grid.innerHTML = '';
+            for (let i = 1; i <= val; i++) {
+                grid.innerHTML += `
+                    <div class="item-box p-3 text-center shadow-sm">
+                        <div class="text-xs font-bold text-gray-400 mb-1">第 ${i} 碗湯圓</div>
+                        <div class="text-xl tracking-tight my-1">🥣 (🍡×7)</div>
+                        <div class="text-[11px] font-bold text-teal-600 bg-teal-50 rounded py-0.5">7 顆湯圓</div>
+                    </div>
+                `;
+            }
+
+            renderTable('table7', 7, val);
+        }
+
+        // 更新 9 的乘法
+        function updateTab9(val) {
+            val = parseInt(val);
+            const base = 9;
+            const product = base * val;
+
+            document.getElementById('val9-display').innerText = val + " 條";
+
+            document.getElementById('formula9').innerHTML = `
+                <span class="text-blue-600">${base}</span>
+                <span class="text-slate-700">×</span>
+                <span class="text-pink-600">${val}</span>
+                <span class="text-slate-700">=</span>
+                <span class="text-amber-600">${product}</span>
+            `;
+
+            document.getElementById('meaning9').innerHTML = `
+                表示有 <span class="text-pink-600 font-bold">${val}</span> 個 <span class="text-blue-600 font-bold">${base}</span>，也就是 <span class="text-blue-600 font-bold">${base}</span> 連加 <span class="text-pink-600 font-bold">${val}</span> 次
+            `;
+
+            const addItems = Array(val).fill(`<span class="text-blue-600 font-bold">${base}</span>`).join(' <span class="text-slate-500">+</span> ');
+            document.getElementById('addition9').innerHTML = `${addItems} <span class="text-slate-500">=</span> <span class="text-amber-600 font-bold">${product}</span>`;
+
+            document.getElementById('times9').innerHTML = `
+                亦表示 <span class="text-blue-600 font-bold">${base}</span> 的 <span class="text-pink-600 font-bold">${val}</span> 倍是 <span class="text-amber-600 font-bold">${product}</span>
+            `;
+
+            if (val > 1) {
+                document.getElementById('tip9').innerHTML = `<i class="fa-solid fa-lightbulb text-purple-500 mr-1"></i> 9 × ${val} 比 9 × ${val-1} 多 1 個 9，也就是多 9 顆藍珠。`;
+            } else {
+                document.getElementById('tip9').innerHTML = `<i class="fa-solid fa-lightbulb text-purple-500 mr-1"></i> 9 的 1 倍就是 9。`;
+            }
+
+            const grid = document.getElementById('grid9');
+            grid.innerHTML = '';
+            for (let i = 1; i <= val; i++) {
+                grid.innerHTML += `
+                    <div class="item-box p-3 text-center shadow-sm">
+                        <div class="text-xs font-bold text-gray-400 mb-1">第 ${i} 條手鍊</div>
+                        <div class="text-xl tracking-tight my-1">📿 (🔵×9)</div>
+                        <div class="text-[11px] font-bold text-purple-600 bg-purple-50 rounded py-0.5">9 顆藍珠</div>
+                    </div>
+                `;
+            }
+
+            renderTable('table9', 9, val);
+        }
+
+        // 通用乘法表填入與高亮函數
+        function renderTable(elementId, base, activeMultiplier) {
+            const container = document.getElementById(elementId);
+            container.innerHTML = '';
+            for (let i = 1; i <= 10; i++) {
+                const isActive = i === activeMultiplier;
+                const activeClass = isActive ? 'bg-indigo-600 text-white font-bold ring-2 ring-indigo-300 scale-105' : 'bg-gray-100 text-gray-600';
+                container.innerHTML += `
+                    <div class="p-1.5 rounded-lg ${activeClass} transition-all">
+                        ${base}×${i}=${base*i}
+                    </div>
+                `;
+            }
+        }
+
+        // 市場探索頁面控制
+        function selectMarketItem(unit, name, icon) {
+            currentMarketUnit = unit;
+            currentMarketName = name;
+            currentMarketIcon = icon;
+
+            // 切換選取卡片外觀
+            document.querySelectorAll('.market-card').forEach(c => {
+                c.classList.remove('border-amber-400', 'bg-amber-50');
+                c.classList.add('border-gray-200', 'bg-white');
+            });
+            const selectedCard = document.getElementById('mCard' + unit);
+            if (selectedCard) {
+                selectedCard.classList.remove('border-gray-200', 'bg-white');
+                selectedCard.classList.add('border-amber-400', 'bg-amber-50');
+            }
+
+            document.getElementById('marketSelectedIcon').innerText = icon;
+            document.getElementById('marketSelectedName').innerText = `${name} (一份 ${unit} 個)`;
+            renderMarket();
+        }
+
+        function changeMarketQty(delta) {
+            currentMarketQty = Math.max(1, Math.min(10, currentMarketQty + delta));
+            renderMarket();
+        }
+
+        function renderMarket() {
+            document.getElementById('marketQtyText').innerText = currentMarketQty + " 份";
+            document.getElementById('marketFormula').innerText = `${currentMarketUnit} × ${currentMarketQty} = ${currentMarketUnit * currentMarketQty}`;
+
+            const grid = document.getElementById('marketGrid');
+            grid.innerHTML = '';
+            for (let i = 1; i <= currentMarketQty; i++) {
+                grid.innerHTML += `
+                    <div class="item-box p-3 text-center shadow-sm">
+                        <div class="text-xs font-bold text-gray-400 mb-1">第 ${i} 份</div>
+                        <div class="text-2xl my-1">${currentMarketIcon}</div>
+                        <div class="text-[11px] font-bold text-indigo-600 bg-indigo-50 rounded py-0.5">${currentMarketUnit} 個</div>
+                    </div>
+                `;
+            }
+        }
+
+        // 評量檢測邏輯
+        function checkQuiz() {
+            const answers = {
+                q1: 'A', // 3 x 7 = 21
+                q2: 'B', // 多 2 個 6，多 12
+                q3: 'A', // 7 x 5 = 35
+                q4: 'B', // 9 x 4 = 36
+                q5: 'C'  // 6 x 9 = 54
+            };
+
+            let score = 0;
+            const form = document.getElementById('quizForm');
+
+            for (let key in answers) {
+                const selected = form.querySelector(`input[name="${key}"]:checked`);
+                const feedback = document.getElementById('feedback-' + key);
+                feedback.classList.remove('hidden');
+
+                if (!selected) {
+                    feedback.className = 'mt-2 text-xs font-bold text-amber-600';
+                    feedback.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> 未作答。';
+                } else if (selected.value === answers[key]) {
+                    score += 20;
+                    feedback.className = 'mt-2 text-xs font-bold text-emerald-600';
+                    feedback.innerHTML = '<i class="fa-solid fa-circle-check"></i> 答對了！太棒了！';
+                } else {
+                    feedback.className = 'mt-2 text-xs font-bold text-rose-600';
+                    feedback.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 答錯囉！正確答案是 (${answers[key]})`;
+                }
+            }
+
+            document.getElementById('quizScore').innerText = score + " / 100";
+
+            // 成功提示彈窗
+            if (score === 100) {
+                setTimeout(() => {
+                    alert('🎉 恭喜您獲得 100 分！完全掌握 3、6、7、9 的乘法奧秘！');
+                }, 100);
+            }
+        }
+
+        // 重新測驗邏輯
+        function resetQuiz() {
+            const form = document.getElementById('quizForm');
+            form.reset();
+            for (let i = 1; i <= 5; i++) {
+                const feedback = document.getElementById('feedback-q' + i);
+                if (feedback) {
+                    feedback.classList.add('hidden');
+                    feedback.innerHTML = '';
+                }
+            }
+            document.getElementById('quizScore').innerText = "0 / 100";
+        }
+
+        // 切換填空挑戰的乘法表數字 (3, 6, 7, 9)
+        function selectFillBlankTable(num) {
+            currentFBTable = num;
+
+            // 更新子頁籤按鈕樣式
+            document.querySelectorAll('.fb-sub-btn').forEach(btn => btn.classList.remove('active-fb'));
+            document.getElementById('fb-sub-' + num).classList.add('active-fb');
+
+            document.getElementById('fbTableTitle').innerText = `${num} 的乘法表 (填空挑戰)`;
+            initFillBlank(num);
+        }
+
+        // 初始化/生成指定數字的填空題型
+        function initFillBlank(num) {
+            document.getElementById('fillBlankScore').innerText = "-- / 100";
+            const tbody = document.getElementById('fillBlankTableBody');
+            tbody.innerHTML = '';
+
+            // 每次重新調用時，隨機產生 5 個乘數填空與 5 個積填空並進行洗牌，確保題目位置不重複
+            const randomPattern = [
+                'product', 'product', 'product', 'product', 'product',
+                'multiplier', 'multiplier', 'multiplier', 'multiplier', 'multiplier'
+            ].sort(() => Math.random() - 0.5);
+
+            fbPatterns[num] = randomPattern;
+
+            for (let i = 1; i <= 10; i++) {
+                const isBlankProduct = randomPattern[i - 1] === 'product';
+                const correctAns = isBlankProduct ? (num * i) : i;
+
+                let rowHtml = `
+                    <tr class="hover:bg-indigo-50/40 transition-colors">
+                        <td class="py-3 font-extrabold text-blue-600 text-base">${num}</td>
+                        <td class="py-3 text-gray-400 font-bold">×</td>
+                `;
+
+                if (!isBlankProduct) {
+                    // 乘數為填空框
+                    rowHtml += `
+                        <td class="py-3">
+                            <input type="number" id="fb-input-${i}" placeholder="?" class="w-16 h-9 border-2 border-amber-300 bg-amber-50 rounded-lg text-center font-extrabold text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all text-base shadow-inner" data-answer="${correctAns}">
+                        </td>
+                        <td class="py-3 text-gray-400 font-bold">=</td>
+                        <td class="py-3 font-extrabold text-red-600 text-base">${num * i}</td>
+                    `;
+                } else {
+                    // 積為填空框
+                    rowHtml += `
+                        <td class="py-3 font-extrabold text-purple-600 text-base">${i}</td>
+                        <td class="py-3 text-gray-400 font-bold">=</td>
+                        <td class="py-3">
+                            <input type="number" id="fb-input-${i}" placeholder="?" class="w-16 h-9 border-2 border-amber-300 bg-amber-50 rounded-lg text-center font-extrabold text-gray-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400 transition-all text-base shadow-inner" data-answer="${correctAns}">
+                        </td>
+                    `;
+                }
+
+                rowHtml += `
+                        <td class="py-3" id="fb-res-${i}">
+                            <span class="text-gray-300 font-bold">--</span>
+                        </td>
+                    </tr>
+                `;
+
+                tbody.innerHTML += rowHtml;
+            }
+        }
+
+        // 提交答案並進行批改
+        function checkFillBlank() {
+            let score = 0;
+            for (let i = 1; i <= 10; i++) {
+                const input = document.getElementById(`fb-input-${i}`);
+                const resTd = document.getElementById(`fb-res-${i}`);
+                const userVal = parseInt(input.value);
+                const correctVal = parseInt(input.dataset.answer);
+
+                if (!isNaN(userVal) && userVal === correctVal) {
+                    score += 10;
+                    resTd.innerHTML = `<span class="text-emerald-600 font-bold text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-circle-check"></i> 正確</span>`;
+                    input.classList.remove('border-amber-300', 'border-rose-400');
+                    input.classList.add('border-emerald-400', 'bg-emerald-50');
+                } else {
+                    resTd.innerHTML = `<span class="text-rose-600 font-bold text-xs flex items-center justify-center gap-1"><i class="fa-solid fa-circle-xmark"></i> 答錯 (${correctVal})</span>`;
+                    input.classList.remove('border-amber-300', 'border-emerald-400');
+                    input.classList.add('border-rose-400', 'bg-rose-50');
+                }
+            }
+
+            document.getElementById('fillBlankScore').innerText = `${score} / 100`;
+        }
+
+        // 重新挑戰（重置當前填空）
+        function resetFillBlank() {
+            initFillBlank(currentFBTable);
+        }
+
+        // 初始化乘法賓果遊戲
+        function initBingoGame() {
+            clearInterval(bingoTimerInterval);
+            bingoTimerInterval = null;
+            bingoTimeSeconds = 0;
+            bingoGameStarted = false;
+            bingoGameFinished = false;
+            currentBingoCard = null;
+
+            document.getElementById('bingoTimer').innerText = '⏱️ 00:00';
+            document.getElementById('bingoCardDisplay').innerText = '點擊抽卡';
+            document.getElementById('bingoLinesText').innerText = '目前連線：0 條';
+
+            // 隨機選取 3, 6, 7, 9 的積填入 4x4 賓果盤 (共16格)
+            const availableBases = [3, 6, 7, 9];
+            const productsSet = new Set();
+
+            // 蒐集所有合法的積
+            availableBases.forEach(b => {
+                for (let m = 1; m <= 10; m++) {
+                    productsSet.add(b * m);
+                }
+            });
+
+            // 轉陣列並洗牌
+            const shuffledProducts = Array.from(productsSet).sort(() => Math.random() - 0.5);
+            const gridValues = shuffledProducts.slice(0, 16);
+
+            bingoGrid = gridValues.map(num => ({
+                value: num,
+                matched: false
+            }));
+
+            renderBingoBoard();
+            renderBingoLeaderboard();
+        }
+
+        // 渲染 4x4 賓果盤
+        function renderBingoBoard() {
+            const board = document.getElementById('bingoBoard');
+            board.innerHTML = '';
+
+            bingoGrid.forEach((item, index) => {
+                const cellBtn = document.createElement('button');
+                cellBtn.onclick = () => clickBingoCell(index);
+
+                if (item.matched) {
+                    cellBtn.className = 'h-16 rounded-xl font-black text-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-md flex items-center justify-center transition-all scale-95 border-2 border-indigo-300';
+                    cellBtn.innerHTML = `<span>${item.value}</span> <i class="fa-solid fa-check ml-1 text-xs text-amber-300"></i>`;
+                } else {
+                    cellBtn.className = 'h-16 rounded-xl font-extrabold text-xl bg-indigo-50/70 hover:bg-indigo-100 text-indigo-900 border border-indigo-100 shadow-sm transition-all hover:scale-105 active:scale-95 flex items-center justify-center';
+                    cellBtn.innerText = item.value;
+                }
+
+                board.appendChild(cellBtn);
+            });
+        }
+
+        // 開始計時器
+        function startBingoTimer() {
+            if (bingoGameStarted) return;
+            bingoGameStarted = true;
+            bingoTimeSeconds = 0;
+            clearInterval(bingoTimerInterval);
+
+            bingoTimerInterval = setInterval(() => {
+                bingoTimeSeconds++;
+                const mins = String(Math.floor(bingoTimeSeconds / 60)).padStart(2, '0');
+                const secs = String(bingoTimeSeconds % 60).padStart(2, '0');
+                document.getElementById('bingoTimer').innerHTML = `<i class="fa-regular fa-clock mr-1"></i> ${mins}:${secs}`;
+            }, 1000);
+        }
+
+        // 抽取題目卡
+        function drawBingoCard() {
+            if (bingoGameFinished) return;
+            startBingoTimer();
+
+            const bases = [3, 6, 7, 9];
+            const base = bases[Math.floor(Math.random() * bases.length)];
+            const mult = Math.floor(Math.random() * 10) + 1;
+
+            currentBingoCard = {
+                base: base,
+                mult: mult,
+                product: base * mult
+            };
+
+            document.getElementById('bingoCardDisplay').innerText = `${base} × ${mult} = ?`;
+        }
+
+        // 點擊賓果格子
+        function clickBingoCell(index) {
+            if (!currentBingoCard) {
+                alert('請先點擊「抽取下一張題目卡」！');
+                return;
+            }
+
+            if (bingoGrid[index].matched) return;
+
+            const targetVal = bingoGrid[index].value;
+            if (targetVal === currentBingoCard.product) {
+                // 答對了
+                bingoGrid[index].matched = true;
+                renderBingoBoard();
+
+                // 計算連線數
+                const lines = countBingoLines();
+                document.getElementById('bingoLinesText').innerText = `目前連線：${lines} 條`;
+
+                if (lines >= 1 && !bingoGameFinished) {
+                    bingoGameFinished = true;
+                    clearInterval(bingoTimerInterval);
+
+                    const mins = String(Math.floor(bingoTimeSeconds / 60)).padStart(2, '0');
+                    const secs = String(bingoTimeSeconds % 60).padStart(2, '0');
+                    const timeStr = `${mins}:${secs}`;
+
+                    // 記錄至排行榜
+                    saveBingoRecord(timeStr, bingoTimeSeconds);
+
+                    setTimeout(() => {
+                        alert(`🎉 恭喜！您成功達成連線，完成時間為 ${timeStr}！`);
+                    }, 200);
+                } else {
+                    // 自動抽下一張
+                    drawBingoCard();
+                }
+            } else {
+                // 答錯提示
+                alert(`答錯囉！ ${currentBingoCard.base} × ${currentBingoCard.mult} = ${currentBingoCard.product}，賓果盤上的 ${targetVal} 不對喔！`);
+            }
+        }
+
+        // 計算賓果連線數
+        function countBingoLines() {
+            let lines = 0;
+            // 橫列
+            for (let r = 0; r < 4; r++) {
+                if (bingoGrid[r * 4].matched && bingoGrid[r * 4 + 1].matched && bingoGrid[r * 4 + 2].matched && bingoGrid[r * 4 + 3].matched) lines++;
+            }
+            // 直行
+            for (let c = 0; c < 4; c++) {
+                if (bingoGrid[c].matched && bingoGrid[c + 4].matched && bingoGrid[c + 8].matched && bingoGrid[c + 12].matched) lines++;
+            }
+            // 斜線
+            if (bingoGrid[0].matched && bingoGrid[5].matched && bingoGrid[10].matched && bingoGrid[15].matched) lines++;
+            if (bingoGrid[3].matched && bingoGrid[6].matched && bingoGrid[9].matched && bingoGrid[12].matched) lines++;
+
+            return lines;
+        }
+
+        // 保存排行榜紀錄
+        function saveBingoRecord(timeStr, seconds) {
+            bingoLeaderboardData.push({ timeStr, seconds });
+            bingoLeaderboardData.sort((a, b) => a.seconds - b.seconds);
+            bingoLeaderboardData = bingoLeaderboardData.slice(0, 5); // 取前 5 名
+            renderBingoLeaderboard();
+        }
+
+        // 渲染排行榜
+        function renderBingoLeaderboard() {
+            const container = document.getElementById('bingoLeaderboard');
+            if (bingoLeaderboardData.length === 0) {
+                container.innerHTML = `尚無連線紀錄<br>快來挑戰排行榜！`;
+                return;
+            }
+
+            const badges = ['🥇', '🥈', '🥉', '4th', '5th'];
+            container.innerHTML = bingoLeaderboardData.map((item, idx) => `
+                <div class="flex justify-between items-center p-2 rounded-lg bg-indigo-50/60 font-bold text-gray-700">
+                    <span class="flex items-center gap-1.5"><span class="text-sm">${badges[idx]}</span> 第 ${idx + 1} 名</span>
+                    <span class="font-mono text-indigo-600">${item.timeStr}</span>
+                </div>
+            `).join('');
+        }
+
+        // 清除排行榜
+        function clearBingoLeaderboard() {
+            bingoLeaderboardData = [];
+            renderBingoLeaderboard();
+        }
+
+        // 重置賓果盤
+        function resetBingoGame() {
+            initBingoGame();
+        }
+
+        // 初始化/切換乘法星環
+        function selectRingNum(num) {
+            currentRingNum = num;
+            renderStarRing(num);
+        }
+
+        // 渲染乘法星環圖陣 (SVG)
+        function renderStarRing(num) {
+            // 更新 2~9 按鈕列表
+            const btnsContainer = document.getElementById('ringNumBtns');
+            btnsContainer.innerHTML = '';
+            for (let n = 2; n <= 9; n++) {
+                const isActive = n === num;
+                const activeStyle = isActive 
+                    ? 'bg-purple-600 text-white font-extrabold shadow-md scale-105' 
+                    : 'bg-purple-50 text-purple-800 hover:bg-purple-100 font-bold';
+                btnsContainer.innerHTML += `
+                    <button onclick="selectRingNum(${n})" class="py-2 px-1 rounded-xl text-xs transition-all ${activeStyle}">
+                        ${n} 的乘法
+                    </button>
+                `;
+            }
+
+            // 計算 1~10 的個位數字變化序列
+            const seq = [];
+            for (let i = 1; i <= 10; i++) {
+                seq.push((num * i) % 10);
+            }
+
+            // 更新下方規律說明
+            document.getElementById('ringTitleText').innerText = `【 ${num} 的乘法星環規律 】`;
+            document.getElementById('ringSeqText').innerText = `個位數變化：` + seq.join(' → ');
+
+            // 繪製 SVG 圓點與連線
+            const svg = document.getElementById('ringSvg');
+            const CX = 200, CY = 200, R = 140;
+
+            // 計算 0~9 個節點座標 (0 在頂端，順時針排列)
+            const nodeCoords = {};
+            for (let d = 0; d < 10; d++) {
+                const angle = -Math.PI / 2 + (d * (2 * Math.PI / 10));
+                nodeCoords[d] = {
+                    x: CX + R * Math.cos(angle),
+                    y: CY + R * Math.sin(angle)
+                };
+            }
+
+            // 構建 SVG 內容
+            let svgContent = `
+                <defs>
+                    <linearGradient id="lineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#3B82F6" />
+                        <stop offset="50%" stop-color="#8B5CF6" />
+                        <stop offset="100%" stop-color="#06B6D4" />
+                    </linearGradient>
+                </defs>
+
+                <!-- 外圈圓環 -->
+                <circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="#C084FC" stroke-width="4" opacity="0.8" />
+            `;
+
+            // 構建幾何連線點路徑 (1~10 依序連接)
+            let pathPoints = [];
+            seq.forEach(val => {
+                const pt = nodeCoords[val];
+                pathPoints.push(`${pt.x},${pt.y}`);
+            });
+
+            svgContent += `
+                <polyline points="${pathPoints.join(' ')}" fill="none" stroke="url(#lineGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+            `;
+
+            // 繪製 0~9 的節點與數字標籤
+            for (let d = 0; d < 10; d++) {
+                const pt = nodeCoords[d];
+                // 計算標籤文字向外位移
+                const labelAngle = -Math.PI / 2 + (d * (2 * Math.PI / 10));
+                const labelX = CX + (R + 24) * Math.cos(labelAngle);
+                const labelY = CY + (R + 24) * Math.sin(labelAngle);
+
+                // 是否為當前序列包含的起始點
+                const isCurrentSeqStart = seq[0] === d;
+
+                svgContent += `
+                    <!-- 節點外圈 -->
+                    <circle cx="${pt.x}" cy="${pt.y}" r="${isCurrentSeqStart ? '8' : '6'}" fill="${isCurrentSeqStart ? '#E11D48' : '#7C3AED'}" stroke="#FFFFFF" stroke-width="2" />
+                    <!-- 數字標籤 -->
+                    <text x="${labelX}" y="${labelY}" text-anchor="middle" dominant-baseline="central" font-weight="800" font-size="16" fill="#334155">${d}</text>
+                `;
+            }
+
+            svg.innerHTML = svgContent;
+        }
+
+        // 頁面初始化
+        window.onload = function() {
+            updateTab3(5);
+            updateTab6(4);
+            updateTab7(3);
+            updateTab9(2);
+            renderMarket();
+            initFillBlank(3);
+            initBingoGame();
+            selectRingNum(3);
+        };
+    </script>
+</body>
+</html>

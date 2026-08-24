@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國小數學二上 - 加減應用與驗算互動探索網頁</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 35%, #312e81 65%, #4c1d95 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* 新海誠天空雲彩與星光背景效果 */
+        .shinkai-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.25) 0%, transparent 40%),
+                radial-gradient(circle at 80% 30%, rgba(244, 114, 182, 0.2) 0%, transparent 45%),
+                radial-gradient(circle at 50% 80%, rgba(129, 140, 248, 0.2) 0%, transparent 50%);
+        }
+
+        /* 磨砂玻璃卡片 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.35);
+            color: #1e293b;
+        }
+
+        .glass-card-dark {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* 標準直式分數 CSS (符合規範要求) */
+        .math-fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.9em;
+            margin: 0 4px;
+        }
+        .math-fraction .numerator {
+            border-bottom: 2px solid currentColor;
+            padding: 0 4px;
+            line-height: 1.1;
+        }
+        .math-fraction .denominator {
+            padding: 0 4px;
+            line-height: 1.1;
+        }
+
+        /* 燈泡微光動畫 */
+        @keyframes bulb-glow {
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.8)); }
+            50% { filter: drop-shadow(0 0 15px rgba(250, 204, 21, 1)); }
+        }
+        .glowing-bulb-yellow {
+            animation: bulb-glow 2s infinite ease-in-out;
+        }
+
+        @keyframes green-glow {
+            0%, 100% { filter: drop-shadow(0 0 6px rgba(74, 222, 128, 0.8)); }
+            50% { filter: drop-shadow(0 0 15px rgba(74, 222, 128, 1)); }
+        }
+        .glowing-bulb-green {
+            animation: green-glow 2s infinite ease-in-out;
+        }
+
+        /* Tab 按鈕樣式 */
+        .tab-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .tab-btn.active {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+        }
+
+        /* 直式計算格式 */
+        .vertical-math {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1.8rem;
+            letter-spacing: 0.25rem;
+        }
+    </style>
+</head>
+<body class="p-2 md:p-6 relative">
+    <div class="shinkai-bg"></div>
+
+    <div class="max-w-6xl mx-auto relative z-10">
+        <!-- 網頁標題區域 -->
+        <header class="text-center my-6">
+            <div class="inline-block px-4 py-1.5 rounded-full bg-sky-500/20 border border-sky-300/30 text-sky-200 text-sm font-semibold mb-3 tracking-wider">
+                <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>國小二上數學 (四) 互動學習網頁
+            </div>
+            <h1 class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-200 via-pink-200 to-amber-200 tracking-wide drop-shadow-md">
+                加減應用與驗算互動探索樂園
+            </h1>
+            <p class="text-sky-200/80 text-sm md:text-base mt-2 max-w-2xl mx-auto">
+                透過拖曳、動態操作與視覺化線段圖，輕鬆掌握「部分與整體」及加減互逆關係！
+            </p>
+        </header>
+
+        <!-- 頁籤導覽系統 -->
+        <nav class="flex flex-wrap justify-center gap-2 md:gap-4 mb-8 bg-slate-900/60 p-2 rounded-2xl border border-white/10 backdrop-blur-md">
+            <button onclick="switchTab('tab1')" id="btn-tab1" class="tab-btn active px-4 py-2.5 rounded-xl text-sm md:text-base font-bold flex items-center gap-2">
+                <i class="fa-solid fa-lightbulb"></i> 1. 藝術燈與部分-整體
+            </button>
+            <button onclick="switchTab('tab2')" id="btn-tab2" class="tab-btn px-4 py-2.5 rounded-xl text-sm md:text-base font-bold text-slate-300 hover:text-white flex items-center gap-2">
+                <i class="fa-solid fa-chart-line"></i> 2. 線段圖與未知數
+            </button>
+            <button onclick="switchTab('tab3')" id="btn-tab3" class="tab-btn px-4 py-2.5 rounded-xl text-sm md:text-base font-bold text-slate-300 hover:text-white flex items-center gap-2">
+                <i class="fa-solid fa-calculator"></i> 3. 直式與加法驗算
+            </button>
+            <button onclick="switchTab('tab4')" id="btn-tab4" class="tab-btn px-4 py-2.5 rounded-xl text-sm md:text-base font-bold text-slate-300 hover:text-white flex items-center gap-2">
+                <i class="fa-solid fa-trophy"></i> 4. 自我挑戰
+            </button>
+        </nav>
+
+        <!-- 主體內容區塊 -->
+        <main>
+            <!-- TAB 1: 藝術燈與部分-整體 -->
+            <section id="tab1" class="tab-content block">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- 控制面板 -->
+                    <div class="lg:col-span-5 glass-card rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 border-b border-slate-200 pb-3 mb-4">
+                                <span class="w-10 h-10 rounded-2xl bg-amber-500/20 text-amber-600 font-bold flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-sliders"></i>
+                                </span>
+                                <div>
+                                    <h2 class="text-xl font-bold text-slate-800">車站前藝術燈探索</h2>
+                                    <p class="text-xs text-slate-500">調整燈泡數量，觀察總數與部分的變化</p>
+                                </div>
+                            </div>
+
+                            <!-- 黃燈滑桿 -->
+                            <div class="mb-6 bg-amber-50/60 p-4 rounded-2xl border border-amber-200/60">
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="font-bold text-amber-800 flex items-center gap-2">
+                                        <i class="fa-solid fa-circle text-amber-400"></i> 黃燈泡 (部分 A)
+                                    </label>
+                                    <span id="yellowVal" class="text-2xl font-black text-amber-600">7</span>
+                                </div>
+                                <input type="range" id="yellowSlider" min="1" max="15" value="7" class="w-full h-2.5 bg-amber-200 rounded-lg appearance-none cursor-pointer accent-amber-500" oninput="updateLampApp()">
+                            </div>
+
+                            <!-- 綠燈滑桿 -->
+                            <div class="mb-6 bg-emerald-50/60 p-4 rounded-2xl border border-emerald-200/60">
+                                <div class="flex justify-between items-center mb-2">
+                                    <label class="font-bold text-emerald-800 flex items-center gap-2">
+                                        <i class="fa-solid fa-circle text-emerald-400"></i> 綠燈泡 (部分 B)
+                                    </label>
+                                    <span id="greenVal" class="text-2xl font-black text-emerald-600">6</span>
+                                </div>
+                                <input type="range" id="greenSlider" min="1" max="15" value="6" class="w-full h-2.5 bg-emerald-200 rounded-lg appearance-none cursor-pointer accent-emerald-500" oninput="updateLampApp()">
+                            </div>
+
+                            <!-- 燈泡開關控制 -->
+                            <div class="grid grid-cols-2 gap-3 mb-2">
+                                <button id="toggleYellowBtn" onclick="toggleYellowLights()" class="py-2.5 px-4 rounded-xl bg-amber-500 text-white font-bold text-sm shadow-md hover:bg-amber-600 transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-power-off"></i> 切換黃燈狀態
+                                </button>
+                                <button id="toggleGreenBtn" onclick="toggleGreenLights()" class="py-2.5 px-4 rounded-xl bg-emerald-500 text-white font-bold text-sm shadow-md hover:bg-emerald-600 transition flex items-center justify-center gap-2">
+                                    <i class="fa-solid fa-power-off"></i> 切換綠燈狀態
+                                </button>
+                            </div>
+                            
+                            <!-- 點亮全部燈泡按鈕 -->
+                            <button id="resetAllLightsBtn" onclick="resetAllLights()" class="w-full py-2.5 px-4 mb-3 rounded-xl bg-indigo-600 text-white font-bold text-sm shadow-md hover:bg-indigo-700 transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-lightbulb"></i> 點亮全部燈泡
+                            </button>
+
+                            <!-- 關係數學式 (已移至點亮全部燈泡按鈕正下方) -->
+                            <div class="bg-indigo-950/90 text-white p-3.5 rounded-2xl mt-2 border border-indigo-300/30 shadow-lg">
+                                <p class="text-xs text-sky-300 font-bold tracking-wider mb-2">加減互逆邏輯觀測：</p>
+                                <div id="lampLogicObsBox" class="space-y-1.5">
+                                    <!-- 由 JS 動態依燈泡狀態切換主標註算式 -->
+                                </div>
+                            </div>
+
+                            <!-- 學習小錦囊 (觀念總結，已移動至左側控制面板) -->
+                            <div class="mt-3 p-3 bg-amber-50 rounded-xl border border-amber-200/80 text-xs text-amber-900 flex items-start gap-2.5">
+                                <i class="fa-solid fa-lightbulb text-amber-500 text-lg mt-0.5"></i>
+                                <div>
+                                    <span class="font-bold">觀念總結：</span> 
+                                    全部的燈泡 (整體) = 黃燈泡 (部分) + 綠燈泡 (部分)。當我們扣除其中一部份，就能求出另一個部分！
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 視覺畫布與動態線段圖 -->
+                    <div class="lg:col-span-7 glass-card rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-eye text-sky-500"></i> 動態藝術燈與「部分-整體」線段圖
+                            </h3>
+                            <p class="text-xs text-slate-500 mb-4">黃燈與綠燈合起來是全部，關掉其中一種顏色就能得到另一種顏色。</p>
+                            
+                            <!-- 藝術燈視覺呈現區 -->
+                            <div class="relative bg-slate-900 rounded-2xl p-4 h-56 flex items-center justify-center border border-slate-700/60 overflow-hidden shadow-inner">
+                                <div id="lampContainer" class="flex flex-wrap justify-center items-center gap-3 max-w-md max-h-48 overflow-y-auto p-2">
+                                    <!-- 由 JavaScript 動態生成燈泡 -->
+                                </div>
+                            </div>
+
+                            <!-- 動態 SVG 線段圖 -->
+                            <div class="mt-6 bg-slate-100 p-4 rounded-2xl border border-slate-200">
+                                <p class="text-xs font-bold text-slate-600 mb-2"><i class="fa-solid fa-ruler-horizontal mr-1"></i> 部分 - 整體 線段圖 (Part-Part-Whole Segment)</p>
+                                <svg id="lampSegmentSVG" class="w-full h-24" viewBox="0 0 500 100">
+                                    <!-- 由 JS 動態繪製 SVG -->
+                                </svg>
+                            </div>
+
+                            <!-- 三個數之間的加減互逆關係 (位於線段圖下方) -->
+                            <div class="mt-4 bg-slate-100/80 p-4 rounded-2xl border border-slate-200">
+                                <p class="text-xs font-bold text-slate-700 mb-3 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-rotate text-sky-500"></i> 三個數之間的加減互逆關係：
+                                </p>
+                                <div class="space-y-2.5">
+                                    <!-- 加法卡片 (藍色系，答案紅色) -->
+                                    <div class="p-3 rounded-xl bg-sky-50 border border-sky-300 flex items-center justify-between text-sky-900 font-bold text-sm shadow-sm">
+                                        <span class="flex items-center gap-1.5 text-sky-800">
+                                            <i class="fa-solid fa-plus text-sky-500"></i> 合起來 (加法):
+                                        </span>
+                                        <span id="inverseAddFormula" class="text-base font-black text-sky-900 font-mono">7 + 6 = <span class="text-red-600">13</span></span>
+                                    </div>
+                                    <!-- 關掉黃燈減法卡片 (黃色系，答案紅色) -->
+                                    <div class="p-3 rounded-xl bg-amber-50 border border-amber-300 flex items-center justify-between text-amber-900 font-bold text-sm shadow-sm">
+                                        <span class="flex items-center gap-1.5 text-amber-800">
+                                            <i class="fa-solid fa-minus text-amber-500"></i> 關掉黃燈 (減法):
+                                        </span>
+                                        <span id="inverseSubYellowFormula" class="text-base font-black text-amber-900 font-mono">13 - 7 = <span class="text-red-600">6</span></span>
+                                    </div>
+                                    <!-- 關掉綠燈減法卡片 (綠色系，答案紅色) -->
+                                    <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-300 flex items-center justify-between text-emerald-900 font-bold text-sm shadow-sm">
+                                        <span class="flex items-center gap-1.5 text-emerald-800">
+                                            <i class="fa-solid fa-minus text-emerald-500"></i> 關掉綠燈 (減法):
+                                        </span>
+                                        <span id="inverseSubGreenFormula" class="text-base font-black text-emerald-900 font-mono">13 - 6 = <span class="text-red-600">7</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: 線段圖與未知數探究 -->
+            <section id="tab2" class="tab-content hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- 情境選擇與參數設定 -->
+                    <div class="lg:col-span-5 glass-card rounded-3xl p-6">
+                        <div class="flex items-center gap-3 border-b border-slate-200 pb-3 mb-4">
+                            <span class="w-10 h-10 rounded-2xl bg-sky-500/20 text-sky-600 font-bold flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-puzzle-piece"></i>
+                            </span>
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">未知數算式 ( ) 解密</h2>
+                                <p class="text-xs text-slate-500">選擇課本經典情境，體驗依題意列式與解題</p>
+                            </div>
+                        </div>
+
+                        <!-- 課本經典題目切換 -->
+                        <div class="space-y-2 mb-6">
+                            <label class="text-xs font-bold text-slate-600">選擇教學情境案例：</label>
+                            <button onclick="loadScenario(1)" id="scenBtn1" class="w-full text-left p-3 rounded-xl border-2 border-sky-400 bg-sky-50 text-sky-900 font-bold text-sm transition hover:shadow-md flex items-center justify-between">
+                                <span>1. 烤紅豆餅與奶油餅 (加數未知)</span>
+                                <i class="fa-solid fa-angle-right"></i>
+                            </button>
+                            <button onclick="loadScenario(2)" id="scenBtn2" class="w-full text-left p-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm transition flex items-center justify-between">
+                                <span>2. 圖書館借書/進來人數 (加數未知)</span>
+                                <i class="fa-solid fa-angle-right"></i>
+                            </button>
+                            <button onclick="loadScenario(3)" id="scenBtn3" class="w-full text-left p-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm transition flex items-center justify-between">
+                                <span>3. 鳳梨酥賣出一些 (減數未知)</span>
+                                <i class="fa-solid fa-angle-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- 滑桿互動區域 -->
+                        <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4">
+                            <div>
+                                <div class="flex justify-between items-center text-xs font-bold text-slate-600 mb-1">
+                                    <span id="param1Label">已知數量 A：</span>
+                                    <span id="param1Val" class="text-base text-sky-600 font-black">15</span>
+                                </div>
+                                <input type="range" id="param1Slider" min="5" max="50" value="15" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-sky-500" oninput="updateScenarioUI()">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between items-center text-xs font-bold text-slate-600 mb-1">
+                                    <span id="param2Label">總數量 / 扣除後：</span>
+                                    <span id="param2Val" class="text-base text-indigo-600 font-black">27</span>
+                                </div>
+                                <input type="range" id="param2Slider" min="20" max="90" value="27" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-500" oninput="updateScenarioUI()">
+                            </div>
+                        </div>
+
+                        <!-- 題目敘述動態展現 -->
+                        <div class="mt-4 p-4 bg-amber-50/80 rounded-2xl border border-amber-200 text-slate-800">
+                            <span class="inline-block px-2 py-0.5 rounded bg-amber-200 text-amber-800 text-xs font-bold mb-1">題目故事</span>
+                            <p id="scenarioStory" class="text-sm leading-relaxed font-medium">
+                                師傅做了 15 個紅豆餅和一些奶油餅，合起來有 27 個。師傅做了幾個奶油餅？
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 右側：線段圖繪製與算式變換 -->
+                    <div class="lg:col-span-7 glass-card rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-800 mb-1 flex items-center gap-2">
+                                <i class="fa-solid fa-diagram-project text-indigo-500"></i> 線段圖表徵與算式轉換
+                            </h3>
+                            <p class="text-xs text-slate-500 mb-4">透過線段圖釐清題意，將有 ( ) 的算式轉化為減法算式</p>
+
+                            <!-- SVG 線段圖 -->
+                            <div class="bg-slate-900 rounded-2xl p-4 border border-slate-800 shadow-inner">
+                                <svg id="scenarioSVG" class="w-full h-36" viewBox="0 0 500 140">
+                                    <!-- 由 JS 動態繪製 -->
+                                </svg>
+                            </div>
+
+                            <!-- 算式推導卡片 -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                                <div class="p-4 rounded-2xl bg-sky-50 border border-sky-200 text-center">
+                                    <span class="text-xs font-bold text-sky-700 block mb-1">步驟 1：依題意記錄問題 (直譯)</span>
+                                    <div id="equationDirect" class="text-xl font-black text-sky-900 font-mono">
+                                        15 + ( ) = 27
+                                    </div>
+                                    <p class="text-xs text-sky-600 mt-1" id="directExplain">用 ( ) 表示不知道的數量</p>
+                                </div>
+
+                                <div class="p-4 rounded-2xl bg-indigo-50 border border-indigo-200 text-center">
+                                    <span class="text-xs font-bold text-indigo-700 block mb-1">步驟 2：利用加減互逆解題 (轉譯)</span>
+                                    <div id="equationSolved" class="text-xl font-black text-indigo-900 font-mono">
+                                        27 - 15 = 12
+                                    </div>
+                                    <p class="text-xs text-indigo-600 mt-1" id="solveExplain">用「全部 - 已知」算答案</p>
+                                </div>
+                            </div>
+
+                            <!-- 直式求解與答案顯示區塊 (右移答案卡，左側新增直式求解) -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 items-stretch">
+                                <!-- 直式求解卡片 (含退位紅字與劃線) -->
+                                <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-center flex flex-col justify-center items-center shadow-sm">
+                                    <span class="text-xs font-bold text-slate-600 block mb-2"><i class="fa-solid fa-calculator text-indigo-500 mr-1"></i>步驟 2 直式求解 (減法)</span>
+                                    
+                                    <!-- 採用三欄對齊網格，加大間距並加入「十」、「個」位數標籤 -->
+                                    <div class="inline-block font-mono text-xl font-bold text-slate-800">
+                                        <!-- 位數標頭 (十位、個位) -->
+                                        <div class="grid grid-cols-3 gap-4 text-center text-xs font-extrabold text-slate-400 mb-1 border-b border-slate-200 pb-0.5">
+                                            <span></span>
+                                            <span class="w-8">十</span>
+                                            <span class="w-8">個</span>
+                                        </div>
+                                        <!-- 退位補值標記列 -->
+                                        <div id="scenBorrowRow" class="grid grid-cols-3 gap-4 text-center text-xs font-bold h-5 leading-none">
+                                            <!-- JS 動態填入 -->
+                                        </div>
+                                        <!-- 被減數列 (退位時十位加刪除線) -->
+                                        <div id="scenMinuendRow" class="grid grid-cols-3 gap-4 text-center mb-0.5">
+                                            <!-- JS 動態填入 -->
+                                        </div>
+                                        <!-- 減數列 -->
+                                        <div id="scenSubtrahendRow" class="grid grid-cols-3 gap-4 text-center border-b-2 border-slate-700 pb-1 mb-1">
+                                            <!-- JS 動態填入 -->
+                                        </div>
+                                        <!-- 計算結果列 (改為綠色顯示) -->
+                                        <div id="scenResultVal" class="grid grid-cols-3 gap-4 text-center text-emerald-600 font-black">
+                                            <!-- JS 動態填入 -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- 右側：揭曉按鈕 + 答案顯示卡片區塊 -->
+                                <div class="flex flex-col gap-3 justify-between">
+                                    <!-- 新增揭曉按鈕 -->
+                                    <button id="revealAnsBtn" onclick="toggleRevealAnswer()" class="w-full py-3 px-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-eye" id="revealBtnIcon"></i> <span id="revealBtnText">揭曉括號 ( ? ) 中的答案</span>
+                                    </button>
+
+                                    <!-- 答案顯示卡片 (往下移動) -->
+                                    <div class="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 flex flex-col justify-center shadow-sm flex-1">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xl font-bold shrink-0">
+                                                <i class="fa-solid fa-check"></i>
+                                            </div>
+                                            <div>
+                                                <div class="text-xs text-emerald-700 font-bold">括號 ( ) 裡的答案</div>
+                                                <div id="finalAnswerText" class="text-base md:text-lg font-black text-emerald-900">答：( ？ )</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: 直式與加法驗算 -->
+            <section id="tab3" class="tab-content hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- 減法計算與輸入面板 -->
+                    <div class="lg:col-span-6 glass-card rounded-3xl p-6">
+                        <div class="flex items-center gap-3 border-b border-slate-200 pb-3 mb-4">
+                            <span class="w-10 h-10 rounded-2xl bg-purple-500/20 text-purple-600 font-bold flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-calculator"></i>
+                            </span>
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">直式減法計算機</h2>
+                                <p class="text-xs text-slate-500">輸入兩數，觀察減法直式與退位過程</p>
+                            </div>
+                        </div>
+
+                        <!-- 數字輸入區 (被減數藍色，減數橙色) -->
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-xs font-bold text-sky-600 mb-1">被減數 (全部)</label>
+                                <input type="number" id="numA" value="62" min="10" max="99" class="w-full p-2.5 rounded-xl border border-sky-300 font-bold text-sky-600 focus:ring-2 focus:ring-sky-400 outline-none" oninput="updateVerticalMath()">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-amber-600 mb-1">減數 (拿走/部分)</label>
+                                <input type="number" id="numB" value="35" min="1" max="99" class="w-full p-2.5 rounded-xl border border-amber-300 font-bold text-amber-600 focus:ring-2 focus:ring-amber-400 outline-none" oninput="updateVerticalMath()">
+                            </div>
+                        </div>
+
+                        <!-- 直式減法板展示 -->
+                        <div class="bg-slate-900 rounded-2xl p-6 text-white border border-slate-700 shadow-xl flex flex-col items-center">
+                            <span class="text-xs text-purple-300 font-bold mb-4 tracking-wider"><i class="fa-solid fa-minus mr-1"></i> 減法直式計算 (Subtraction)</span>
+                            
+                            <!-- 三欄對齊網格，含「十」、「個」位數標籤 -->
+                            <div class="inline-block font-mono text-xl font-bold text-slate-100">
+                                <!-- 位數標頭 (十位、個位) -->
+                                <div class="grid grid-cols-3 gap-4 text-center text-xs font-extrabold text-slate-400 mb-1 border-b border-slate-700 pb-0.5">
+                                    <span></span>
+                                    <span class="w-8">十</span>
+                                    <span class="w-8">個</span>
+                                </div>
+                                <!-- 退位補值標記列 -->
+                                <div id="borrowRow" class="grid grid-cols-3 gap-4 text-center text-xs font-bold h-5 leading-none">
+                                    <!-- JS 動態填入 -->
+                                </div>
+                                <!-- 被減數列 (藍色字體，退位時十位加紅色刪除線) -->
+                                <div id="vNumA" class="grid grid-cols-3 gap-4 text-center mb-0.5 text-sky-300">
+                                    <!-- JS 動態填入 -->
+                                </div>
+                                <!-- 減數列 (粉紅色字體) -->
+                                <div id="vNumB" class="grid grid-cols-3 gap-4 text-center border-b-2 border-white/80 pb-1 mb-1 text-pink-400">
+                                    <!-- JS 動態填入 -->
+                                </div>
+                                <!-- 計算結果列 (綠色字體) -->
+                                <div id="vResultSub" class="grid grid-cols-3 gap-4 text-center text-emerald-400 font-black">
+                                    <!-- JS 動態填入 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 右側：加法驗算面板 -->
+                    <div class="lg:col-span-6 glass-card rounded-3xl p-6 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-3 border-b border-slate-200 pb-3 mb-4">
+                                <span class="w-10 h-10 rounded-2xl bg-emerald-500/20 text-emerald-600 font-bold flex items-center justify-center text-xl">
+                                    <i class="fa-solid fa-square-check"></i>
+                                </span>
+                                <div>
+                                    <h2 class="text-xl font-bold text-slate-800">用加法驗算減法</h2>
+                                    <p class="text-xs text-slate-500">「剩下的 + 拿走的 = 原有的」證明算對了！</p>
+                                </div>
+                            </div>
+
+                            <!-- 驗算說明口訣 -->
+                            <div class="p-3 bg-purple-50 rounded-xl border border-purple-200 text-xs text-purple-900 mb-6 flex items-center gap-2">
+                                <i class="fa-solid fa-comment-dots text-purple-500 text-base"></i>
+                                <div><strong>驗算秘訣：</strong> 把算出的答案 (差) 加回減去的數，若等於原來的數 (被減數)，代表完全算對！</div>
+                            </div>
+
+                            <!-- 加法驗算直式展示 -->
+                            <div class="bg-slate-900 rounded-2xl p-6 text-white border border-slate-700 shadow-xl flex flex-col items-center">
+                                <span class="text-xs text-emerald-300 font-bold mb-4 tracking-wider"><i class="fa-solid fa-rotate-left mr-1"></i> 加法驗算直式 (Addition Check)</span>
+                                
+                                <!-- 三欄對齊網格，含「十」、「個」位數標籤 -->
+                                <div class="inline-block font-mono text-xl font-bold text-slate-100">
+                                    <!-- 位數標頭 (十位、個位) -->
+                                    <div class="grid grid-cols-3 gap-4 text-center text-xs font-extrabold text-slate-400 mb-1 border-b border-slate-700 pb-0.5">
+                                        <span></span>
+                                        <span class="w-8">十</span>
+                                        <span class="w-8">個</span>
+                                    </div>
+                                    <!-- 補白列 (保持垂直高度一致) -->
+                                    <div class="grid grid-cols-3 gap-4 text-center text-xs font-bold h-5 leading-none">
+                                        <span></span><span class="w-8"></span><span class="w-8"></span>
+                                    </div>
+                                    <!-- 差 (綠色字體) -->
+                                    <div id="vAnsCopy" class="grid grid-cols-3 gap-4 text-center mb-0.5 text-emerald-400">
+                                        <!-- JS 動態填入 -->
+                                    </div>
+                                    <!-- 減數 (粉紅色字體，帶加號 +) -->
+                                    <div id="vSubCopy" class="grid grid-cols-3 gap-4 text-center border-b-2 border-white/80 pb-1 mb-1 text-pink-400">
+                                        <!-- JS 動態填入 -->
+                                    </div>
+                                    <!-- 原被減數 (藍色字體) -->
+                                    <div id="vCheckResult" class="grid grid-cols-3 gap-4 text-center text-sky-300 font-black">
+                                        <!-- JS 動態填入 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 驗算結果證明條 -->
+                        <div id="verifySuccessBadge" class="mt-6 p-4 rounded-2xl bg-emerald-100 border border-emerald-300 text-emerald-900 flex items-center gap-3">
+                            <i class="fa-solid fa-circle-check text-2xl text-emerald-600"></i>
+                            <div>
+                                <div class="font-bold text-sm">驗算結果正確 (62 = 62)</div>
+                                <div class="text-xs text-emerald-700">用不同的計算方式檢查，確認計算沒有錯誤！</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: 自我挑戰 -->
+            <section id="tab4" class="tab-content hidden">
+                <div class="glass-card rounded-3xl p-6 md:p-8 max-w-4xl mx-auto">
+                    <!-- 評量頂部狀態標頭 -->
+                    <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-200 pb-4 mb-6 gap-4">
+                        <div>
+                            <span class="px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold">學習評量</span>
+                            <h2 class="text-2xl font-black text-slate-800 mt-1">自我挑戰</h2>
+                        </div>
+                        <div class="flex items-center gap-4 bg-slate-100 px-4 py-2 rounded-2xl border border-slate-200">
+                            <div class="text-xs text-slate-500">
+                                當前得分：<span id="quizScore" class="text-xl font-black text-sky-600">0</span> / 100
+                            </div>
+                            <div class="text-xs text-slate-500">
+                                進度：<span id="quizProgress" class="text-base font-bold text-slate-700">1 / 5</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 測驗題目容器 -->
+                    <div id="quizContainer">
+                        <!-- 由 JavaScript 動態繪製題目內容 -->
+                    </div>
+
+                    <!-- 測驗結論與重新測驗彈窗/卡片 -->
+                    <div id="quizSummary" class="hidden text-center py-6">
+                        <div class="w-20 h-20 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center text-4xl mx-auto mb-4 animate-bounce">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <h3 class="text-2xl font-black text-slate-800">恭喜完成加減應用挑戰！</h3>
+                        <p class="text-slate-600 mt-2 text-sm" id="summaryComment">你的表現太棒了，已經完全掌握了部分與整體的觀念！</p>
+                        <div class="text-4xl font-black text-sky-600 my-4" id="finalScoreText">100 分</div>
+
+                        <!-- 各題作答結果明細 -->
+                        <div class="my-6 text-left max-w-md mx-auto space-y-2" id="quizResultsList">
+                            <!-- 由 JS 動態繪製作答明細 -->
+                        </div>
+
+                        <button onclick="resetQuiz()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-sky-500 to-indigo-600 text-white font-bold shadow-lg hover:opacity-90 transition">
+                            <i class="fa-solid fa-rotate-right mr-2"></i> 重新測驗
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 頁尾 -->
+        <footer class="text-center my-8">
+        </footer>
+    </div>
+
+    <script>
+        // 全域狀態控制
+        let currentTab = 'tab1';
+        let scenarioRevealed = false; // 新增：未知數答案與直式揭曉狀態
+
+        // 頁籤切換邏輯
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('text-slate-300');
+            });
+
+            document.getElementById(tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('btn-' + tabId);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('text-slate-300');
+
+            // 重新繪製目前頁籤圖形
+            if (tabId === 'tab1') updateLampApp();
+            if (tabId === 'tab2') {
+                scenarioRevealed = false;
+                updateScenarioUI();
+            }
+            if (tabId === 'tab3') updateVerticalMath();
+        }
+
+        // ================= Tab 1: 藝術燈邏輯 =================
+        let yellowOn = true;
+        let greenOn = true;
+
+        // 點亮全部燈泡功能
+        function resetAllLights() {
+            yellowOn = true;
+            greenOn = true;
+            
+            const btnY = document.getElementById('toggleYellowBtn');
+            btnY.classList.remove('bg-slate-500');
+            btnY.classList.add('bg-amber-500');
+            
+            const btnG = document.getElementById('toggleGreenBtn');
+            btnG.classList.remove('bg-slate-500');
+            btnG.classList.add('bg-emerald-500');
+            
+            updateLampApp();
+        }
+
+        function toggleYellowLights() {
+            yellowOn = !yellowOn;
+            const btn = document.getElementById('toggleYellowBtn');
+            btn.classList.toggle('bg-slate-500', !yellowOn);
+            btn.classList.toggle('bg-amber-500', yellowOn);
+            updateLampApp();
+        }
+
+        function toggleGreenLights() {
+            greenOn = !greenOn;
+            const btn = document.getElementById('toggleGreenBtn');
+            btn.classList.toggle('bg-slate-500', !greenOn);
+            btn.classList.toggle('bg-emerald-500', greenOn);
+            updateLampApp();
+        }
+
+        function updateLampApp() {
+            const yellowCount = parseInt(document.getElementById('yellowSlider').value);
+            const greenCount = parseInt(document.getElementById('greenSlider').value);
+
+            document.getElementById('yellowVal').innerText = yellowCount;
+            document.getElementById('greenVal').innerText = greenCount;
+
+            const total = yellowCount + greenCount;
+
+            // 動態更新「三個數之間的加減互逆關係」三個算式
+            if (document.getElementById('inverseAddFormula')) {
+                document.getElementById('inverseAddFormula').innerHTML = `${yellowCount} + ${greenCount} = <span class="text-red-600 font-black">${total}</span>`;
+                document.getElementById('inverseSubYellowFormula').innerHTML = `${total} - ${yellowCount} = <span class="text-red-600 font-black">${greenCount}</span>`;
+                document.getElementById('inverseSubGreenFormula').innerHTML = `${total} - ${greenCount} = <span class="text-red-600 font-black">${yellowCount}</span>`;
+            }
+
+            // 繪製藝術燈泡群
+            const container = document.getElementById('lampContainer');
+            container.innerHTML = '';
+
+            // 渲染黃燈
+            for (let i = 0; i < yellowCount; i++) {
+                const bulb = document.createElement('div');
+                bulb.className = `w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                    yellowOn 
+                    ? 'bg-amber-400 text-amber-950 glowing-bulb-yellow font-bold shadow-lg' 
+                    : 'bg-slate-700 text-slate-500 opacity-40'
+                }`;
+                bulb.innerHTML = `<i class="fa-solid fa-lightbulb text-sm"></i>`;
+                container.appendChild(bulb);
+            }
+
+            // 渲染綠燈
+            for (let i = 0; i < greenCount; i++) {
+                const bulb = document.createElement('div');
+                bulb.className = `w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+                    greenOn 
+                    ? 'bg-emerald-400 text-emerald-950 glowing-bulb-green font-bold shadow-lg' 
+                    : 'bg-slate-700 text-slate-500 opacity-40'
+                }`;
+                bulb.innerHTML = `<i class="fa-solid fa-lightbulb text-sm"></i>`;
+                container.appendChild(bulb);
+            }
+
+            // 更新算式 (所有字體統一大小 text-sm md:text-base，僅靠 Highlight 外框區分焦點)
+            const obsBox = document.getElementById('lampLogicObsBox');
+            if (yellowOn && greenOn) {
+                // 黃燈與綠燈全亮時
+                obsBox.innerHTML = `
+                    <div class="text-sm md:text-base font-bold text-center bg-sky-500/30 text-sky-200 py-2 px-3 rounded-xl border-2 border-sky-400 shadow-md">
+                        ${yellowCount} + ${greenCount} = <span class="text-red-400 font-black">${total}</span> (合起來是全部)
+                    </div>
+                    <div class="text-sm md:text-base font-bold text-center text-amber-300/80 py-1 px-3">
+                        ${total} - ${yellowCount} = <span class="text-red-400 font-black">${greenCount}</span> (全部扣除黃燈剩綠燈)
+                    </div>
+                    <div class="text-sm md:text-base font-bold text-center text-emerald-300/80 py-1 px-3">
+                        ${total} - ${greenCount} = <span class="text-red-400 font-black">${yellowCount}</span> (全部扣除綠燈剩黃燈)
+                    </div>
+                `;
+            } else if (!yellowOn && greenOn) {
+                // 按下切換黃燈 (關黃燈) 時
+                obsBox.innerHTML = `
+                    <div class="text-sm md:text-base font-bold text-center text-sky-300/80 py-1 px-3">
+                        ${yellowCount} + ${greenCount} = <span class="text-red-400 font-black">${total}</span> (合起來是全部)
+                    </div>
+                    <div class="text-sm md:text-base font-bold text-center bg-amber-500/30 text-amber-200 py-2 px-3 rounded-xl border-2 border-amber-400 shadow-md">
+                        ${total} - ${yellowCount} = <span class="text-red-400 font-black">${greenCount}</span> (全部扣除黃燈剩綠燈)
+                    </div>
+                    <div class="text-sm md:text-base font-bold text-center text-emerald-300/80 py-1 px-3">
+                        ${total} - ${greenCount} = <span class="text-red-400 font-black">${yellowCount}</span> (全部扣除綠燈剩黃燈)
+                    </div>
+                `;
+            } else if (yellowOn && !greenOn) {
+                // 按下切換綠燈 (關綠燈) 時
+                obsBox.innerHTML = `
+                    <div class="text-sm md:text-base font-bold text-center text-sky-300/80 py-1 px-3">
+                        ${yellowCount} + ${greenCount} = <span class="text-red-400 font-black">${total}</span> (合起來是全部)
+                    </div>
+                    <div class="text-sm md:text-base font-bold text-center text-amber-300/80 py-1 px-3">
+                        ${total} - ${yellowCount} = <span class="text-red-400 font-black">${greenCount}</span> (全部扣除黃燈剩綠燈)
+                    </div>
+                    <div class="text-sm md:text-base font-bold text-center bg-emerald-500/30 text-emerald-200 py-2 px-3 rounded-xl border-2 border-emerald-400 shadow-md">
+                        ${total} - ${greenCount} = <span class="text-red-400 font-black">${yellowCount}</span> (全部扣除綠燈剩黃燈)
+                    </div>
+                `;
+            } else {
+                // 兩者皆關閉時
+                obsBox.innerHTML = `
+                    <div class="text-sm md:text-base font-bold text-center text-sky-300/60 py-1 px-3">
+                        ${yellowCount} + ${greenCount} = <span class="text-red-400 font-black">${total}</span> (合起來是全部)
+                    </div>
+                    <div class="text-sm md:text-base font-bold text-center text-amber-300/60 py-1 px-3">
+                        ${total} - ${yellowCount} = <span class="text-red-400 font-black">${greenCount}</span> (全部扣除黃燈剩綠燈)
+                    </div>
+                    <div class="text-sm md:text-base font-bold text-center text-emerald-300/60 py-1 px-3">
+                        ${total} - ${greenCount} = <span class="text-red-400 font-black">${yellowCount}</span> (全部扣除綠燈剩黃燈)
+                    </div>
+                `;
+            }
+
+            // 繪製動態 SVG 線段圖
+            drawLampSegmentSVG(yellowCount, greenCount, total);
+        }
+
+        function drawLampSegmentSVG(y, g, total) {
+            const svg = document.getElementById('lampSegmentSVG');
+            const startX = 20;
+            const endX = 480;
+            const length = endX - startX;
+
+            const yRatio = y / total;
+            const gRatio = g / total;
+
+            const yWidth = length * yRatio;
+            const gWidth = length * gRatio;
+
+            const midX = startX + length / 2;
+            const yMidX = startX + yWidth / 2;
+            const gMidX = startX + yWidth + gWidth / 2;
+
+            const bgColor = "#f1f5f9"; // 線段圖容器背景色
+
+            // 判斷不同開關狀態下的數字與紅色 (?) 標註
+            let totalLabel = `${total} 個`;
+            let yellowLabel = `${y} 個`;
+            let greenLabel = `${g} 個`;
+
+            if (yellowOn && greenOn) {
+                // 全體燈亮：全部的數字以 ( ? ) 顯示，其中 ? 為紅色
+                totalLabel = `(<tspan fill="#ef4444" font-weight="900">?</tspan>) 個`;
+            } else if (!yellowOn && greenOn) {
+                // 關閉黃燈：綠燈的數字以 ( ? ) 顯示，其中 ? 為紅色
+                greenLabel = `(<tspan fill="#ef4444" font-weight="900">?</tspan>) 個`;
+            } else if (yellowOn && !greenOn) {
+                // 關閉綠燈：黃燈的數字以 ( ? ) 顯示，其中 ? 為紅色
+                yellowLabel = `(<tspan fill="#ef4444" font-weight="900">?</tspan>) 個`;
+            }
+            // 全部關閉 (!yellowOn && !greenOn) 時，數字均完整呈現正常值 (已預設)
+
+            svg.innerHTML = `
+                <!-- 上方全體數量的虛線弧線 (起點與終點精準切齊兩邊 border) -->
+                <path d="M ${startX} 36 Q ${midX} 12 ${endX} 36" fill="none" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5 4" />
+                <rect x="${midX - 35}" y="10" width="70" height="18" fill="${bgColor}" rx="3" />
+                <text x="${midX}" y="23" text-anchor="middle" fill="#1e293b" font-weight="bold" font-size="13">${totalLabel}</text>
+
+                <!-- 黃燈區段色塊 (僅顯示名稱：黃燈) -->
+                <rect x="${startX}" y="36" width="${yWidth}" height="28" rx="6" fill="${yellowOn ? '#f59e0b' : '#94a3b8'}" />
+                <text x="${yMidX}" y="55" text-anchor="middle" fill="#ffffff" font-weight="bold" font-size="13">黃燈</text>
+
+                <!-- 綠燈區段色塊 (僅顯示名稱：綠燈) -->
+                <rect x="${startX + yWidth}" y="36" width="${gWidth}" height="28" rx="6" fill="${greenOn ? '#10b981' : '#64748b'}" />
+                <text x="${gMidX}" y="55" text-anchor="middle" fill="#ffffff" font-weight="bold" font-size="13">綠燈</text>
+
+                <!-- 下方黃燈部分弧線 (起點與終點精準切齊黃燈線段兩邊) -->
+                <path d="M ${startX} 64 Q ${yMidX} 86 ${startX + yWidth} 64" fill="none" stroke="#d97706" stroke-width="1.5" stroke-dasharray="4 3" />
+                <rect x="${yMidX - 32}" y="70" width="64" height="18" fill="${bgColor}" rx="3" />
+                <text x="${yMidX}" y="83" text-anchor="middle" fill="#b45309" font-weight="bold" font-size="13">${yellowLabel}</text>
+
+                <!-- 下方綠燈部分弧線 (起點與終點精準切齊綠燈線段兩邊) -->
+                <path d="M ${startX + yWidth} 64 Q ${gMidX} 86 ${endX} 64" fill="none" stroke="#059669" stroke-width="1.5" stroke-dasharray="4 3" />
+                <rect x="${gMidX - 32}" y="70" width="64" height="18" fill="${bgColor}" rx="3" />
+                <text x="${gMidX}" y="83" text-anchor="middle" fill="#047857" font-weight="bold" font-size="13">${greenLabel}</text>
+            `;
+        }
+
+        // ================= Tab 2: 未知數探究邏輯 =================
+        let scenarioIndex = 1;
+        const scenarios = {
+            1: {
+                title: "1. 烤紅豆餅與奶油餅 (加數未知)",
+                param1Name: "紅豆餅數量：",
+                param2Name: "總餅數 (全部)：",
+                p1Min: 5, p1Max: 30, p1Val: 15,
+                p2Min: 20, p2Max: 60, p2Val: 27,
+                getStory: (a, b) => `師傅做了 ${a} 個紅豆餅和一些奶油餅，合起來有 ${b} 個。師傅做了幾個奶油餅？`,
+                type: 'addition_unknown',
+                part1Label: '紅豆餅',
+                part2Label: '奶油餅',
+                unit: '個'
+            },
+            2: {
+                title: "2. 圖書館借書/進來人數 (加數未知)",
+                param1Name: "原來人數：",
+                param2Name: "現在總人數：",
+                p1Min: 10, p1Max: 40, p1Val: 29,
+                p2Min: 30, p2Max: 80, p2Val: 45,
+                getStory: (a, b) => `圖書館裡原有 ${a} 個人，進來一些人後，現在有 ${b} 個人。進來了幾個人？`,
+                type: 'addition_unknown',
+                part1Label: '原有',
+                part2Label: '進來',
+                unit: '人'
+            },
+            3: {
+                title: "3. 鳳梨酥賣出一些 (減數未知)",
+                param1Name: "原有鳳梨酥：",
+                param2Name: "剩下盒數：",
+                p1Min: 40, p1Max: 90, p1Val: 83,
+                p2Min: 10, p2Max: 39, p2Val: 35,
+                getStory: (a, b) => `糕餅店原有 ${a} 盒鳳梨酥，今天賣出一些後，剩下 ${b} 盒。糕餅店賣出幾盒鳳梨酥？`,
+                type: 'subtraction_unknown',
+                part1Label: '賣出',
+                part2Label: '剩下',
+                unit: '盒'
+            }
+        };
+
+        function toggleRevealAnswer() {
+            scenarioRevealed = !scenarioRevealed;
+            updateScenarioUI();
+        }
+
+        function loadScenario(idx) {
+            scenarioIndex = idx;
+            scenarioRevealed = false; // 切換情境時自動重置為隱藏狀態
+            for (let i = 1; i <= 3; i++) {
+                const btn = document.getElementById(`scenBtn${i}`);
+                if (i === idx) {
+                    btn.className = "w-full text-left p-3 rounded-xl border-2 border-sky-400 bg-sky-50 text-sky-900 font-bold text-sm transition hover:shadow-md flex items-center justify-between";
+                } else {
+                    btn.className = "w-full text-left p-3 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-sm transition flex items-center justify-between";
+                }
+            }
+
+            const sc = scenarios[idx];
+            document.getElementById('param1Label').innerText = sc.param1Name;
+            document.getElementById('param2Label').innerText = sc.param2Name;
+
+            const p1Slider = document.getElementById('param1Slider');
+            p1Slider.min = sc.p1Min; p1Slider.max = sc.p1Max; p1Slider.value = sc.p1Val;
+
+            const p2Slider = document.getElementById('param2Slider');
+            p2Slider.min = sc.p2Min; p2Slider.max = sc.p2Max; p2Slider.value = sc.p2Val;
+
+            updateScenarioUI();
+        }
+
+        function updateScenarioUI() {
+            const sc = scenarios[scenarioIndex];
+            let p1 = parseInt(document.getElementById('param1Slider').value);
+            let p2 = parseInt(document.getElementById('param2Slider').value);
+
+            // 確保合邏輯 (如總數必須大於部分)
+            if (sc.type === 'addition_unknown' && p2 <= p1) {
+                p2 = p1 + 5;
+                document.getElementById('param2Slider').value = p2;
+            } else if (sc.type === 'subtraction_unknown' && p1 <= p2) {
+                p1 = p2 + 5;
+                document.getElementById('param1Slider').value = p1;
+            }
+
+            document.getElementById('param1Val').innerText = p1;
+            document.getElementById('param2Val').innerText = p2;
+            document.getElementById('scenarioStory').innerText = sc.getStory(p1, p2);
+
+            // 更新按鈕文字與圖示
+            const btnIcon = document.getElementById('revealBtnIcon');
+            const btnText = document.getElementById('revealBtnText');
+            if (scenarioRevealed) {
+                btnIcon.className = "fa-solid fa-eye-slash";
+                btnText.innerText = "隱藏括號 ( ? ) 中的答案";
+            } else {
+                btnIcon.className = "fa-solid fa-eye";
+                btnText.innerText = "揭曉括號 ( ? ) 中的答案";
+            }
+
+            let ans = 0;
+            if (sc.type === 'addition_unknown') {
+                ans = p2 - p1;
+                document.getElementById('directExplain').innerText = `用 ( ) 表示不知道的數量`;
+                
+                if (scenarioRevealed) {
+                    document.getElementById('equationDirect').innerHTML = `${p1} + ( <span class="text-emerald-600 font-black">${ans}</span> ) = ${p2}`;
+                    document.getElementById('equationSolved').innerHTML = `${p2} - ${p1} = <span class="text-emerald-600">${ans}</span>`;
+                    document.getElementById('finalAnswerText').innerText = `答：${ans} ${sc.unit}${sc.part2Label}`;
+                } else {
+                    document.getElementById('equationDirect').innerHTML = `${p1} + ( <span class="text-emerald-600 font-black">?</span> ) = ${p2}`;
+                    document.getElementById('equationSolved').innerHTML = `${p2} - ${p1} = <span class="text-emerald-600 font-black">?</span>`;
+                    document.getElementById('finalAnswerText').innerText = `答：( ？ )`;
+                }
+                
+                document.getElementById('solveExplain').innerText = `用「全部 - 已知」算答案`;
+                updateVerticalMathDisplay(p2, p1, 'scenBorrowRow', 'scenMinuendRow', 'scenSubtrahendRow', 'scenResultVal');
+            } else {
+                ans = p1 - p2;
+                document.getElementById('directExplain').innerText = `用 ( ) 表示不知道的數量`;
+                
+                if (scenarioRevealed) {
+                    document.getElementById('equationDirect').innerHTML = `${p1} - ( <span class="text-emerald-600 font-black">${ans}</span> ) = ${p2}`;
+                    document.getElementById('equationSolved').innerHTML = `${p1} - ${p2} = <span class="text-emerald-600">${ans}</span>`;
+                    document.getElementById('finalAnswerText').innerText = `答：${ans} ${sc.unit}${sc.part1Label}`;
+                } else {
+                    document.getElementById('equationDirect').innerHTML = `${p1} - ( <span class="text-emerald-600 font-black">?</span> ) = ${p2}`;
+                    document.getElementById('equationSolved').innerHTML = `${p1} - ${p2} = <span class="text-emerald-600 font-black">?</span>`;
+                    document.getElementById('finalAnswerText').innerText = `答：( ？ )`;
+                }
+                
+                document.getElementById('solveExplain').innerText = `用「原有 - 剩下」算答案`;
+                updateVerticalMathDisplay(p1, p2, 'scenBorrowRow', 'scenMinuendRow', 'scenSubtrahendRow', 'scenResultVal');
+            }
+
+            drawScenarioSVG(sc, p1, p2, ans);
+        }
+
+        // 通用直式減法與退位補值渲染函數 (支援十/個位對齊、原十位數字黑色、刪除線與補值紅字)
+        function updateVerticalMathDisplay(minNum, subNum, borrowRowId, minuendRowId, subValId, resultValId) {
+            const minOnes = minNum % 10;
+            const subOnes = subNum % 10;
+            const minTens = Math.floor(minNum / 10);
+            const subTens = Math.floor(subNum / 10);
+            const diff = minNum - subNum;
+            const diffOnes = diff % 10;
+            const diffTens = Math.floor(diff / 10);
+
+            const borrowRowEl = document.getElementById(borrowRowId);
+            const minuendRowEl = document.getElementById(minuendRowId);
+            const subtrahendRowEl = document.getElementById(subValId);
+            const resultValEl = document.getElementById(resultValId);
+
+            // 更新減數列 (帶減號 `-`)
+            if (subtrahendRowEl) {
+                subtrahendRowEl.innerHTML = `
+                    <span class="text-slate-700 font-bold">-</span>
+                    <span class="w-8">${subTens > 0 ? subTens : ''}</span>
+                    <span class="w-8">${subOnes}</span>
+                `;
+            }
+
+            // 更新答案結果列 (未揭曉時顯示 ?)
+            if (resultValEl) {
+                if (scenarioRevealed || borrowRowId !== 'scenBorrowRow') {
+                    resultValEl.innerHTML = `
+                        <span></span>
+                        <span class="w-8">${diffTens > 0 ? diffTens : ''}</span>
+                        <span class="w-8">${diffOnes}</span>
+                    `;
+                } else {
+                    resultValEl.innerHTML = `
+                        <span></span>
+                        <span class="w-8"></span>
+                        <span class="w-8 text-emerald-600 font-black">?</span>
+                    `;
+                }
+            }
+
+            if (minOnes < subOnes) {
+                // 需要退位 (借位)
+                const newTens = minTens - 1;
+                if (borrowRowEl) {
+                    if (scenarioRevealed || borrowRowId !== 'scenBorrowRow') {
+                        borrowRowEl.innerHTML = `
+                            <span></span>
+                            <span class="w-8 text-red-500 font-bold">${newTens > 0 ? newTens : ''}</span>
+                            <span class="w-8 text-red-500 font-bold">10</span>
+                        `;
+                    } else {
+                        borrowRowEl.innerHTML = `<span></span><span class="w-8"></span><span class="w-8"></span>`;
+                    }
+                }
+                if (minuendRowEl) {
+                    if (scenarioRevealed || borrowRowId !== 'scenBorrowRow') {
+                        // 原十位數字用黑色 (text-slate-800)，刪除線用紅色 (decoration-red-500)
+                        minuendRowEl.innerHTML = `
+                            <span></span>
+                            <span class="w-8 relative inline-block text-slate-800 line-through decoration-red-500 decoration-2">${minTens}</span>
+                            <span class="w-8 text-slate-800">${minOnes}</span>
+                        `;
+                    } else {
+                        minuendRowEl.innerHTML = `
+                            <span></span>
+                            <span class="w-8 text-slate-800">${minTens}</span>
+                            <span class="w-8 text-slate-800">${minOnes}</span>
+                        `;
+                    }
+                }
+            } else {
+                // 不需要退位
+                if (borrowRowEl) {
+                    borrowRowEl.innerHTML = `<span></span><span class="w-8"></span><span class="w-8"></span>`;
+                }
+                if (minuendRowEl) {
+                    minuendRowEl.innerHTML = `
+                        <span></span>
+                        <span class="w-8 text-slate-800">${minTens > 0 ? minTens : ''}</span>
+                        <span class="w-8 text-slate-800">${minOnes}</span>
+                    `;
+                }
+            }
+        }
+
+        function drawScenarioSVG(sc, p1, p2, ans) {
+            const svg = document.getElementById('scenarioSVG');
+            if (!svg) return;
+
+            const startX = 20;
+            const endX = 480;
+            const length = endX - startX;
+
+            let totalVal, part1Val, part2Val, part1IsUnknown, part2IsUnknown;
+
+            if (sc.type === 'addition_unknown') {
+                totalVal = p2;
+                part1Val = p1;
+                part2Val = ans;
+                part1IsUnknown = false;
+                part2IsUnknown = true;
+            } else {
+                totalVal = p1;
+                part1Val = ans;
+                part2Val = p2;
+                part1IsUnknown = true;
+                part2IsUnknown = false;
+            }
+
+            const actualP1Width = Math.max(20, Math.min(length - 20, length * (part1Val / totalVal)));
+            const actualP2Width = length - actualP1Width;
+
+            const midX = startX + length / 2;
+            const p1MidX = startX + actualP1Width / 2;
+            const p2MidX = startX + actualP1Width + actualP2Width / 2;
+
+            const bgColor = "#0f172a";
+
+            const totalLabel = `${totalVal} ${sc.unit}`;
+            
+            let part1LabelStr, part2LabelStr;
+            if (part1IsUnknown) {
+                part1LabelStr = scenarioRevealed 
+                    ? `<tspan fill="#10b981" font-weight="900">${part1Val}</tspan> ${sc.unit}` 
+                    : `( <tspan fill="#10b981" font-weight="900">?</tspan> ) ${sc.unit}`;
+            } else {
+                part1LabelStr = `${part1Val} ${sc.unit}`;
+            }
+
+            if (part2IsUnknown) {
+                part2LabelStr = scenarioRevealed 
+                    ? `<tspan fill="#10b981" font-weight="900">${part2Val}</tspan> ${sc.unit}` 
+                    : `( <tspan fill="#10b981" font-weight="900">?</tspan> ) ${sc.unit}`;
+            } else {
+                part2LabelStr = `${part2Val} ${sc.unit}`;
+            }
+
+            svg.innerHTML = `
+                <!-- 上方全體數量的虛線弧線 -->
+                <path d="M ${startX} 42 Q ${midX} 14 ${endX} 42" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5 4" />
+                <rect x="${midX - 45}" y="8" width="90" height="22" fill="${bgColor}" rx="4" />
+                <text x="${midX}" y="24" text-anchor="middle" fill="#f8fafc" font-weight="bold" font-size="14">${totalLabel}</text>
+
+                <!-- 第一區段色塊 -->
+                <rect x="${startX}" y="42" width="${actualP1Width}" height="32" rx="6" fill="#0284c7" />
+                <text x="${p1MidX}" y="63" text-anchor="middle" fill="#ffffff" font-weight="bold" font-size="14">${sc.part1Label}</text>
+
+                <!-- 第二區段色塊 -->
+                <rect x="${startX + actualP1Width}" y="42" width="${actualP2Width}" height="32" rx="6" fill="#d97706" />
+                <text x="${p2MidX}" y="63" text-anchor="middle" fill="#ffffff" font-weight="bold" font-size="14">${sc.part2Label}</text>
+
+                <!-- 下方第一部分弧線 -->
+                <path d="M ${startX} 74 Q ${p1MidX} 98 ${startX + actualP1Width} 74" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 3" />
+                <rect x="${p1MidX - 40}" y="76" width="80" height="20" fill="${bgColor}" rx="3" />
+                <text x="${p1MidX}" y="90" text-anchor="middle" fill="#38bdf8" font-weight="bold" font-size="13">${part1LabelStr}</text>
+
+                <!-- 下方第二部分弧線 -->
+                <path d="M ${startX + actualP1Width} 74 Q ${p2MidX} 98 ${endX} 74" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="4 3" />
+                <rect x="${p2MidX - 40}" y="76" width="80" height="20" fill="${bgColor}" rx="3" />
+                <text x="${p2MidX}" y="90" text-anchor="middle" fill="#fbbf24" font-weight="bold" font-size="13">${part2LabelStr}</text>
+            `;
+        }
+
+        // ================= Tab 3: 直式與驗算邏輯 =================
+        function updateVerticalMath() {
+            let a = parseInt(document.getElementById('numA').value) || 0;
+            let b = parseInt(document.getElementById('numB').value) || 0;
+
+            if (b > a) {
+                b = a - 1;
+                if (b < 1) b = 1;
+                document.getElementById('numB').value = b;
+            }
+
+            const diff = a - b;
+
+            const aOnes = a % 10;
+            const bOnes = b % 10;
+            const aTens = Math.floor(a / 10);
+            const bTens = Math.floor(b / 10);
+            const diffOnes = diff % 10;
+            const diffTens = Math.floor(diff / 10);
+
+            const borrowRowEl = document.getElementById('borrowRow');
+            const vNumAEl = document.getElementById('vNumA');
+            const vNumBEl = document.getElementById('vNumB');
+            const vResultSubEl = document.getElementById('vResultSub');
+
+            // 1. 渲染減法直式 (被減數：藍色 text-sky-300, 減數：橙色 text-amber-400, 差：綠色 text-emerald-400)
+            vNumBEl.innerHTML = `
+                <span class="text-amber-400 font-bold">-</span>
+                <span class="w-8 text-amber-400">${bTens > 0 ? bTens : ''}</span>
+                <span class="w-8 text-amber-400">${bOnes}</span>
+            `;
+
+            vResultSubEl.innerHTML = `
+                <span></span>
+                <span class="w-8 text-emerald-400">${diffTens > 0 ? diffTens : ''}</span>
+                <span class="w-8 text-emerald-400">${diffOnes}</span>
+            `;
+
+            if (aOnes < bOnes) {
+                // 需要退位
+                const newTens = aTens - 1;
+                borrowRowEl.innerHTML = `
+                    <span></span>
+                    <span class="w-8 text-red-400 font-bold">${newTens > 0 ? newTens : ''}</span>
+                    <span class="w-8 text-red-400 font-bold">10</span>
+                `;
+                vNumAEl.innerHTML = `
+                    <span></span>
+                    <span class="w-8 relative inline-block text-sky-300 line-through decoration-red-500 decoration-2">${aTens}</span>
+                    <span class="w-8 text-sky-300">${aOnes}</span>
+                `;
+            } else {
+                // 不需要退位
+                borrowRowEl.innerHTML = `<span></span><span class="w-8"></span><span class="w-8"></span>`;
+                vNumAEl.innerHTML = `
+                    <span></span>
+                    <span class="w-8 text-sky-300">${aTens > 0 ? aTens : ''}</span>
+                    <span class="w-8 text-sky-300">${aOnes}</span>
+                `;
+            }
+
+            // 2. 渲染加法驗算直式 (差：綠色 text-emerald-400, 減數：橙色 text-amber-400, 原被減數：藍色 text-sky-300)
+            document.getElementById('vAnsCopy').innerHTML = `
+                <span></span>
+                <span class="w-8 text-emerald-400">${diffTens > 0 ? diffTens : ''}</span>
+                <span class="w-8 text-emerald-400">${diffOnes}</span>
+            `;
+
+            document.getElementById('vSubCopy').innerHTML = `
+                <span class="text-amber-400 font-bold">+</span>
+                <span class="w-8 text-amber-400">${bTens > 0 ? bTens : ''}</span>
+                <span class="w-8 text-amber-400">${bOnes}</span>
+            `;
+
+            document.getElementById('vCheckResult').innerHTML = `
+                <span></span>
+                <span class="w-8 text-sky-300">${aTens > 0 ? aTens : ''}</span>
+                <span class="w-8 text-sky-300">${aOnes}</span>
+            `;
+
+            const badge = document.getElementById('verifySuccessBadge');
+            badge.innerHTML = `
+                <i class="fa-solid fa-circle-check text-2xl text-emerald-600"></i>
+                <div>
+                    <div class="font-bold text-sm">驗算結果正確 (${diff} + ${b} = ${a})</div>
+                    <div class="text-xs text-emerald-700">與原被減數 ${a} 完全吻合，表示減法算對了！</div>
+                </div>
+            `;
+        }
+
+        // ================= Tab 4: 歷程性評量邏輯 =================
+        const quizQuestions = [
+            {
+                id: 1,
+                question: "車站前的藝術燈有 8 個黃燈泡與 5 個綠燈泡。當全部一起亮起時，共有幾個燈泡？",
+                options: ["11 個", "13 個", "15 個", "3 個"],
+                answer: 1,
+                explain: "利用「部分 + 部分 = 整體」，8 + 5 = 13 個。"
+            },
+            {
+                id: 2,
+                question: "罐子裡共有 26 顆糖果，其中 12 顆是草莓糖，其餘是檸檬糖。求檸檬糖數量的『直譯算式』該如何記錄？",
+                options: ["12 + ( ) = 26", "26 + 12 = ( )", "( ) - 12 = 26", "26 + ( ) = 12"],
+                answer: 0,
+                explain: "依題意：12 顆草莓糖加上 ( ) 顆檸檬糖等於全部 26 顆，記作 12 + ( ) = 26。"
+            },
+            {
+                id: 3,
+                question: "糕餅店原有 83 盒鳳梨酥，賣出一些後剩下 35 盒。賣出了幾盒鳳梨酥？",
+                options: ["118 盒", "48 盒", "52 盒", "38 盒"],
+                answer: 1,
+                explain: "算式為 83 - 35 = 48 盒。"
+            },
+            {
+                id: 4,
+                question: "關於檢查算式『54 - 31 = 23』是否正確，下列哪一種『加法驗算』方式是標準正確的？",
+                options: ["54 + 31 = 85", "23 + 31 = 54", "54 + 23 = 77", "31 - 23 = 8"],
+                answer: 1,
+                explain: "依課綱規範，用『剩下的 + 拿走的 = 原有的』，即 23 + 31 = 54 進行驗算。"
+            },
+            {
+                id: 5,
+                question: "哥哥有 36 張遊戲卡，弟弟也有一些，兩人共有 62 張。弟弟有幾張遊戲卡？",
+                options: ["26 張", "98 張", "36 張", "24 張"],
+                answer: 0,
+                explain: "問題記成 36 + ( ) = 62，計算為 62 - 36 = 26 張。"
+            }
+        ];
+
+        let currentQuizIndex = 0;
+        let score = 0;
+        let userAnswers = Array(quizQuestions.length).fill(null);
+
+        function renderQuizQuestion() {
+            const container = document.getElementById('quizContainer');
+            if (!container) return;
+
+            const q = quizQuestions[currentQuizIndex];
+
+            const qp = document.getElementById('quizProgress');
+            if (qp) qp.innerText = `${currentQuizIndex + 1} / ${quizQuestions.length}`;
+
+            const qs = document.getElementById('quizScore');
+            if (qs) qs.innerText = score;
+
+            container.innerHTML = `
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-6">
+                    <span class="inline-block px-3 py-1 rounded-lg bg-sky-500 text-white font-bold text-xs mb-3">第 ${q.id} 題</span>
+                    <h3 class="text-lg font-bold text-slate-800 leading-relaxed">${q.question}</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
+                    ${q.options.map((opt, idx) => `
+                        <button onclick="selectAnswer(${idx})" class="quiz-opt-btn p-4 rounded-xl border-2 text-left font-bold transition flex items-center justify-between ${
+                            userAnswers[currentQuizIndex] === idx 
+                            ? 'border-sky-500 bg-sky-50 text-sky-900' 
+                            : 'border-slate-200 hover:border-sky-300 text-slate-700 bg-white'
+                        }">
+                            <span>${String.fromCharCode(65 + idx)}. ${opt}</span>
+                            <i class="fa-regular fa-circle text-slate-300"></i>
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div id="quizFeedback" class="hidden p-4 rounded-xl mb-6"></div>
+
+                <div class="flex justify-between items-center">
+                    <button onclick="prevQuestion()" ${currentQuizIndex === 0 ? 'disabled class="opacity-40 cursor-not-allowed text-slate-400 font-bold text-sm px-4 py-2"' : 'class="px-4 py-2 rounded-xl bg-slate-200 text-slate-700 font-bold text-sm hover:bg-slate-300"'}>
+                        <i class="fa-solid fa-arrow-left mr-1"></i> 上一題
+                    </button>
+                    
+                    <button id="nextQuizBtn" onclick="nextQuestion()" class="px-6 py-2.5 rounded-xl bg-sky-500 text-white font-bold text-sm shadow-md hover:bg-sky-600 transition flex items-center gap-2">
+                        <span>${currentQuizIndex === quizQuestions.length - 1 ? '提交答案' : '下一題'}</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function selectAnswer(optIdx) {
+            userAnswers[currentQuizIndex] = optIdx;
+            const q = quizQuestions[currentQuizIndex];
+            const feedback = document.getElementById('quizFeedback');
+
+            if (feedback) {
+                feedback.classList.remove('hidden');
+                if (optIdx === q.answer) {
+                    feedback.className = "p-4 rounded-xl bg-emerald-100 border border-emerald-300 text-emerald-900 text-sm font-bold flex items-start gap-2.5";
+                    feedback.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-xl"></i><div>回答正確！<p class="text-xs font-normal text-emerald-800 mt-0.5">${q.explain}</p></div>`;
+                } else {
+                    feedback.className = "p-4 rounded-xl bg-rose-100 border border-rose-300 text-rose-900 text-sm font-bold flex items-start gap-2.5";
+                    feedback.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 text-xl"></i><div>思考一下喔！<p class="text-xs font-normal text-rose-800 mt-0.5">${q.explain}</p></div>`;
+                }
+            }
+
+            // 重新計分
+            calculateScore();
+            renderQuizQuestion();
+            const updatedFeedback = document.getElementById('quizFeedback');
+            if (updatedFeedback) updatedFeedback.classList.remove('hidden');
+        }
+
+        function calculateScore() {
+            score = 0;
+            userAnswers.forEach((ans, i) => {
+                if (ans === quizQuestions[i].answer) {
+                    score += 20;
+                }
+            });
+            const qs = document.getElementById('quizScore');
+            if (qs) qs.innerText = score;
+        }
+
+        function nextQuestion() {
+            if (currentQuizIndex < quizQuestions.length - 1) {
+                currentQuizIndex++;
+                renderQuizQuestion();
+            } else {
+                showQuizSummary();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuizIndex > 0) {
+                currentQuizIndex--;
+                renderQuizQuestion();
+            }
+        }
+
+        function showQuizSummary() {
+            const qc = document.getElementById('quizContainer');
+            if (qc) qc.classList.add('hidden');
+
+            const qs = document.getElementById('quizSummary');
+            if (qs) qs.classList.remove('hidden');
+
+            const fst = document.getElementById('finalScoreText');
+            if (fst) fst.innerText = `${score} 分`;
+
+            const comment = document.getElementById('summaryComment');
+            if (comment) {
+                if (score === 100) {
+                    comment.innerText = "太完美了！你已經完全融會貫通『加減應用』與驗算觀念！";
+                } else if (score >= 60) {
+                    comment.innerText = "做得好！大部分的題目都難不倒你，可以再複習一下錯題喔！";
+                } else {
+                    comment.innerText = "加油！可以回到前幾個頁籤多操作幾次線段圖與藝術燈喔！";
+                }
+            }
+
+            // 渲染作答結果明細
+            const resultsList = document.getElementById('quizResultsList');
+            if (resultsList) {
+                resultsList.innerHTML = quizQuestions.map((q, idx) => {
+                    const userAns = userAnswers[idx];
+                    let statusBadge = '';
+
+                    if (userAns === null) {
+                        statusBadge = `<span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold border border-amber-300 flex items-center gap-1"><i class="fa-solid fa-circle-exclamation text-amber-500"></i> 未作答</span>`;
+                    } else if (userAns === q.answer) {
+                        statusBadge = `<span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300 flex items-center gap-1"><i class="fa-solid fa-circle-check text-emerald-600"></i> 答對</span>`;
+                    } else {
+                        statusBadge = `<span class="px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-bold border border-rose-300 flex items-center gap-1"><i class="fa-solid fa-circle-xmark text-rose-600"></i> 答錯</span>`;
+                    }
+
+                    return `
+                        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                            <span class="text-xs font-bold text-slate-700">第 ${q.id} 題</span>
+                            ${statusBadge}
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        function resetQuiz() {
+            currentQuizIndex = 0;
+            score = 0;
+            userAnswers = Array(quizQuestions.length).fill(null);
+            const qs = document.getElementById('quizSummary');
+            if (qs) qs.classList.add('hidden');
+
+            const qc = document.getElementById('quizContainer');
+            if (qc) qc.classList.remove('hidden');
+
+            renderQuizQuestion();
+        }
+
+        window.onload = function() {
+            updateLampApp();
+            loadScenario(1);
+            updateVerticalMath();
+            renderQuizQuestion();
+        };
+    </script>
+</body>
+</html>

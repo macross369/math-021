@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國小數學二上：面的大小比較與自我挑戰</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom Styles with Noto Sans TC font and Shinkai Sky theme -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 35%, #e0c3fc 70%, #8ec5fc 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .shinkai-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.65);
+            box-shadow: 0 10px 30px rgba(31, 38, 135, 0.12);
+        }
+
+        .shinkai-tab-active {
+            background: linear-gradient(135deg, #38bdf8, #818cf8);
+            color: white;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+        }
+
+        /* Standard vertical fraction helper style */
+        .fraction {
+            display: inline-flex;
+            flex-direction: column;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.9em;
+            padding: 0 4px;
+        }
+        .fraction .numerator {
+            border-bottom: 2px solid currentColor;
+            padding-bottom: 1px;
+            line-height: 1;
+        }
+        .fraction .denominator {
+            padding-top: 1px;
+            line-height: 1;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.4);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #818cf8;
+            border-radius: 4px;
+        }
+
+        /* Smooth transition for tracing paper sliding */
+        .tracing-paper-transition {
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="p-3 md:p-6 text-slate-800">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header Banner -->
+        <header class="shinkai-card rounded-3xl p-6 mb-6 text-center relative overflow-hidden">
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-pink-300/40 rounded-full blur-2xl"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-sky-300/40 rounded-full blur-2xl"></div>
+            <!-- Top Tag Pill Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-100/80 text-indigo-800 text-xs md:text-sm font-bold mb-3 shadow-sm border border-indigo-200/60">
+                <i class="fa-solid fa-graduation-cap text-indigo-600"></i>
+                <span>國小二上數學 (十) 互動學習網頁</span>
+            </div>
+            <h1 class="text-2xl md:text-4xl font-black text-indigo-900 mb-2 tracking-wide flex items-center justify-center gap-3">
+                <i class="fa-solid fa-shapes text-sky-500"></i>
+                第十單元：面的大小比較
+                <i class="fa-solid fa-star text-amber-400"></i>
+            </h1>
+            <p class="text-slate-600 font-bold text-sm md:text-base">
+                探索平平的面 ‧ 疊合對齊 ‧ 描圖比較 ‧ 方格面積
+            </p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="flex flex-wrap gap-2 md:gap-3 mb-6 justify-center" id="main-tabs">
+            <button onclick="switchTab('tab1')" id="btn-tab1" class="shinkai-tab-active px-4 py-3 rounded-2xl font-bold transition-all duration-300 flex items-center gap-2 text-sm md:text-base">
+                <i class="fa-solid fa-cube"></i> 1. 認識平面
+            </button>
+            <button onclick="switchTab('tab2')" id="btn-tab2" class="shinkai-card px-4 py-3 rounded-2xl font-bold hover:bg-white/90 transition-all duration-300 flex items-center gap-2 text-sm md:text-base text-slate-700">
+                <i class="fa-solid fa-layer-group"></i> 2. 疊合比較
+            </button>
+            <button onclick="switchTab('tab2_5')" id="btn-tab2_5" class="shinkai-card px-4 py-3 rounded-2xl font-bold hover:bg-white/90 transition-all duration-300 flex items-center gap-2 text-sm md:text-base text-slate-700">
+                <i class="fa-solid fa-copy"></i> 3. 描圖比較
+            </button>
+            <button onclick="switchTab('tab3')" id="btn-tab3" class="shinkai-card px-4 py-3 rounded-2xl font-bold hover:bg-white/90 transition-all duration-300 flex items-center gap-2 text-sm md:text-base text-slate-700">
+                <i class="fa-solid fa-border-all"></i> 4. 方格拼排
+            </button>
+            <button onclick="switchTab('tab5')" id="btn-tab5" class="shinkai-card px-4 py-3 rounded-2xl font-bold hover:bg-white/90 transition-all duration-300 flex items-center gap-2 text-sm md:text-base text-slate-700 bg-amber-100/80">
+                <i class="fa-solid fa-pen-to-square text-amber-600"></i> 5. 自我挑戰
+            </button>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main>
+            <!-- TAB 1: 認識平面 -->
+            <section id="tab1" class="tab-content block">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Left Sidebar (Knowledge & Guide) -->
+                    <div class="lg:col-span-4 shinkai-card rounded-3xl p-6 flex flex-col justify-between space-y-6">
+                        <div>
+                            <!-- Header with Icon Inline -->
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-12 h-12 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl shadow-sm shrink-0">
+                                    <i class="fa-solid fa-lightbulb"></i>
+                                </div>
+                                <h2 class="text-2xl font-black text-slate-800 tracking-tight">什麼是「平面」？</h2>
+                            </div>
+                            <p class="text-slate-600 font-medium mb-6 leading-relaxed">
+                                物體上<strong class="text-sky-600 font-bold">平平的面</strong>，我們就叫做<span class="text-sky-600 font-bold">「平面」</span>！
+                            </p>
+
+                            <!-- Yellow Teaching Tips Box -->
+                            <div class="bg-amber-50/90 border border-amber-200/80 rounded-2xl p-4 shadow-sm">
+                                <h3 class="font-bold text-amber-800 mb-2.5 flex items-center gap-2 text-base">
+                                    <i class="fa-solid fa-star text-amber-500"></i> 教學小寶典：
+                                </h3>
+                                <ul class="text-sm text-amber-900/80 space-y-2 list-disc list-inside leading-relaxed font-medium">
+                                    <li>盒子、桌子有平平的面（平面）。</li>
+                                    <li>籃球全身上下都是彎彎的（沒有平面）。</li>
+                                    <li>保溫瓶上下有平平的面，側面則是彎彎的。</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Hint Pill -->
+                        <div class="bg-indigo-50/80 border border-indigo-100 rounded-2xl p-3.5 text-xs font-bold text-indigo-700 flex items-center gap-2">
+                            <span>💡 試試看：點擊右側物品，找出哪些具有「平面」！</span>
+                        </div>
+                    </div>
+
+                    <!-- Right Main Area (Item Verification Cards Grid) -->
+                    <div class="lg:col-span-8 shinkai-card rounded-3xl p-6 flex flex-col justify-between space-y-6">
+                        <div>
+                            <div class="flex items-center gap-2.5 mb-1 text-slate-800 font-black text-xl md:text-2xl">
+                                <i class="fa-solid fa-hand-pointer text-indigo-500"></i>
+                                <h3>生活物品分類實作：找出有平面的物品</h3>
+                            </div>
+                            <p class="text-slate-500 text-sm font-bold mb-6">
+                                點擊下面的物品圖卡，正確判斷它有沒有「平平的面」吧！
+                            </p>
+
+                            <!-- 6 Items Grid (2 rows x 3 cols) -->
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4" id="flat-items-grid">
+                                <!-- Item 1: 籃球 -->
+                                <button onclick="verifyFlatItem('basketball')" id="card-basketball" class="item-card bg-white hover:bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 flex flex-col items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md group relative">
+                                    <div class="text-4xl mb-3 text-orange-500 transition-transform group-hover:scale-110"><i class="fa-solid fa-basketball"></i></div>
+                                    <span class="font-bold text-slate-800 text-base mb-1">籃球</span>
+                                    <span class="status-badge text-xs font-bold text-slate-400">點擊驗證</span>
+                                </button>
+
+                                <!-- Item 2: 餅乾盒 -->
+                                <button onclick="verifyFlatItem('box')" id="card-box" class="item-card bg-white hover:bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 flex flex-col items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md group relative">
+                                    <div class="mb-2 transition-transform group-hover:scale-110 flex items-center justify-center">
+                                        <svg class="w-12 h-12" viewBox="0 0 64 64">
+                                            <rect x="10" y="24" width="44" height="30" rx="4" fill="#a855f7"/>
+                                            <polygon points="10,24 20,12 54,12 44,24" fill="#c084fc"/>
+                                            <polygon points="44,24 54,12 54,42 44,54" fill="#9333ea"/>
+                                            <rect x="28" y="24" width="8" height="30" fill="#f43f5e"/>
+                                            <rect x="32" y="12" width="8" height="12" fill="#fb7185" transform="skewX(-40)" transform-origin="32 12"/>
+                                            <circle cx="32" cy="24" r="4" fill="#ffe4e6"/>
+                                        </svg>
+                                    </div>
+                                    <span class="font-bold text-slate-800 text-base mb-1">餅乾盒</span>
+                                    <span class="status-badge text-xs font-bold text-slate-400">點擊驗證</span>
+                                </button>
+
+                                <!-- Item 3: 保溫瓶 -->
+                                <button onclick="verifyFlatItem('bottle')" id="card-bottle" class="item-card bg-white hover:bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 flex flex-col items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md group relative">
+                                    <div class="text-4xl mb-3 text-cyan-500 transition-transform group-hover:scale-110"><i class="fa-solid fa-bottle-water"></i></div>
+                                    <span class="font-bold text-slate-800 text-base mb-1">保溫瓶</span>
+                                    <span class="status-badge text-xs font-bold text-slate-400">點擊驗證</span>
+                                </button>
+
+                                <!-- Item 4: 數學課本 -->
+                                <button onclick="verifyFlatItem('book')" id="card-book" class="item-card bg-white hover:bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 flex flex-col items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md group relative">
+                                    <div class="text-4xl mb-3 text-emerald-500 transition-transform group-hover:scale-110"><i class="fa-solid fa-book-open"></i></div>
+                                    <span class="font-bold text-slate-800 text-base mb-1">數學課本</span>
+                                    <span class="status-badge text-xs font-bold text-slate-400">點擊驗證</span>
+                                </button>
+
+                                <!-- Item 5: 大西瓜 -->
+                                <button onclick="verifyFlatItem('watermelon')" id="card-watermelon" class="item-card bg-white hover:bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 flex flex-col items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md group relative">
+                                    <div class="mb-2 transition-transform group-hover:scale-110 flex items-center justify-center">
+                                        <svg class="w-12 h-12" viewBox="0 0 64 64">
+                                            <path d="M 8 20 A 26 26 0 0 0 56 20 Z" fill="#22c55e" stroke="#15803d" stroke-width="2"/>
+                                            <path d="M 12 20 A 22 22 0 0 0 52 20 Z" fill="#fef08a"/>
+                                            <path d="M 15 20 A 19 19 0 0 0 49 20 Z" fill="#ef4444"/>
+                                            <circle cx="24" cy="26" r="1.5" fill="#1e293b"/>
+                                            <circle cx="32" cy="30" r="1.5" fill="#1e293b"/>
+                                            <circle cx="40" cy="26" r="1.5" fill="#1e293b"/>
+                                            <circle cx="32" cy="22" r="1.5" fill="#1e293b"/>
+                                        </svg>
+                                    </div>
+                                    <span class="font-bold text-slate-800 text-base mb-1">大西瓜</span>
+                                    <span class="status-badge text-xs font-bold text-slate-400">點擊驗證</span>
+                                </button>
+
+                                <!-- Item 6: 積木方塊 -->
+                                <button onclick="verifyFlatItem('blocks')" id="card-blocks" class="item-card bg-white hover:bg-slate-50 border-2 border-slate-100 rounded-2xl p-5 flex flex-col items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md group relative">
+                                    <div class="mb-2 transition-transform group-hover:scale-110 flex items-center justify-center">
+                                        <svg class="w-12 h-12" viewBox="0 0 64 64">
+                                            <g transform="translate(12, 8)">
+                                                <polygon points="12,0 24,6 12,12 0,6" fill="#f43f5e"/>
+                                                <polygon points="0,6 12,12 12,24 0,18" fill="#e11d48"/>
+                                                <polygon points="24,6 12,12 12,24 24,18" fill="#be123c"/>
+                                            </g>
+                                            <g transform="translate(28, 8)">
+                                                <polygon points="12,0 24,6 12,12 0,6" fill="#fb7185"/>
+                                                <polygon points="0,6 12,12 12,24 0,18" fill="#f43f5e"/>
+                                                <polygon points="24,6 12,12 12,24 24,18" fill="#e11d48"/>
+                                            </g>
+                                            <g transform="translate(20, 24)">
+                                                <polygon points="12,0 24,6 12,12 0,6" fill="#f43f5e"/>
+                                                <polygon points="0,6 12,12 12,24 0,18" fill="#e11d48"/>
+                                                <polygon points="24,6 12,12 12,24 24,18" fill="#be123c"/>
+                                            </g>
+                                        </svg>
+                                    </div>
+                                    <span class="font-bold text-slate-800 text-base mb-1">積木方塊</span>
+                                    <span class="status-badge text-xs font-bold text-slate-400">點擊驗證</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Feedback Message Box -->
+                        <div id="flat-feedback-box" class="hidden rounded-2xl p-4 font-bold text-sm md:text-base flex items-center gap-3 transition-all duration-300 border">
+                            <span id="flat-feedback-icon" class="w-7 h-7 rounded-full flex items-center justify-center text-white shrink-0 text-sm"></span>
+                            <span id="flat-feedback-text"></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: 疊合與對齊比較 -->
+            <section id="tab2" class="tab-content hidden">
+                <div class="shinkai-card rounded-3xl p-6 mb-6">
+                    <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                        <div class="flex items-center gap-3">
+                            <span class="w-8 h-8 rounded-full bg-indigo-500 text-white font-bold flex items-center justify-center">2</span>
+                            <h2 class="text-xl font-bold text-indigo-900">面的疊合與對齊比較</h2>
+                        </div>
+                        <span class="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-bold flex items-center gap-1">
+                            <i class="fa-solid fa-up-down-left-right"></i> 提示：綠色圖形可以自由用滑鼠/手指拖曳喔！
+                        </span>
+                    </div>
+                    <p class="text-slate-600 mb-4">
+                        當兩個圖形無法一眼看清大小時，我們可以把圖形<b>對齊疊在一起</b>，觀察超出重疊範圍的部分來比較面的大小！
+                    </p>
+
+                    <!-- Interactive Canvas / Workspace -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <div class="lg:col-span-7 bg-slate-100/90 rounded-2xl p-6 border border-slate-200 relative min-h-[380px] flex items-center justify-center overflow-hidden shadow-inner select-none" id="overlay-workspace">
+                            <div class="relative w-full h-full min-h-[320px] flex items-center justify-center" id="shapes-container">
+                                <!-- Shape A (粉紅正方形 ㄅ) -->
+                                <div id="shapeA" class="absolute bg-rose-400/80 rounded-2xl border-2 border-rose-600 flex flex-col items-center justify-center font-bold text-white text-lg transition-all shadow-md pointer-events-none" style="width: 180px; height: 180px; left: calc(50% - 200px); top: calc(50% - 90px);">
+                                    <span>粉紅圖形 (ㄅ)</span>
+                                    <span id="label-shapeA-size" class="text-xs font-normal bg-rose-700/50 px-2 py-0.5 rounded-full mt-1">180 px</span>
+                                </div>
+                                <!-- Shape B (綠色正方形 ㄆ - DRAGGABLE) -->
+                                <div id="shapeB" class="absolute bg-emerald-400/80 rounded-2xl border-2 border-emerald-600 flex flex-col items-center justify-center font-bold text-white text-lg transition-all shadow-lg cursor-grab active:cursor-grabbing z-10 hover:ring-4 hover:ring-emerald-300" style="width: 130px; height: 130px; left: calc(50% + 30px); top: calc(50% - 65px);" onmousedown="startDragShapeB(event)" ontouchstart="startDragShapeB(event)">
+                                    <span class="pointer-events-none">綠色圖形 (ㄆ)</span>
+                                    <span id="label-shapeB-size" class="text-xs font-normal bg-emerald-700/50 px-2 py-0.5 rounded-full mt-1 pointer-events-none">130 px</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Controls Panel -->
+                        <div class="lg:col-span-5 flex flex-col gap-4">
+                            <div class="bg-white/90 p-5 rounded-2xl border border-indigo-100 shadow-sm space-y-4">
+                                <h3 class="font-bold text-indigo-900 flex items-center gap-2 text-base">
+                                    <i class="fa-solid fa-sliders text-indigo-500"></i> 調整兩圖形的大小：
+                                </h3>
+                                
+                                <!-- Pink Shape Slider -->
+                                <div>
+                                    <div class="flex justify-between text-sm font-bold mb-1">
+                                        <span class="text-rose-600 flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-rose-500 inline-block"></span>粉紅圖形 (ㄅ) 寬度</span>
+                                        <span id="val-shapeA" class="text-rose-600 font-extrabold">180 px</span>
+                                    </div>
+                                    <input type="range" id="sliderA" min="100" max="240" step="5" value="180" oninput="updateShapeSizes()" class="w-full accent-rose-500 cursor-pointer">
+                                </div>
+
+                                <!-- Green Shape Slider -->
+                                <div>
+                                    <div class="flex justify-between text-sm font-bold mb-1">
+                                        <span class="text-emerald-600 flex items-center gap-1.5"><span class="w-3.5 h-3.5 rounded bg-emerald-500 inline-block"></span>綠色圖形 (ㄆ) 寬度</span>
+                                        <span id="val-shapeB" class="text-emerald-600 font-extrabold">130 px</span>
+                                    </div>
+                                    <input type="range" id="sliderB" min="100" max="240" step="5" value="130" oninput="updateShapeSizes()" class="w-full accent-emerald-500 cursor-pointer">
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="grid grid-cols-2 gap-3 pt-2">
+                                    <button onclick="alignOverlay()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-1.5 text-sm">
+                                        <i class="fa-solid fa-object-group"></i> 疊合對齊比較
+                                    </button>
+                                    <button onclick="separateShapes()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2.5 px-3 rounded-xl transition-all flex items-center justify-center gap-1.5 text-sm">
+                                        <i class="fa-solid fa-arrows-split-up-and-left"></i> 分開放置
+                                    </button>
+                                </div>
+
+                                <!-- Opacity Slider -->
+                                <div class="pt-2 border-t border-slate-100">
+                                    <div class="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                                        <span>半透明度</span>
+                                        <span id="val-opacity">80%</span>
+                                    </div>
+                                    <input type="range" id="opacitySlider" min="0.3" max="1" step="0.05" value="0.8" oninput="updateOpacity(this.value)" class="w-full accent-indigo-400 cursor-pointer">
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Hint Box -->
+                            <div id="overlay-hint" class="bg-amber-50/90 border border-amber-200 rounded-2xl p-4 text-xs md:text-sm font-bold text-amber-900 leading-relaxed shadow-sm flex items-start gap-2.5">
+                                <i class="fa-solid fa-lightbulb text-amber-500 text-base shrink-0 mt-0.5"></i>
+                                <span id="overlay-hint-text">請點擊「疊合對齊比較」按鈕，或是用滑鼠/手指將綠色圖形抓過來直接對齊吧！</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2.5 / TAB 3: 描圖紙間接比較 (無法直接疊合時) -->
+            <section id="tab2_5" class="tab-content hidden">
+                <div class="shinkai-card rounded-3xl p-6 mb-6">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-8 h-8 rounded-full bg-purple-500 text-white font-bold flex items-center justify-center">3</span>
+                        <h2 class="text-xl font-bold text-purple-900">描圖紙間接比較 (無法直接疊合時)</h2>
+                    </div>
+                    <p class="text-slate-600 mb-6 text-sm md:text-base">
+                        當兩個物品固定在不同地方無法直接疊放在一起時，我們可以透過<b>「半透明描圖紙」</b>先描下形狀，再進行比較！
+                    </p>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- Left Panel: Steps and Control Buttons -->
+                        <div class="lg:col-span-4 bg-white/90 p-5 rounded-2xl border border-purple-100 shadow-sm flex flex-col justify-between space-y-4">
+                            <div>
+                                <h3 class="font-bold text-purple-900 mb-3 flex items-center gap-2 text-base">
+                                    <i class="fa-solid fa-list-check text-purple-500"></i> 描圖紙比較三步驟：
+                                </h3>
+                                <ol class="text-xs md:text-sm text-slate-600 space-y-2 mb-6 font-medium leading-relaxed">
+                                    <li class="flex items-start gap-1.5"><span class="font-bold text-purple-600">1.</span> 點擊「第一步：蓋上描圖紙」，放在小狗卡片上。</li>
+                                    <li class="flex items-start gap-1.5"><span class="font-bold text-purple-600">2.</span> 點擊「第二步：描出小狗卡片」，將輪廓畫在描圖紙上。</li>
+                                    <li class="flex items-start gap-1.5"><span class="font-bold text-purple-600">3.</span> 點擊「第三步：移至小貓卡片比較」，比比看誰的面比較大！</li>
+                                </ol>
+
+                                <!-- Step Action Buttons -->
+                                <div class="space-y-2.5">
+                                    <button onclick="runTracingStep(1)" id="btn-trace-step1" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md text-sm text-left flex items-center justify-between">
+                                        <span>1. 蓋上描圖紙</span>
+                                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                                    </button>
+
+                                    <button onclick="runTracingStep(2)" id="btn-trace-step2" disabled class="w-full bg-slate-200 text-slate-400 font-bold py-3 px-4 rounded-xl transition-all text-sm text-left flex items-center justify-between cursor-not-allowed">
+                                        <span>2. 描出輪廓圖形</span>
+                                        <i class="fa-solid fa-pen-line text-xs"></i>
+                                    </button>
+
+                                    <button onclick="runTracingStep(3)" id="btn-trace-step3" disabled class="w-full bg-slate-200 text-slate-400 font-bold py-3 px-4 rounded-xl transition-all text-sm text-left flex items-center justify-between cursor-not-allowed">
+                                        <span>3. 移至小貓卡片疊合比較</span>
+                                        <i class="fa-solid fa-arrows-to-eye text-xs"></i>
+                                    </button>
+
+                                    <button onclick="resetTracingExperiment()" id="btn-trace-reset" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-bold py-2.5 px-4 rounded-xl transition-all text-xs flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-rotate-left"></i> 重新開始實驗
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="bg-indigo-50 p-3 rounded-xl border border-indigo-100 text-xs font-bold text-indigo-800 flex items-center gap-2">
+                                <span>💡 觀念加分：描圖紙透明且輕便，是無法直接移動物體時的最佳比較工具！</span>
+                            </div>
+                        </div>
+
+                        <!-- Right Panel: Interactive Visual Workspace -->
+                        <div class="lg:col-span-8 bg-slate-100/90 rounded-2xl p-6 border border-slate-200 relative min-h-[380px] flex flex-col justify-between shadow-inner overflow-hidden">
+                            <!-- Cards Display Area -->
+                            <div class="relative w-full h-[280px] flex items-center justify-around" id="tracing-workspace">
+                                <!-- Location A: Dog Card (10cm x 10cm) -->
+                                <div class="flex flex-col items-center">
+                                    <div id="dog-card" class="w-40 h-40 bg-amber-200/90 border-4 border-amber-400 rounded-3xl flex flex-col items-center justify-center shadow-md relative">
+                                        <i class="fa-solid fa-dog text-4xl text-amber-700 mb-2"></i>
+                                        <span class="font-bold text-amber-900 text-base">小狗卡片</span>
+                                        <span class="text-xs font-medium text-amber-800/80">(高 10cm × 寬 10cm)</span>
+                                    </div>
+                                    <span class="mt-3 font-bold text-slate-600 text-sm bg-white/80 px-3 py-1 rounded-full border border-slate-200 shadow-sm">
+                                        📍 地點 A：書桌上
+                                    </span>
+                                </div>
+
+                                <!-- Location B: Cat Card (10cm x 12cm) -->
+                                <div class="flex flex-col items-center">
+                                    <div id="cat-card" class="w-48 h-40 bg-purple-200/90 border-4 border-purple-400 rounded-3xl flex flex-col items-center justify-center shadow-md relative">
+                                        <i class="fa-solid fa-cat text-4xl text-purple-700 mb-2"></i>
+                                        <span class="font-bold text-purple-900 text-base">小貓卡片</span>
+                                        <span class="text-xs font-medium text-purple-800/80">(高 10cm × 寬 12cm)</span>
+                                    </div>
+                                    <span class="mt-3 font-bold text-slate-600 text-sm bg-white/80 px-3 py-1 rounded-full border border-slate-200 shadow-sm">
+                                        📍 地點 B：牆壁上
+                                    </span>
+                                </div>
+
+                                <!-- Animated Tracing Paper Layer -->
+                                <div id="tracing-paper" class="absolute bg-white/40 backdrop-blur-sm border-2 border-dashed border-sky-400 rounded-3xl flex flex-col items-center justify-center shadow-lg pointer-events-none opacity-0 tracing-paper-transition" style="width: 160px; height: 160px; left: 10%; top: 15%;">
+                                    <span class="text-xs font-bold bg-sky-600 text-white px-2 py-0.5 rounded-full shadow-sm mb-1" id="tracing-paper-tag">半透明描圖紙</span>
+                                    <!-- Traced Outline Inner Container -->
+                                    <div id="traced-line" class="w-full h-full absolute inset-0 rounded-3xl bg-amber-300/30 opacity-0 transition-opacity duration-500 flex items-center justify-center">
+                                        <span class="text-xs font-bold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-full border border-amber-200">小狗輪廓</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Feedback Message Bar -->
+                            <div id="tracing-feedback" class="mt-4 bg-purple-50 border border-purple-200 rounded-2xl p-3.5 text-xs md:text-sm font-bold text-purple-900 flex items-center gap-2.5 transition-all">
+                                <i class="fa-solid fa-circle-info text-purple-500 text-base shrink-0"></i>
+                                <span id="tracing-feedback-text">請按下「1. 蓋上描圖紙」開始實驗！</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4 / TAB 3: 個別單位鋪排與數格遊戲 -->
+            <section id="tab3" class="tab-content hidden">
+                <div class="shinkai-card rounded-3xl p-6 mb-6">
+                    <!-- Title Banner -->
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="w-9 h-9 rounded-2xl bg-indigo-600 text-white font-bold flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-border-all text-base"></i>
+                        </span>
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-black text-indigo-950 tracking-wide">個別單位鋪排與數格遊戲</h2>
+                            <p class="text-xs md:text-sm font-bold text-slate-500 mt-0.5">
+                                使用「小正方形」當作個別單位鋪排在圖形上（不可重疊、不能有縫隙），點數小正方形數量來比較面的大小。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+                        <!-- Left Control & Summary Panel -->
+                        <div class="lg:col-span-4 bg-white/90 p-5 rounded-2xl border border-indigo-100 shadow-sm flex flex-col justify-between space-y-5">
+                            <div>
+                                <h3 class="font-bold text-indigo-900 mb-2 flex items-center gap-2 text-base">
+                                    <i class="fa-solid fa-gamepad text-indigo-500"></i> 鋪排與計數選擇
+                                </h3>
+                                <p class="text-xs text-slate-500 font-bold mb-4 leading-relaxed">
+                                    點擊下方切換按鈕，觀察三種不同圖形（甲、乙、丙）各由幾個小正方形方格鋪滿：
+                                </p>
+
+                                <!-- Interactive Buttons -->
+                                <div class="space-y-2.5" id="grid-mode-buttons">
+                                    <button onclick="renderGridShape('甲')" id="btn-grid-shapeA" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md flex items-center justify-between text-sm">
+                                        <span class="flex items-center gap-2"><i class="fa-solid fa-cross"></i> 觀察 圖形 甲 (十字形)</span>
+                                        <span class="bg-emerald-700/40 text-emerald-100 text-xs px-2.5 py-1 rounded-lg font-black">6 格</span>
+                                    </button>
+
+                                    <button onclick="renderGridShape('乙')" id="btn-grid-shapeB" class="w-full bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md flex items-center justify-between text-sm">
+                                        <span class="flex items-center gap-2"><i class="fa-solid fa-turn-down"></i> 觀察 圖形 乙 (L型)</span>
+                                        <span class="bg-amber-700/40 text-amber-100 text-xs px-2.5 py-1 rounded-lg font-black">4 格</span>
+                                    </button>
+
+                                    <button onclick="renderGridShape('丙')" id="btn-grid-shapeC" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md flex items-center justify-between text-sm">
+                                        <span class="flex items-center gap-2"><i class="fa-solid fa-bolt"></i> 觀察 圖形 丙 (閃電型)</span>
+                                        <span class="bg-sky-700/40 text-sky-100 text-xs px-2.5 py-1 rounded-lg font-black">5 格</span>
+                                    </button>
+
+                                    <!-- Updated button with light pink semi-transparent background -->
+                                    <button onclick="renderGridShape('ALL')" id="btn-grid-shapeALL" class="w-full bg-pink-100/70 hover:bg-pink-200/80 text-pink-900 font-bold py-3 px-4 rounded-xl transition-all shadow-md flex items-center justify-between text-sm border-2 border-pink-300/80">
+                                        <span class="flex items-center gap-2"><i class="fa-solid fa-layer-group"></i> 同時觀察三個圖形</span>
+                                        <span class="bg-pink-300/50 text-pink-900 text-xs px-2.5 py-1 rounded-lg font-black">15 格</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Value Comparison Summary Box -->
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-3">
+                                <h4 class="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+                                    <i class="fa-solid fa-chart-simple text-indigo-500"></i> 數值比較總結：
+                                </h4>
+                                <ul class="text-xs font-bold space-y-1.5 pl-1">
+                                    <li class="text-emerald-600 flex items-center justify-between">
+                                        <span>‧ 圖形甲：</span>
+                                        <span class="bg-emerald-100 px-2 py-0.5 rounded text-emerald-800">6 個小方格</span>
+                                    </li>
+                                    <li class="text-amber-600 flex items-center justify-between">
+                                        <span>‧ 圖形乙：</span>
+                                        <span class="bg-amber-100 px-2 py-0.5 rounded text-amber-800">4 個小方格</span>
+                                    </li>
+                                    <li class="text-sky-600 flex items-center justify-between">
+                                        <span>‧ 圖形丙：</span>
+                                        <span class="bg-sky-100 px-2 py-0.5 rounded text-sky-800">5 個小方格</span>
+                                    </li>
+                                </ul>
+
+                                <div class="pt-2 border-t border-slate-200/80 font-black text-xs md:text-sm space-y-1.5 bg-indigo-50/60 p-2.5 rounded-lg text-indigo-900">
+                                    <div class="flex justify-between items-center">
+                                        <span>最大的面是：</span>
+                                        <span class="text-emerald-600 bg-white px-2 py-0.5 rounded border border-emerald-200 shadow-sm">圖形 甲</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span>最小的面是：</span>
+                                        <span class="text-amber-600 bg-white px-2 py-0.5 rounded border border-amber-200 shadow-sm">圖形 乙</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Grid Display Workspace -->
+                        <div class="lg:col-span-8 bg-slate-100/90 rounded-2xl p-5 border border-slate-200 flex flex-col items-center justify-between shadow-inner">
+                            <div class="w-full flex items-center justify-between mb-3 px-1">
+                                <span class="text-xs font-bold text-slate-500 flex items-center gap-1.5">
+                                    <span class="w-3 h-3 rounded bg-indigo-500 inline-block"></span>
+                                    網格背景 (每個小方格大小均相同)
+                                </span>
+                                <span id="current-grid-title" class="text-xs font-black text-indigo-700 bg-indigo-100 px-3 py-1 rounded-full">
+                                    目前檢視：圖形 甲
+                                </span>
+                            </div>
+
+                            <!-- 8x6 Interactive Grid Canvas / Container -->
+                            <div class="bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-sm w-full max-w-[520px] mx-auto">
+                                <div id="grid-matrix" class="grid grid-cols-8 gap-1.5 aspect-[8/6] w-full">
+                                    <!-- 48 grid cells dynamically populated -->
+                                </div>
+                            </div>
+
+                            <!-- Tip at bottom -->
+                            <div class="mt-4 bg-amber-50/90 border border-amber-200 rounded-xl p-3 text-xs font-bold text-amber-900 flex items-center gap-2 w-full">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-500 text-sm shrink-0"></i>
+                                <span>個別單位鋪排時，必須「緊密黏貼、不能重疊、也不能留下縫隙」。</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 5: 自我挑戰 -->
+            <section id="tab5" class="tab-content hidden">
+                <div class="shinkai-card rounded-3xl p-6 mb-6">
+                    <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+                        <div class="flex items-center gap-3">
+                            <span class="w-9 h-9 rounded-2xl bg-amber-500 text-white font-bold flex items-center justify-center shadow-md">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </span>
+                            <h2 class="text-xl md:text-2xl font-black text-amber-900 tracking-wide">自我挑戰 (共 5 題，滿分 100 分)</h2>
+                        </div>
+                    </div>
+
+                    <!-- Score Result Banner (Hidden initially) -->
+                    <div id="quiz-score-banner" class="hidden mb-6 p-4 rounded-2xl bg-indigo-600 text-white text-center font-black text-lg md:text-xl shadow-md border-2 border-indigo-400">
+                        <!-- Score dynamically inserted -->
+                    </div>
+
+                    <div id="quiz-container" class="space-y-6">
+                        <!-- Question 1 -->
+                        <div class="bg-white/90 p-5 rounded-2xl border border-amber-100 shadow-sm" id="q1-box">
+                            <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-base">
+                                <span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-lg text-sm">第 1 題</span>
+                                下列哪一個物品具有「平平的面（平面）」？
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <button onclick="selectOption(1, 'A')" id="q1-btn-A" class="q1-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">A. 滾動的籃球</button>
+                                <button onclick="selectOption(1, 'B')" id="q1-btn-B" class="q1-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">B. 裝鞋子的正方形紙盒</button>
+                                <button onclick="selectOption(1, 'C')" id="q1-btn-C" class="q1-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">C. 好吃的西瓜</button>
+                            </div>
+                            <div id="q1-feedback" class="mt-3 p-3.5 rounded-xl hidden font-bold text-sm"></div>
+                        </div>
+
+                        <!-- Question 2 -->
+                        <div class="bg-white/90 p-5 rounded-2xl border border-amber-100 shadow-sm" id="q2-box">
+                            <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-base">
+                                <span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-lg text-sm">第 2 題</span>
+                                想要比較兩條毛巾面的大小，首先應該怎麼做？
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <button onclick="selectOption(2, 'A')" id="q2-btn-A" class="q2-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">A. 揉成一團直接比</button>
+                                <button onclick="selectOption(2, 'B')" id="q2-btn-B" class="q2-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">B. 先拉直鋪平再比較</button>
+                                <button onclick="selectOption(2, 'C')" id="q2-btn-C" class="q2-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">C. 掛在衣架上看長度</button>
+                            </div>
+                            <div id="q2-feedback" class="mt-3 p-3.5 rounded-xl hidden font-bold text-sm"></div>
+                        </div>
+
+                        <!-- Question 3 -->
+                        <div class="bg-white/90 p-5 rounded-2xl border border-amber-100 shadow-sm" id="q3-box">
+                            <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-base">
+                                <span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-lg text-sm">第 3 題</span>
+                                拿透明描圖紙畫下小狗卡片後，放在小貓卡片上比較，發現小貓卡片在右邊有露出多餘的部分，請問誰的面比較大？
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <button onclick="selectOption(3, 'A')" id="q3-btn-A" class="q3-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">A. 小狗卡片的面比較大</button>
+                                <button onclick="selectOption(3, 'B')" id="q3-btn-B" class="q3-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">B. 小貓卡片的面比較大</button>
+                                <button onclick="selectOption(3, 'C')" id="q3-btn-C" class="q3-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">C. 兩者一樣大</button>
+                            </div>
+                            <div id="q3-feedback" class="mt-3 p-3.5 rounded-xl hidden font-bold text-sm"></div>
+                        </div>
+
+                        <!-- Question 4 -->
+                        <div class="bg-white/90 p-5 rounded-2xl border border-amber-100 shadow-sm" id="q4-box">
+                            <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-base">
+                                <span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-lg text-sm">第 4 題</span>
+                                用小方格拼排圖形測量面積時，下列哪種做法是正確的？
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <button onclick="selectOption(4, 'A')" id="q4-btn-A" class="q4-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">A. 方格之間可以重疊</button>
+                                <button onclick="selectOption(4, 'B')" id="q4-btn-B" class="q4-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">B. 隨便留下大縫隙</button>
+                                <button onclick="selectOption(4, 'C')" id="q4-btn-C" class="q4-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">C. 一個接一個緊貼、不留縫隙且不重疊</button>
+                            </div>
+                            <div id="q4-feedback" class="mt-3 p-3.5 rounded-xl hidden font-bold text-sm"></div>
+                        </div>
+
+                        <!-- Question 5 -->
+                        <div class="bg-white/90 p-5 rounded-2xl border border-amber-100 shadow-sm" id="q5-box">
+                            <h3 class="font-bold text-slate-800 mb-3 flex items-center gap-2 text-base">
+                                <span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-lg text-sm">第 5 題</span>
+                                用小正方形當作個別單位鋪排測量兩個圖形時，下列哪一個觀念是正確的？
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <button onclick="selectOption(5, 'A')" id="q5-btn-A" class="q5-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">A. 使用的個別單位形狀和大小必須相同</button>
+                                <button onclick="selectOption(5, 'B')" id="q5-btn-B" class="q5-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">B. 只要數量一樣多，方格大小不一樣也沒關係</button>
+                                <button onclick="selectOption(5, 'C')" id="q5-btn-C" class="q5-btn p-3 border border-slate-200 rounded-xl text-left hover:bg-amber-50 transition-all font-medium">C. 方格可以隨意互相重疊</button>
+                            </div>
+                            <div id="q5-feedback" class="mt-3 p-3.5 rounded-xl hidden font-bold text-sm"></div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Action Buttons: 提交答案 (Left) & 重新測驗 (Right) -->
+                    <div class="flex flex-row justify-center gap-4 mt-8">
+                        <button onclick="submitQuiz()" class="w-44 md:w-52 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg transition-all text-base flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-paper-plane"></i> 提交答案
+                        </button>
+                        <button onclick="resetQuiz()" class="w-44 md:w-52 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-3.5 px-6 rounded-2xl transition-all text-base flex items-center justify-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-rotate-left"></i> 重新測驗
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Helper to calculate relative positions between elements
+        function getRelativePos(elemId, containerId) {
+            const elem = document.getElementById(elemId);
+            const container = document.getElementById(containerId);
+            if (!elem || !container) return { left: 0, top: 0 };
+            const elemRect = elem.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            return {
+                left: elemRect.left - containerRect.left,
+                top: elemRect.top - containerRect.top
+            };
+        }
+
+        // Global Tab Navigation
+        function switchTab(tabId) {
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => {
+                content.classList.add('hidden');
+                content.classList.remove('block');
+            });
+
+            const targetContent = document.getElementById(tabId);
+            if (targetContent) {
+                targetContent.classList.remove('hidden');
+                targetContent.classList.add('block');
+            }
+
+            const navButtons = document.querySelectorAll('#main-tabs button');
+            navButtons.forEach(btn => {
+                if (btn.id === 'btn-tab5') {
+                    btn.className = 'shinkai-card px-4 py-3 rounded-2xl font-bold hover:bg-white/90 transition-all duration-300 flex items-center gap-2 text-sm md:text-base text-slate-700 bg-amber-100/80';
+                } else {
+                    btn.className = 'shinkai-card px-4 py-3 rounded-2xl font-bold hover:bg-white/90 transition-all duration-300 flex items-center gap-2 text-sm md:text-base text-slate-700';
+                }
+            });
+
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if (activeBtn) {
+                activeBtn.className = 'shinkai-tab-active px-4 py-3 rounded-2xl font-bold transition-all duration-300 flex items-center gap-2 text-sm md:text-base';
+            }
+
+            if (tabId === 'tab3') {
+                renderGridShape('甲');
+            }
+        }
+
+        // --- TAB 1 LOGIC: 認識平面分類驗證 ---
+        const flatItemDetails = {
+            'basketball': {
+                title: '籃球',
+                hasFlat: false,
+                borderClass: 'border-rose-400 bg-rose-50/60',
+                badgeText: '✖ 沒有平面',
+                badgeClass: 'text-rose-600 bg-rose-100 px-2 py-0.5 rounded-full font-bold',
+                msgClass: 'bg-rose-50 border-rose-200 text-rose-800',
+                iconBg: 'bg-rose-500',
+                icon: '<i class="fa-solid fa-xmark"></i>',
+                msg: '答對囉！籃球全身上下都是圓弧曲面，沒有平平的面！'
+            },
+            'box': {
+                title: '餅乾盒',
+                hasFlat: true,
+                borderClass: 'border-emerald-400 bg-emerald-50/60',
+                badgeText: '✔ 有平面',
+                badgeClass: 'text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full font-bold',
+                msgClass: 'bg-emerald-50 border-emerald-200 text-emerald-800',
+                iconBg: 'bg-emerald-500',
+                icon: '<i class="fa-solid fa-check"></i>',
+                msg: '賓果！餅乾盒的正面、側邊與頂部都是平平的「平面」！'
+            },
+            'bottle': {
+                title: '保溫瓶',
+                hasFlat: true,
+                borderClass: 'border-emerald-400 bg-emerald-50/60',
+                badgeText: '✔ 有平面',
+                badgeClass: 'text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full font-bold',
+                msgClass: 'bg-emerald-50 border-emerald-200 text-emerald-800',
+                iconBg: 'bg-emerald-500',
+                icon: '<i class="fa-solid fa-check"></i>',
+                msg: '正確！保溫瓶的頂部（蓋子）和底部是平平的面，側面則是彎彎的曲面喔！'
+            },
+            'book': {
+                title: '數學課本',
+                hasFlat: true,
+                borderClass: 'border-emerald-400 bg-emerald-50/60',
+                badgeText: '✔ 有平面',
+                badgeClass: 'text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full font-bold',
+                msgClass: 'bg-emerald-50 border-emerald-200 text-emerald-800',
+                iconBg: 'bg-emerald-500',
+                icon: '<i class="fa-solid fa-check"></i>',
+                msg: '太棒了！數學課本的封面、封底都是非常標準的「平面」！'
+            },
+            'watermelon': {
+                title: '大西瓜',
+                hasFlat: false,
+                borderClass: 'border-rose-400 bg-rose-50/60',
+                badgeText: '✖ 沒有平面',
+                badgeClass: 'text-rose-600 bg-rose-100 px-2 py-0.5 rounded-full font-bold',
+                msgClass: 'bg-rose-50 border-rose-200 text-rose-800',
+                iconBg: 'bg-rose-500',
+                icon: '<i class="fa-solid fa-xmark"></i>',
+                msg: '讚喔！西瓜的外表是圓弧曲面，沒有平平的面！'
+            },
+            'blocks': {
+                title: '積木方塊',
+                hasFlat: true,
+                borderClass: 'border-emerald-400 bg-emerald-50/60',
+                badgeText: '✔ 有平面',
+                badgeClass: 'text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full font-bold',
+                msgClass: 'bg-emerald-50 border-emerald-200 text-emerald-800',
+                iconBg: 'bg-emerald-500',
+                icon: '<i class="fa-solid fa-check"></i>',
+                msg: '讚喔！積木方塊每個面都是平平的正方形「平面」！'
+            }
+        };
+
+        function verifyFlatItem(itemKey) {
+            const data = flatItemDetails[itemKey];
+            if (!data) return;
+
+            const card = document.getElementById('card-' + itemKey);
+            if (card) {
+                card.className = `item-card border-2 rounded-2xl p-5 flex flex-col items-center justify-center transition-all duration-300 shadow-sm ${data.borderClass} group relative`;
+                const badge = card.querySelector('.status-badge');
+                if (badge) {
+                    badge.textContent = data.badgeText;
+                    badge.className = `status-badge text-xs ${data.badgeClass}`;
+                }
+            }
+
+            const feedbackBox = document.getElementById('flat-feedback-box');
+            const feedbackIcon = document.getElementById('flat-feedback-icon');
+            const feedbackText = document.getElementById('flat-feedback-text');
+
+            if (feedbackBox && feedbackIcon && feedbackText) {
+                feedbackBox.className = `rounded-2xl p-4 font-bold text-sm md:text-base flex items-center gap-3 transition-all duration-300 border ${data.msgClass}`;
+                feedbackIcon.className = `w-7 h-7 rounded-full flex items-center justify-center text-white shrink-0 text-sm ${data.iconBg}`;
+                feedbackIcon.innerHTML = data.icon;
+                feedbackText.textContent = data.msg;
+                feedbackBox.classList.remove('hidden');
+            }
+        }
+
+        // --- TAB 2 LOGIC: 疊合與對齊比較 ---
+        function updateShapeSizes() {
+            const sliderA = document.getElementById('sliderA');
+            const sliderB = document.getElementById('sliderB');
+            const shapeA = document.getElementById('shapeA');
+            const shapeB = document.getElementById('shapeB');
+            const valA = document.getElementById('val-shapeA');
+            const valB = document.getElementById('val-shapeB');
+            const labelA = document.getElementById('label-shapeA-size');
+            const labelB = document.getElementById('label-shapeB-size');
+
+            if (!sliderA || !sliderB || !shapeA || !shapeB) return;
+
+            const sizeA = parseInt(sliderA.value);
+            const sizeB = parseInt(sliderB.value);
+
+            shapeA.style.width = sizeA + 'px';
+            shapeA.style.height = sizeA + 'px';
+            shapeB.style.width = sizeB + 'px';
+            shapeB.style.height = sizeB + 'px';
+
+            if (valA) valA.textContent = sizeA + ' px';
+            if (valB) valB.textContent = sizeB + ' px';
+            if (labelA) labelA.textContent = sizeA + ' px';
+            if (labelB) labelB.textContent = sizeB + ' px';
+
+            const hintText = document.getElementById('overlay-hint-text');
+            if (hintText) {
+                if (sizeA > sizeB) {
+                    hintText.textContent = `目前粉紅圖形 (ㄅ: ${sizeA}px) 大於 綠色圖形 (ㄆ: ${sizeB}px)。點擊「疊合對齊比較」將兩圖形左上角對齊！`;
+                } else if (sizeA < sizeB) {
+                    hintText.textContent = `目前粉紅圖形 (ㄅ: ${sizeA}px) 小於 綠色圖形 (ㄆ: ${sizeB}px)。點擊「疊合對齊比較」將兩圖形左上角對齊！`;
+                } else {
+                    hintText.textContent = `兩圖形寬度皆為 ${sizeA}px，大小完全相同！`;
+                }
+            }
+        }
+
+        function alignOverlay() {
+            const shapeA = document.getElementById('shapeA');
+            const shapeB = document.getElementById('shapeB');
+            const hintText = document.getElementById('overlay-hint-text');
+
+            if (!shapeA || !shapeB) return;
+
+            shapeB.style.left = shapeA.style.left;
+            shapeB.style.top = shapeA.style.top;
+
+            const sizeA = parseInt(document.getElementById('sliderA').value);
+            const sizeB = parseInt(document.getElementById('sliderB').value);
+
+            if (hintText) {
+                if (sizeA > sizeB) {
+                    const diff = sizeA - sizeB;
+                    hintText.textContent = `✨ 疊合對齊完成！粉紅圖形 (ㄅ) 邊長比綠色圖形 (ㄆ) 多出 ${diff} px，因此粉紅圖形的面比較大！`;
+                } else if (sizeA < sizeB) {
+                    const diff = sizeB - sizeA;
+                    hintText.textContent = `✨ 疊合對齊完成！綠色圖形 (ㄆ) 邊長比粉紅圖形 (ㄅ) 多出 ${diff} px，超出重疊範圍，因此綠色圖形的面比較大！`;
+                } else {
+                    hintText.textContent = `✨ 疊合對齊完成！兩邊重疊處完全貼合，沒有多餘部分，因此兩圖形的面一樣大！`;
+                }
+            }
+        }
+
+        function separateShapes() {
+            const shapeA = document.getElementById('shapeA');
+            const shapeB = document.getElementById('shapeB');
+            const hintText = document.getElementById('overlay-hint-text');
+
+            if (!shapeA || !shapeB) return;
+
+            shapeA.style.left = 'calc(50% - 200px)';
+            shapeA.style.top = 'calc(50% - 90px)';
+
+            shapeB.style.left = 'calc(50% + 30px)';
+            shapeB.style.top = 'calc(50% - 65px)';
+
+            if (hintText) {
+                hintText.textContent = '已將兩圖形分開放置。你可以重新調整 slider 或手動拖曳綠色圖形！';
+            }
+        }
+
+        function updateOpacity(val) {
+            const shapeB = document.getElementById('shapeB');
+            const valOpacity = document.getElementById('val-opacity');
+            if (shapeB) shapeB.style.opacity = val;
+            if (valOpacity) valOpacity.textContent = Math.round(val * 100) + '%';
+        }
+
+        // Draggable Shape B Logic
+        let isDraggingShapeB = false;
+        let dragOffsetX = 0;
+        let dragOffsetY = 0;
+
+        function startDragShapeB(e) {
+            isDraggingShapeB = true;
+            const shapeB = document.getElementById('shapeB');
+            const container = document.getElementById('shapes-container');
+            if (!shapeB || !container) return;
+
+            const rectB = shapeB.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            dragOffsetX = clientX - rectB.left;
+            dragOffsetY = clientY - rectB.top;
+
+            document.addEventListener('mousemove', onDragShapeB);
+            document.addEventListener('mouseup', stopDragShapeB);
+            document.addEventListener('touchmove', onDragShapeB);
+            document.addEventListener('touchend', stopDragShapeB);
+        }
+
+        function onDragShapeB(e) {
+            if (!isDraggingShapeB) return;
+            const shapeB = document.getElementById('shapeB');
+            const container = document.getElementById('shapes-container');
+            if (!shapeB || !container) return;
+
+            const containerRect = container.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+            let newLeft = clientX - containerRect.left - dragOffsetX;
+            let newTop = clientY - containerRect.top - dragOffsetY;
+
+            shapeB.style.left = newLeft + 'px';
+            shapeB.style.top = newTop + 'px';
+        }
+
+        function stopDragShapeB() {
+            isDraggingShapeB = false;
+            document.removeEventListener('mousemove', onDragShapeB);
+            document.removeEventListener('mouseup', stopDragShapeB);
+            document.removeEventListener('touchmove', onDragShapeB);
+            document.removeEventListener('touchend', stopDragShapeB);
+        }
+
+        // --- TAB 3 LOGIC: 描圖紙間接比較 ---
+        let currentTraceStep = 0;
+
+        function runTracingStep(step) {
+            const paper = document.getElementById('tracing-paper');
+            const tracedLine = document.getElementById('traced-line');
+            const feedbackText = document.getElementById('tracing-feedback-text');
+            const btnStep1 = document.getElementById('btn-trace-step1');
+            const btnStep2 = document.getElementById('btn-trace-step2');
+            const btnStep3 = document.getElementById('btn-trace-step3');
+
+            if (!paper || !tracedLine || !feedbackText) return;
+
+            if (step === 1) {
+                const dogPos = getRelativePos('dog-card', 'tracing-workspace');
+                paper.style.left = dogPos.left + 'px';
+                paper.style.top = dogPos.top + 'px';
+                paper.style.opacity = '1';
+
+                feedbackText.textContent = '步驟 1：透明描圖紙已蓋在小狗卡片上。請按下「2. 描出輪廓圖形」！';
+
+                btnStep2.disabled = false;
+                btnStep2.className = 'w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md text-sm text-left flex items-center justify-between cursor-pointer';
+
+                currentTraceStep = 1;
+            } else if (step === 2) {
+                tracedLine.style.opacity = '1';
+                feedbackText.textContent = '步驟 2：已用色筆描出小狗卡片 10cm × 10cm 輪廓！請按下「3. 移至小貓卡片疊合比較」！';
+
+                btnStep3.disabled = false;
+                btnStep3.className = 'w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-xl transition-all shadow-md text-sm text-left flex items-center justify-between cursor-pointer';
+
+                currentTraceStep = 2;
+            } else if (step === 3) {
+                const catPos = getRelativePos('cat-card', 'tracing-workspace');
+                paper.style.left = catPos.left + 'px';
+                paper.style.top = catPos.top + 'px';
+
+                feedbackText.textContent = '✨ 步驟 3：描圖紙移至小貓卡片上！發現小貓卡片右側多出 2cm，因此小貓卡片的面比小狗卡片大！';
+
+                currentTraceStep = 3;
+            }
+        }
+
+        function resetTracingExperiment() {
+            const paper = document.getElementById('tracing-paper');
+            const tracedLine = document.getElementById('traced-line');
+            const feedbackText = document.getElementById('tracing-feedback-text');
+            const btnStep2 = document.getElementById('btn-trace-step2');
+            const btnStep3 = document.getElementById('btn-trace-step3');
+
+            if (paper) {
+                paper.style.opacity = '0';
+                paper.style.left = '10%';
+                paper.style.top = '15%';
+            }
+            if (tracedLine) tracedLine.style.opacity = '0';
+
+            if (feedbackText) feedbackText.textContent = '請按下「1. 蓋上描圖紙」開始實驗！';
+
+            if (btnStep2) {
+                btnStep2.disabled = true;
+                btnStep2.className = 'w-full bg-slate-200 text-slate-400 font-bold py-3 px-4 rounded-xl transition-all text-sm text-left flex items-center justify-between cursor-not-allowed';
+            }
+            if (btnStep3) {
+                btnStep3.disabled = true;
+                btnStep3.className = 'w-full bg-slate-200 text-slate-400 font-bold py-3 px-4 rounded-xl transition-all text-sm text-left flex items-center justify-between cursor-not-allowed';
+            }
+            currentTraceStep = 0;
+        }
+
+        // --- TAB 4 LOGIC: 個別單位鋪排與數格遊戲 ---
+        const gridShapes = {
+            '甲': {
+                name: '圖形 甲 (十字形)',
+                colorClass: 'bg-emerald-500 border-emerald-600 text-white font-black shadow-sm scale-95 transition-transform duration-300',
+                cells: {
+                    10: 1,
+                    17: 2, 18: 3, 19: 4,
+                    26: 5,
+                    34: 6
+                }
+            },
+            '乙': {
+                name: '圖形 乙 (L型)',
+                colorClass: 'bg-amber-500 border-amber-600 text-white font-black shadow-sm scale-95 transition-transform duration-300',
+                cells: {
+                    4: 1, 5: 2, 6: 3,
+                    12: 4
+                }
+            },
+            '丙': {
+                name: '圖形 丙 (閃電型)',
+                colorClass: 'bg-sky-500 border-sky-600 text-white font-black shadow-sm scale-95 transition-transform duration-300',
+                cells: {
+                    22: 1, 23: 2,
+                    30: 3, 31: 4,
+                    37: 5
+                }
+            }
+        };
+
+        function renderGridShape(mode) {
+            const gridContainer = document.getElementById('grid-matrix');
+            const titleSpan = document.getElementById('current-grid-title');
+            if (!gridContainer) return;
+
+            gridContainer.innerHTML = '';
+
+            if (mode === 'ALL') {
+                if (titleSpan) titleSpan.textContent = '目前檢視：同時觀察三個圖形 (甲、乙、丙)';
+            } else {
+                if (titleSpan) titleSpan.textContent = `目前檢視：${gridShapes[mode]?.name || ''}`;
+            }
+
+            for (let i = 0; i < 48; i++) {
+                const cell = document.createElement('div');
+
+                let activeConfig = null;
+
+                if (mode === 'ALL') {
+                    for (const key of ['甲', '乙', '丙']) {
+                        if (gridShapes[key].cells[i] !== undefined) {
+                            activeConfig = {
+                                colorClass: gridShapes[key].colorClass,
+                                label: gridShapes[key].cells[i]
+                            };
+                            break;
+                        }
+                    }
+                } else if (gridShapes[mode] && gridShapes[mode].cells[i] !== undefined) {
+                    activeConfig = {
+                        colorClass: gridShapes[mode].colorClass,
+                        label: gridShapes[mode].cells[i]
+                    };
+                }
+
+                if (activeConfig) {
+                    cell.className = `rounded-lg border flex items-center justify-center text-sm md:text-base ${activeConfig.colorClass} aspect-square`;
+                    cell.textContent = activeConfig.label;
+                } else {
+                    cell.className = 'rounded-lg border border-slate-100 bg-slate-50 flex items-center justify-center font-medium text-xs text-slate-300 transition-all duration-300 aspect-square';
+                    cell.textContent = i + 1;
+                }
+
+                gridContainer.appendChild(cell);
+            }
+        }
+
+        // --- TAB 5 LOGIC: 自我挑戰 (QUIZ LOGIC & UNANSWERED PROTECTION) ---
+        const userAnswers = {
+            1: null,
+            2: null,
+            3: null,
+            4: null,
+            5: null
+        };
+
+        const correctAnswers = {
+            1: 'B',
+            2: 'B',
+            3: 'B',
+            4: 'C',
+            5: 'A'
+        };
+
+        const explanations = {
+            1: {
+                correct: '正方形紙盒具有平平的面（平面）。籃球與西瓜表面均為圓弧曲面，沒有平面。',
+                wrong: '籃球與西瓜表面均為圓弧曲面。只有裝鞋子的正方形紙盒擁有平平的面（平面）。'
+            },
+            2: {
+                correct: '比較毛巾或軟質物品面的大小時，必須先將其拉直鋪平，才能精準進行疊合或觀察。',
+                wrong: '揉成一團或掛在衣架上無法精準觀察整個面的大小，必須先將毛巾拉直鋪平才能比較。'
+            },
+            3: {
+                correct: '疊合時，小貓卡片右側露出了多餘的部分，代表小貓卡片涵蓋的範圍較大。',
+                wrong: '當小貓卡片右側露出多餘部分時，表示小貓卡片超出重疊範圍，因此小貓卡片的面比較大。'
+            },
+            4: {
+                correct: '個別單位鋪排測量時，方格必須「一個接一個緊貼、不留縫隙且不重疊」，測量結果才準確。',
+                wrong: '方格間若有重疊或縫隙，會導致點數數量不準確。必須緊貼、不留縫隙且不重疊。'
+            },
+            5: {
+                correct: '使用個別單位比較面的大小時，所使用的單位（如小正方形）形狀與大小必須完全一致。',
+                wrong: '若個別單位的大小不相同，單憑數量無法公平比較面的大小，因此單位形狀與大小必須相同。'
+            }
+        };
+
+        function selectOption(qNum, option) {
+            userAnswers[qNum] = option;
+            const btnGroup = document.querySelectorAll(`.q${qNum}-btn`);
+            btnGroup.forEach(btn => {
+                btn.classList.remove('bg-amber-200', 'border-amber-400', 'font-bold');
+            });
+            const selectedBtn = document.getElementById(`q${qNum}-btn-${option}`);
+            if (selectedBtn) {
+                selectedBtn.classList.add('bg-amber-200', 'border-amber-400', 'font-bold');
+            }
+        }
+
+        function submitQuiz() {
+            let score = 0;
+
+            for (let q = 1; q <= 5; q++) {
+                const ans = userAnswers[q];
+                const feedbackDiv = document.getElementById(`q${q}-feedback`);
+                if (!feedbackDiv) continue;
+
+                feedbackDiv.classList.remove('hidden');
+
+                if (ans === null || ans === undefined) {
+                    // Blank / Unanswered protection: Show ONLY "未作答。" in yellow alert, no explanations revealed!
+                    feedbackDiv.className = 'mt-3 p-3.5 rounded-xl font-bold text-sm bg-amber-50 text-amber-800 border border-amber-300 flex items-center gap-2';
+                    feedbackDiv.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-500 text-base shrink-0"></i> 未作答。';
+                } else if (ans === correctAnswers[q]) {
+                    score += 20;
+                    feedbackDiv.className = 'mt-3 p-3.5 rounded-xl font-bold text-sm bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-start gap-2';
+                    feedbackDiv.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 text-base shrink-0 mt-0.5"></i> <div><span>答對了！</span> <p class="text-xs font-normal mt-0.5 text-emerald-700">${explanations[q].correct}</p></div>`;
+                } else {
+                    feedbackDiv.className = 'mt-3 p-3.5 rounded-xl font-bold text-sm bg-rose-50 text-rose-800 border border-rose-200 flex items-start gap-2';
+                    feedbackDiv.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 text-base shrink-0 mt-0.5"></i> <div><span>答錯了！</span> <p class="text-xs font-normal mt-0.5 text-rose-700">${explanations[q].wrong}</p></div>`;
+                }
+            }
+
+            // Show score banner
+            const scoreBanner = document.getElementById('quiz-score-banner');
+            if (scoreBanner) {
+                scoreBanner.classList.remove('hidden');
+                scoreBanner.innerHTML = `🎉 測驗結果：你的總得分是 <span class="text-amber-300 text-2xl font-black">${score}</span> / 100 分！`;
+            }
+        }
+
+        function resetQuiz() {
+            for (let q = 1; q <= 5; q++) {
+                userAnswers[q] = null;
+                const btnGroup = document.querySelectorAll(`.q${q}-btn`);
+                btnGroup.forEach(btn => {
+                    btn.classList.remove('bg-amber-200', 'border-amber-400', 'font-bold');
+                });
+                const feedbackDiv = document.getElementById(`q${q}-feedback`);
+                if (feedbackDiv) {
+                    feedbackDiv.classList.add('hidden');
+                    feedbackDiv.innerHTML = '';
+                }
+            }
+
+            const scoreBanner = document.getElementById('quiz-score-banner');
+            if (scoreBanner) {
+                scoreBanner.classList.add('hidden');
+                scoreBanner.innerHTML = '';
+            }
+        }
+
+        // --- WINDOW ONLOAD INITIALIZATION ---
+        window.onload = function() {
+            updateShapeSizes();
+            renderGridShape('甲');
+        };
+    </script>
+</body>
+</html>

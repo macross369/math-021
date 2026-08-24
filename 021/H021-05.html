@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>二年級數學：容量動態探究館</title>
+    <!-- FontAwesome 繪圖圖示庫 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --sky-top: #a1c4fd;
+            --sky-bottom: #c2e9fb;
+            --sunset-pink: #fbc2eb;
+            --sunset-blue: #a6c1ee;
+            --cloud-white: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --primary-blue: #3a7bd5;
+            --water-color: #3a88e9;
+            --water-light: #64b5f6;
+            --juice-orange: #ff9800;
+            --text-dark: #2c3e50;
+            --success-color: #2e7d32;
+            --error-color: #c62828;
+            --warning-color: #e65100;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 50%, #e0c3fc 100%);
+            background-attachment: fixed;
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sky-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 100px;
+            filter: blur(8px);
+            animation: floatCloud 25s infinite linear;
+        }
+
+        .cloud1 { width: 300px; height: 100px; top: 10%; left: -10%; }
+        .cloud2 { width: 400px; height: 120px; top: 40%; right: -15%; animation-duration: 35s; }
+
+        @keyframes floatCloud {
+            0% { transform: translateX(-100px); }
+            100% { transform: translateX(100vw); }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 960px;
+            background: var(--cloud-white);
+            backdrop-filter: blur(12px);
+            border: 2px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(31, 38, 135, 0.15);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sub-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(224, 231, 255, 0.9);
+            color: #312e81;
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(49, 46, 129, 0.1);
+            border: 1.5px solid rgba(199, 210, 254, 0.8);
+        }
+
+        header h1 {
+            color: var(--primary-blue);
+            font-size: 2rem;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        header p {
+            color: #555;
+            margin-top: 6px;
+            font-size: 1rem;
+        }
+
+        .tab-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            background: var(--sky-top);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--primary-blue), #2b5876);
+            color: white;
+            box-shadow: 0 4px 12px rgba(58, 123, 213, 0.4);
+            border-color: transparent;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            color: #1e3c72;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px dashed #bbdefb;
+            padding-bottom: 8px;
+        }
+
+        .grid-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .item-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .item-card:hover {
+            transform: scale(1.05);
+            border-color: var(--primary-blue);
+        }
+
+        .item-card i {
+            font-size: 2.5rem;
+            color: #5c6bc0;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .item-card.correct {
+            border-color: var(--success-color);
+            background: #e8f5e9;
+        }
+
+        .item-card.wrong {
+            border-color: var(--error-color);
+            background: #ffebee;
+        }
+
+        .badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 1.2rem;
+        }
+
+        .pouring-stage {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            min-height: 220px;
+            background: linear-gradient(to bottom, #f0f4f8, #d9e2ec);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .cup-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cup {
+            position: relative;
+            background: rgba(255, 255, 255, 0.4);
+            border: 3px solid #546e7a;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .cup-teacher { width: 70px; height: 120px; }
+        .cup-pipi { width: 100px; height: 90px; }
+        .cup-dandan { width: 55px; height: 140px; }
+
+        .water {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, #ff9800, #ffb74d);
+            transition: height 0.8s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9rem;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .mini-cup {
+            width: 32px;
+            height: 40px;
+            border: 2px solid #0288d1;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            position: relative;
+            overflow: hidden;
+            background: white;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: white;
+            z-index: 1;
+        }
+
+        .mini-cup .mini-water {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--water-light);
+            z-index: -1;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .btn {
+            background: #1e88e5;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(30, 136, 229, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(30, 136, 229, 0.4);
+            background: #1565c0;
+        }
+
+        .btn:disabled {
+            background: #b0bec5;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .quiz-item {
+            background: white;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--primary-blue);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .quiz-q {
+            font-weight: bold;
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-btn {
+            background: #f8f9fa;
+            border: 1.5px solid #dee2e6;
+            padding: 10px 15px;
+            border-radius: 10px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .option-btn:hover {
+            background: #e3f2fd;
+            border-color: #90caf9;
+        }
+
+        .option-btn.selected {
+            background: #e3f2fd;
+            border-color: #1e88e5;
+            font-weight: bold;
+            color: #1565c0;
+            box-shadow: 0 0 0 2px rgba(30,136,229,0.3);
+        }
+
+        .quiz-feedback {
+            margin-top: 10px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+            line-height: 1.5;
+        }
+
+        .quiz-feedback.correct {
+            display: block;
+            background: #e8f5e9;
+            color: var(--success-color);
+            border: 1px solid #a5d6a7;
+        }
+
+        .quiz-feedback.wrong {
+            display: block;
+            background: #ffebee;
+            color: var(--error-color);
+            border: 1px solid #ef9a9a;
+        }
+
+        .quiz-feedback.unanswered {
+            display: block;
+            background: #fffde7;
+            color: var(--warning-color);
+            border: 1px solid #ffe082;
+        }
+
+        .info-box {
+            background: #e1f5fe;
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #0277bd;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .practice-card {
+            background: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .practice-card:hover {
+            border-color: var(--primary-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .practice-card.selected-correct {
+            border-color: var(--success-color);
+            background: #e8f5e9;
+        }
+
+        .practice-card.selected-wrong {
+            border-color: var(--error-color);
+            background: #ffebee;
+        }
+
+        footer {
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sky-bg">
+        <div class="cloud cloud1"></div>
+        <div class="cloud cloud2"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="sub-badge">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> 國小二上數學 (五) 互動學習網頁
+            </div>
+            <h1><i class="fa-solid fa-glass-water"></i> 第五單元：容量動態探究館</h1>
+            <p>透過動態操作，觀察、比較與探究容器和容量的奧秘！</p>
+        </header>
+
+        <nav class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('tab1')">
+                <i class="fa-solid fa-shapes"></i> 1. 認識容器與保留概念
+            </button>
+            <button class="tab-btn" onclick="switchTab('tab2')">
+                <i class="fa-solid fa-scale-unbalanced"></i> 2. 容量直接與間接比較
+            </button>
+            <button class="tab-btn" onclick="switchTab('tab3')">
+                <i class="fa-solid fa-wine-glass-empty"></i> 3. 個別單位點數測量
+            </button>
+            <button class="tab-btn" onclick="switchTab('tab4')">
+                <i class="fa-solid fa-pen-to-square"></i> 4. 自我挑戰
+            </button>
+        </nav>
+
+        <!-- ==========================================
+             分頁一：認識容器與水份保留概念
+             ========================================== -->
+        <div id="tab1" class="tab-content active">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fa-solid fa-bullseye"></i> 活動 1-1：哪一個是容器？（請點擊判斷）
+                </div>
+                <div class="info-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span><strong>教學觀念：</strong>能用來「裝水」的東西，我們就稱它為<strong>「容器」</strong>。</span>
+                </div>
+                <p>請點選下方物品，找出哪些是容器：</p>
+                <div class="grid-items">
+                    <div class="item-card" onclick="checkContainer(this, true)">
+                        <i class="fa-solid fa-whiskey-glass"></i>
+                        <span>玻璃杯</span>
+                    </div>
+                    <div class="item-card" onclick="checkContainer(this, false)">
+                        <i class="fa-solid fa-baseball-bat-ball"></i>
+                        <span>球棒</span>
+                    </div>
+                    <div class="item-card" onclick="checkContainer(this, true)">
+                        <i class="fa-solid fa-bowl-food"></i>
+                        <span>湯碗</span>
+                    </div>
+                    <div class="item-card" onclick="checkContainer(this, false)">
+                        <i class="fa-solid fa-table-tennis-paddle-ball"></i>
+                        <span>桌球拍</span>
+                    </div>
+                    <div class="item-card" onclick="checkContainer(this, true)">
+                        <i class="fa-solid fa-bottle-water"></i>
+                        <span>水壺</span>
+                    </div>
+                    <div class="item-card" onclick="checkContainer(this, false)">
+                        <i class="fa-solid fa-bowling-ball"></i>
+                        <span>保齡球</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 活動 1-2：同一瓶水傾斜放，水量有變嗎？ -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="fa-solid fa-droplet"></i> 活動 1-2：同一瓶水傾斜放，水量有變嗎？
+                </div>
+                <div class="info-box" style="background: #e3f2fd; color: #0277bd;">
+                    <i class="fa-solid fa-hand-pointer"></i>
+                    <span>拉動右側滑桿傾斜寶特瓶，觀察水面與水量的變化。</span>
+                </div>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: center; margin-top: 15px;">
+                    <div style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(to bottom, #eef7ff, #e3f2fd); border: 2px solid #b3e5fc; border-radius: 16px; padding: 15px; text-align: center; position: relative;">
+                        <canvas id="tiltCanvas" width="360" height="260" style="width: 100%; height: auto; display: block; margin: 0 auto;"></canvas>
+
+                        <div style="margin-top: 10px; display: inline-flex; align-items: center; gap: 6px; background: white; padding: 6px 16px; border-radius: 20px; border: 1.5px solid #81d4fa; font-weight: bold; color: #0288d1; font-size: 0.9rem; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+                            <i class="fa-solid fa-compass"></i> <span id="tiltStateText">目前狀態：直立放 (0°)</span>
+                        </div>
+                    </div>
+
+                    <div style="flex: 1; min-width: 280px; display: flex; flex-direction: column; gap: 15px;">
+                        <div style="background: white; border: 1.5px solid #e0e0e0; border-radius: 16px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-weight: bold; color: #37474f;">
+                                <span><i class="fa-solid fa-hand-back-fist" style="color:#0288d1;"></i> 調整瓶子傾斜角度：</span>
+                                <span id="angleValueDisplay" style="font-size: 1.2rem; color: #0288d1;">0°</span>
+                            </div>
+                            <input type="range" id="tiltSlider" min="-90" max="90" value="0" style="width: 100%; accent-color: #0288d1; cursor: pointer;" oninput="updateTiltBottle(this.value)">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #78909c; margin-top: 6px; font-weight: bold;">
+                                <span>向左橫放 (-90°)</span>
+                                <span>直立 (0°)</span>
+                                <span>向右橫放 (+90°)</span>
+                            </div>
+                        </div>
+
+                        <div style="background: #fffde7; border-left: 5px solid #fbc02d; border-radius: 12px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.03);">
+                            <div style="font-weight: bold; color: #f57f17; font-size: 1rem; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-lightbulb"></i> 學習小解答：
+                            </div>
+                            <p style="font-size: 0.92rem; color: #424242; line-height: 1.6; margin: 0;">
+                                寶特瓶傾斜時，水面始終會<strong style="color:#0288d1;">保持水平</strong>！而且因為瓶蓋鎖緊了，水沒有流出來，瓶子裡的水<strong style="color:#d32f2f;">沒有變多，也沒有變少</strong>喔！
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 活動 1-3：果汁倒來倒去 -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="fa-solid fa-arrows-rotate"></i> 活動 1-3：果汁倒來倒去，水量有變嗎？（液量保留）
+                </div>
+                <div class="info-box">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <span>皮皮說：「我的杯子比較胖，果汁比較多！」丹丹說：「我的杯子高，比較多！」點點看下方按鈕倒倒看吧！</span>
+                </div>
+
+                <div class="pouring-stage">
+                    <div class="cup-wrapper">
+                        <span>皮皮的矮胖杯</span>
+                        <div class="cup cup-pipi">
+                            <div id="water-pipi" class="water" style="height: 0%;"></div>
+                        </div>
+                    </div>
+                    <div class="cup-wrapper">
+                        <span>老師的杯子</span>
+                        <div class="cup cup-teacher">
+                            <div id="water-teacher" class="water" style="height: 80%;"></div>
+                        </div>
+                    </div>
+                    <div class="cup-wrapper">
+                        <span>丹丹的瘦高杯</span>
+                        <div class="cup cup-dandan">
+                            <div id="water-dandan" class="water" style="height: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn" onclick="pourJuice('pipi')">倒給皮皮 <i class="fa-solid fa-arrow-left"></i></button>
+                    <button class="btn" onclick="pourJuice('reset')"><i class="fa-solid fa-rotate-left"></i> 重置倒回老師杯中</button>
+                    <button class="btn" onclick="pourJuice('dandan')">倒給丹丹 <i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+                <div id="juice-result" style="text-align: center; margin-top: 12px; font-weight: bold; color: var(--primary-blue);">
+                    請點選按鈕進行倒水實驗！
+                </div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             分頁二：容量直接與間接比較
+             ========================================== -->
+        <div id="tab2" class="tab-content">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fa-solid fa-water"></i> 活動 2-1：直接倒水比比看（矮杯 vs 高杯）
+                </div>
+                <div class="info-box">
+                    <i class="fa-solid fa-eye"></i>
+                    <span>看起來矮矮的杯子和高高的杯子，哪一個容量比較大呢？讓我們將水裝滿互相倒倒看！</span>
+                </div>
+
+                <div class="pouring-stage">
+                    <div class="cup-wrapper">
+                        <span>矮廣杯 (甲)</span>
+                        <div class="cup" style="width: 90px; height: 90px;">
+                            <div id="cmp-cup1" class="water" style="height: 100%; background: var(--water-color);">裝滿水</div>
+                        </div>
+                    </div>
+                    <div class="cup-wrapper">
+                        <i class="fa-solid fa-right-long" style="font-size: 2rem; color: #78909c; margin-bottom: 30px;"></i>
+                    </div>
+                    <div class="cup-wrapper" style="position: relative;">
+                        <span>高細杯 (乙)</span>
+                        <div class="cup" style="width: 50px; height: 130px; position: relative; z-index: 2;">
+                            <div id="cmp-cup2" class="water" style="height: 0%; background: var(--water-color); text-shadow: 0 1px 3px rgba(0,0,0,0.6);"></div>
+                        </div>
+                        <div id="cmp-puddle" style="display: none; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 85px; height: 16px; background: rgba(58, 136, 233, 0.85); border-radius: 50%; border: 1.5px solid #1565c0; filter: drop-shadow(0 2px 4px rgba(58,136,233,0.4)); z-index: 1;"></div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button class="btn" onclick="simulatePour(1)"><i class="fa-solid fa-fill-drip"></i> 將【矮廣杯】裝滿倒進【高細杯】</button>
+                    <button class="btn" onclick="simulatePour(2)"><i class="fa-solid fa-rotate-left"></i> 復原</button>
+                </div>
+                <p id="cmp-text" style="text-align: center; margin-top: 12px; font-weight: bold; color: #d32f2f;"></p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <i class="fa-solid fa-vial"></i> 活動 2-2：間接比較（倒入兩個相同的透明瓶）
+                </div>
+                <div class="info-box">
+                    <i class="fa-solid fa-flask"></i>
+                    <span>當兩個杯子形狀不同無法直接比較時，可以把兩杯分別裝滿水，倒入<strong>兩個一模一樣的透明瓶子</strong>中觀察水面高度！</span>
+                </div>
+                <div class="pouring-stage">
+                    <div class="cup-wrapper">
+                        <span>藍色水壺的水倒入瓶1</span>
+                        <div class="cup" style="width: 60px; height: 130px; border-radius: 8px;">
+                            <div class="water" style="height: 75%; background: #29b6f6;">75% 高</div>
+                        </div>
+                    </div>
+                    <div class="cup-wrapper">
+                        <span>紅色水壺的水倒入瓶2</span>
+                        <div class="cup" style="width: 60px; height: 130px; border-radius: 8px;">
+                            <div class="water" style="height: 50%; background: #ef5350;">50% 高</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; font-weight: bold; color: #2e7d32; font-size: 1.05rem;">
+                    結果：藍色水壺倒進瓶子後的水面比較高，所以<span style="color:#0288d1;">藍色水壺</span>的容量比較大！
+                </div>
+            </div>
+
+            <!-- 活動 2-3：液量的直觀比較與探究 -->
+            <div class="card">
+                <div class="card-title">
+                    <i class="fa-solid fa-eye"></i> 活動 2-3：說說看，哪一個杯子裡的水比較多？（點擊選擇）
+                </div>
+                <div class="info-box" style="background: #eef7ff; color: #1565c0;">
+                    <i class="fa-solid fa-lightbulb"></i>
+                    <span>觀察杯子的形狀、寬窄與水面高度，點選你認為水量較多的杯子來測試看看吧！</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+                    <!-- 互動 1 -->
+                    <div style="background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 16px; padding: 18px; text-align: center;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; color: #1976d2; margin-bottom: 12px; font-size: 1rem;">
+                            <span style="background: #1976d2; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">1</span>
+                            <span>2 個杯子水面一樣高，哪一杯的水比較多？</span>
+                        </div>
+                        <div style="display: flex; justify-content: center; align-items: flex-end; gap: 20px; height: 160px; background: white; padding: 15px; border-radius: 12px; border: 1px solid #e0e0e0; margin-bottom: 12px;">
+                            <!-- 較寬杯 -->
+                            <div class="practice-card" onclick="checkAct23(1, true, this)" style="flex: 1; max-width: 110px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 8px; border-radius: 12px;">
+                                <div style="width: 55px; height: 85px; border: 3px solid #546e7a; border-top: none; border-radius: 0 0 8px 8px; position: relative; background: #fff; overflow: hidden;">
+                                    <div style="position: absolute; bottom: 0; width: 100%; height: 60%; background: #29b6f6;"></div>
+                                </div>
+                                <span style="font-size: 0.85rem; font-weight: bold; color: #1565c0; margin-top: 6px;">較寬杯</span>
+                            </div>
+                            <!-- 較細杯 -->
+                            <div class="practice-card" onclick="checkAct23(1, false, this)" style="flex: 1; max-width: 110px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 8px; border-radius: 12px;">
+                                <div style="width: 32px; height: 85px; border: 3px solid #546e7a; border-top: none; border-radius: 0 0 8px 8px; position: relative; background: #fff; overflow: hidden;">
+                                    <div style="position: absolute; bottom: 0; width: 100%; height: 60%; background: #29b6f6;"></div>
+                                </div>
+                                <span style="font-size: 0.85rem; color: #616161; margin-top: 6px;">較細杯</span>
+                            </div>
+                        </div>
+                        <div id="act23-fb-1" class="quiz-feedback" style="text-align: left; line-height: 1.5; margin: 0; padding: 10px 12px; border-radius: 8px;"></div>
+                    </div>
+
+                    <!-- 互動 2 -->
+                    <div style="background: #f8f9fa; border: 2px solid #e0e0e0; border-radius: 16px; padding: 18px; text-align: center;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: bold; color: #1976d2; margin-bottom: 12px; font-size: 1rem;">
+                            <span style="background: #1976d2; color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem;">2</span>
+                            <span>哪一杯的水比較多？</span>
+                        </div>
+                        <div style="display: flex; justify-content: center; align-items: flex-end; gap: 20px; height: 160px; background: white; padding: 15px; border-radius: 12px; border: 1px solid #e0e0e0; margin-bottom: 12px;">
+                            <!-- 矮寬杯 -->
+                            <div class="practice-card" onclick="checkAct23(2, true, this)" style="flex: 1; max-width: 110px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 8px; border-radius: 12px;">
+                                <div style="width: 60px; height: 65px; border: 3px solid #546e7a; border-top: none; border-radius: 0 0 8px 8px; position: relative; background: #fff; overflow: hidden;">
+                                    <div style="position: absolute; bottom: 0; width: 100%; height: 85%; background: #29b6f6;"></div>
+                                </div>
+                                <span style="font-size: 0.85rem; font-weight: bold; color: #1565c0; margin-top: 6px;">矮寬杯</span>
+                            </div>
+                            <!-- 高細杯 -->
+                            <div class="practice-card" onclick="checkAct23(2, false, this)" style="flex: 1; max-width: 110px; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 8px; border-radius: 12px;">
+                                <div style="width: 38px; height: 95px; border: 3px solid #546e7a; border-top: none; border-radius: 0 0 8px 8px; position: relative; background: #fff; overflow: hidden;">
+                                    <div style="position: absolute; bottom: 0; width: 100%; height: 30%; background: #29b6f6;"></div>
+                                </div>
+                                <span style="font-size: 0.85rem; color: #616161; margin-top: 6px;">高細杯</span>
+                            </div>
+                        </div>
+                        <div id="act23-fb-2" class="quiz-feedback" style="text-align: left; line-height: 1.5; margin: 0; padding: 10px 12px; border-radius: 8px;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ==========================================
+             分頁三：個別單位點數測量
+             ========================================== -->
+        <div id="tab3" class="tab-content">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fa-solid fa-list-ol"></i> 活動 3-1：用相同的小杯子量量看（點數分裝）
+                </div>
+                <div class="info-box">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>將水壺裝滿水，點擊按鈕倒進小杯子裡，看可以倒滿幾杯？倒滿比較多杯的水壺容量較大。</span>
+                </div>
+
+                <div class="jug-area" style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
+                    <!-- 甲水壺 (藍色) -->
+                    <div style="flex: 1; min-width: 260px; background: #f0f7ff; border: 2px solid #90caf9; border-radius: 16px; padding: 18px; text-align: center;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h4 style="color: #1565c0; font-size: 1.15rem; font-weight: bold; margin: 0;">
+                                <i class="fa-solid fa-bottle-water"></i> 甲水壺
+                            </h4>
+                            <span style="background: #1e88e5; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">
+                                已倒滿：<span id="count-num-A">0</span> 杯
+                            </span>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-around; margin-bottom: 15px;">
+                            <div style="position: relative; width: 80px; height: 130px;">
+                                <svg width="80" height="130" viewBox="0 0 100 160">
+                                    <rect x="25" y="10" width="50" height="15" rx="4" fill="#1e88e5" />
+                                    <rect x="35" y="25" width="30" height="12" fill="#64b5f6" />
+                                    <rect x="15" y="37" width="70" height="110" rx="18" fill="#e3f2fd" stroke="#42a5f5" stroke-width="4" />
+                                    <rect id="svg-water-A" x="19" y="60" width="62" height="83" rx="14" fill="#29b6f6" opacity="0.85" style="transition: height 0.4s ease, y 0.4s ease;" />
+                                    <line x1="25" y1="80" x2="40" y2="80" stroke="#ffffff" stroke-width="2" opacity="0.8" />
+                                    <line x1="25" y1="100" x2="40" y2="100" stroke="#ffffff" stroke-width="2" opacity="0.8" />
+                                    <line x1="25" y1="120" x2="40" y2="120" stroke="#ffffff" stroke-width="2" opacity="0.8" />
+                                </svg>
+                            </div>
+
+                            <i class="fa-solid fa-arrow-right" style="font-size: 1.5rem; color: #1e88e5;"></i>
+
+                            <div id="cups-A" class="small-cups-container" style="min-width: 120px; min-height: 80px; background: white; border-radius: 12px; padding: 10px; border: 1.5px solid #bbdefb; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; align-items: center; margin: 0;">
+                            </div>
+                        </div>
+
+                        <button id="btn-pour-A" class="btn" style="width: 100%; justify-content: center; background: #1e88e5; font-size: 1rem;" onclick="pourSingleCup('A')">
+                            <i class="fa-solid fa-plus"></i> 倒滿 1 杯小杯子
+                        </button>
+                    </div>
+
+                    <!-- 乙水壺 (綠色) -->
+                    <div style="flex: 1; min-width: 260px; background: #f1f8e9; border: 2px solid #a5d6a7; border-radius: 16px; padding: 18px; text-align: center;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <h4 style="color: #2e7d32; font-size: 1.15rem; font-weight: bold; margin: 0;">
+                                <i class="fa-solid fa-bottle-water"></i> 乙水壺
+                            </h4>
+                            <span style="background: #43a047; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">
+                                已倒滿：<span id="count-num-B">0</span> 杯
+                            </span>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; justify-content: space-around; margin-bottom: 15px;">
+                            <div style="position: relative; width: 80px; height: 130px;">
+                                <svg width="80" height="130" viewBox="0 0 100 160">
+                                    <rect x="25" y="10" width="50" height="15" rx="4" fill="#43a047" />
+                                    <rect x="35" y="25" width="30" height="12" fill="#81c784" />
+                                    <rect x="18" y="37" width="64" height="110" rx="18" fill="#e8f5e9" stroke="#66bb6a" stroke-width="4" />
+                                    <rect id="svg-water-B" x="22" y="70" width="56" height="73" rx="14" fill="#66bb6a" opacity="0.85" style="transition: height 0.4s ease, y 0.4s ease;" />
+                                    <line x1="28" y1="90" x2="42" y2="90" stroke="#ffffff" stroke-width="2" opacity="0.8" />
+                                    <line x1="28" y1="110" x2="42" y2="110" stroke="#ffffff" stroke-width="2" opacity="0.8" />
+                                    <line x1="28" y1="130" x2="42" y2="130" stroke="#ffffff" stroke-width="2" opacity="0.8" />
+                                </svg>
+                            </div>
+
+                            <i class="fa-solid fa-arrow-right" style="font-size: 1.5rem; color: #43a047;"></i>
+
+                            <div id="cups-B" class="small-cups-container" style="min-width: 120px; min-height: 80px; background: white; border-radius: 12px; padding: 10px; border: 1.5px solid #c8e6c9; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; align-items: center; margin: 0;">
+                            </div>
+                        </div>
+
+                        <button id="btn-pour-B" class="btn" style="width: 100%; justify-content: center; background: #43a047; font-size: 1rem;" onclick="pourSingleCup('B')">
+                            <i class="fa-solid fa-plus"></i> 倒滿 1 杯小杯子
+                        </button>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+                    <div id="unit-comparison-result" style="width: 100%; text-align: center; font-weight: bold; font-size: 1.05rem; padding: 12px; background: #e8f5e9; border: 1.5px solid #a5d6a7; border-radius: 12px; color: #2e7d32;">
+                        📊 目前甲水壺已倒 0 杯，乙水壺已倒 0 杯。
+                    </div>
+                    <button class="btn" style="background: #607d8b;" onclick="resetPouring()">
+                        <i class="fa-solid fa-rotate-left"></i> 重置重新測量
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <i class="fa-solid fa-brain"></i> 動腦想一想：小杯子大小不同時？
+                </div>
+                <p style="line-height: 1.6; font-size: 1rem;">
+                    美美說：「我的小杯子裝滿水，倒了 <strong>12</strong> 杯裝滿水桶。」<br>
+                    妮妮說：「我的小杯子裝滿水，倒了 <strong>15</strong> 杯才裝滿同一個水桶。」<br>
+                    <strong>請問：誰的小杯子容量比較大？</strong>
+                </p>
+                <div class="controls" style="margin-top: 12px;">
+                    <button class="btn" onclick="explainBrainTeaser('meimei')">美美的杯子</button>
+                    <button class="btn" onclick="explainBrainTeaser('nini')">妮妮的杯子</button>
+                </div>
+                <div id="brain-result" class="info-box" style="margin-top: 12px; display: none; background: #fff3e0; color: #e65100;"></div>
+            </div>
+        </div>
+
+        <!-- ==========================================
+             分頁四：自我挑戰 (5題與即時評分)
+             ========================================== -->
+        <div id="tab4" class="tab-content">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fa-solid fa-graduation-cap"></i> 自我挑戰
+                </div>
+                <p style="margin-bottom: 15px;">請仔細閱讀題目並選擇答案，完成後點擊最下方【提交答案】按鈕檢視得分與解析！</p>
+
+                <!-- 得分顯示 Banner -->
+                <div id="quiz-score-banner" style="display: none; text-align: center; margin-bottom: 20px; padding: 16px; border-radius: 12px; background: #e8f5e9; border: 2px solid #81c784; font-size: 1.3rem; font-weight: bold; color: #2e7d32; box-shadow: 0 4px 12px rgba(46,125,50,0.15);"></div>
+
+                <!-- Q1 -->
+                <div class="quiz-item">
+                    <div class="quiz-q">
+                        <span>1.</span> 下列哪一個物品可以稱為「容器」？
+                    </div>
+                    <div class="quiz-options">
+                        <button class="option-btn" onclick="selectQuizOption(1, 0, this)">A. 乒乓球拍</button>
+                        <button class="option-btn" onclick="selectQuizOption(1, 1, this)">B. 喝水用的湯碗</button>
+                        <button class="option-btn" onclick="selectQuizOption(1, 2, this)">C. 實心橡皮擦</button>
+                    </div>
+                    <div id="q1-feedback" class="quiz-feedback"></div>
+                </div>
+
+                <!-- Q2 -->
+                <div class="quiz-item">
+                    <div class="quiz-q">
+                        <span>2.</span> 將一滿杯牛奶整杯倒入較瘦長的玻璃杯中（沒溢出），牛奶的水量會如何？
+                    </div>
+                    <div class="quiz-options">
+                        <button class="option-btn" onclick="selectQuizOption(2, 0, this)">A. 變多了</button>
+                        <button class="option-btn" onclick="selectQuizOption(2, 1, this)">B. 變少了</button>
+                        <button class="option-btn" onclick="selectQuizOption(2, 2, this)">C. 一樣多（液量守恆）</button>
+                    </div>
+                    <div id="q2-feedback" class="quiz-feedback"></div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="quiz-item">
+                    <div class="quiz-q">
+                        <span>3.</span> 將甲杯裝滿水全部倒入乙杯中，結果水溢出來了！請問哪一個杯子的容量比較大？
+                    </div>
+                    <div class="quiz-options">
+                        <button class="option-btn" onclick="selectQuizOption(3, 0, this)">A. 甲杯容量大</button>
+                        <button class="option-btn" onclick="selectQuizOption(3, 1, this)">B. 乙杯容量大</button>
+                        <button class="option-btn" onclick="selectQuizOption(3, 2, this)">C. 兩杯一樣大</button>
+                    </div>
+                    <div id="q3-feedback" class="quiz-feedback"></div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="quiz-item">
+                    <div class="quiz-q">
+                        <span>4.</span> 甲水壺可以倒滿 5 杯小紙杯，乙水壺可以倒滿 3 杯相同的小紙杯。哪一個水壺的容量比較小？
+                    </div>
+                    <div class="quiz-options">
+                        <button class="option-btn" onclick="selectQuizOption(4, 0, this)">A. 甲水壺</button>
+                        <button class="option-btn" onclick="selectQuizOption(4, 1, this)">B. 乙水壺</button>
+                        <button class="option-btn" onclick="selectQuizOption(4, 2, this)">C. 一樣小</button>
+                    </div>
+                    <div id="q4-feedback" class="quiz-feedback"></div>
+                </div>
+
+                <!-- Q5 -->
+                <div class="quiz-item">
+                    <div class="quiz-q">
+                        <span>5.</span> 觀察下圖中的兩個杯子，哪一杯的水【比較少】？
+                    </div>
+                    <div style="display: flex; justify-content: center; align-items: flex-end; gap: 40px; margin: 15px 0; background: linear-gradient(to bottom, #f8f9fa, #eef2f5); padding: 20px; border-radius: 12px; border: 1.5px solid #bbdefb;">
+                        <!-- 甲杯 -->
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                            <span style="font-weight: bold; color: #1565c0; font-size: 1.05rem;">甲杯</span>
+                            <div style="width: 55px; height: 95px; border: 3px solid #455a64; border-top: none; border-radius: 0 0 10px 10px; position: relative; background: white; overflow: hidden; box-shadow: inset 0 0 6px rgba(0,0,0,0.05);">
+                                <div style="position: absolute; bottom: 0; width: 100%; height: 35%; background: var(--water-color);"></div>
+                            </div>
+                        </div>
+                        <!-- 乙杯 -->
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                            <span style="font-weight: bold; color: #1565c0; font-size: 1.05rem;">乙杯</span>
+                            <div style="width: 55px; height: 95px; border: 3px solid #455a64; border-top: none; border-radius: 0 0 10px 10px; position: relative; background: white; overflow: hidden; box-shadow: inset 0 0 6px rgba(0,0,0,0.05);">
+                                <div style="position: absolute; bottom: 0; width: 100%; height: 85%; background: var(--water-color);"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="quiz-options">
+                        <button class="option-btn" onclick="selectQuizOption(5, 0, this)">A. 甲杯的水比較少</button>
+                        <button class="option-btn" onclick="selectQuizOption(5, 1, this)">B. 乙杯的水比較少</button>
+                        <button class="option-btn" onclick="selectQuizOption(5, 2, this)">C. 兩杯一樣多</button>
+                    </div>
+                    <div id="q5-feedback" class="quiz-feedback"></div>
+                </div>
+
+                <!-- 提交與重置按鈕區塊 -->
+                <div style="display: flex; justify-content: center; gap: 15px; margin-top: 25px; flex-wrap: wrap;">
+                    <button class="btn" style="flex: 1; min-width: 150px; max-width: 220px; justify-content: center; background: #2e7d32; font-size: 1.05rem; padding: 12px 20px;" onclick="submitQuiz()">
+                        <i class="fa-solid fa-paper-plane"></i> 提交答案
+                    </button>
+                    <button class="btn" style="flex: 1; min-width: 150px; max-width: 220px; justify-content: center; background: #1565c0; font-size: 1.05rem; padding: 12px 20px;" onclick="resetQuiz()">
+                        <i class="fa-solid fa-rotate-left"></i> 重新測驗
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <footer></footer>
+    </div>
+
+    <script>
+        // ==========================================
+        // 分頁切換與初始化
+        // ==========================================
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => {
+                return btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(tabId);
+            });
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const target = document.getElementById(tabId);
+            if (target) target.classList.add('active');
+
+            if (tabId === 'tab1') {
+                setTimeout(() => {
+                    const slider = document.getElementById('tiltSlider');
+                    updateTiltBottle(slider ? slider.value : 0);
+                }, 50);
+            }
+        }
+
+        // ==========================================
+        // 活動 1-1 點擊容器判斷
+        // ==========================================
+        function checkContainer(el, isCorrect) {
+            if (isCorrect) {
+                el.classList.add('correct');
+                el.classList.remove('wrong');
+                if (!el.querySelector('.badge')) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge';
+                    badge.innerHTML = '⭕';
+                    el.appendChild(badge);
+                }
+            } else {
+                el.classList.add('wrong');
+                el.classList.remove('correct');
+                if (!el.querySelector('.badge')) {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge';
+                    badge.innerHTML = '❌';
+                    el.appendChild(badge);
+                }
+            }
+        }
+
+        // ==========================================
+        // 活動 1-2：傾斜寶特瓶 Canvas 動態繪製
+        // ==========================================
+        function updateTiltBottle(deg) {
+            const angle = parseInt(deg, 10) || 0;
+            const angleDisplay = document.getElementById('angleValueDisplay');
+            const stateText = document.getElementById('tiltStateText');
+            const canvas = document.getElementById('tiltCanvas');
+
+            if (angleDisplay) angleDisplay.innerText = `${angle}°`;
+
+            if (stateText) {
+                if (angle === 0) {
+                    stateText.innerText = '目前狀態：直立放 (0°)';
+                } else if (angle < 0) {
+                    stateText.innerText = `目前狀態：向左傾斜 ${Math.abs(angle)}° (水面保持水平，水量不變！)`;
+                } else {
+                    stateText.innerText = `目前狀態：向右傾斜 ${angle}° (水面保持水平，水量不變！)`;
+                }
+            }
+
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            const width = canvas.width;
+            const height = canvas.height;
+            ctx.clearRect(0, 0, width, height);
+
+            const cx = width / 2;
+            const cy = height / 2 + 10;
+            const rad = (angle * Math.PI) / 180;
+
+            // 1. 繪製地面/水平線虛線標示
+            ctx.save();
+            ctx.beginPath();
+            ctx.setLineDash([6, 6]);
+            ctx.moveTo(30, cy);
+            ctx.lineTo(330, cy);
+            ctx.strokeStyle = '#29b6f6';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.font = 'bold 12px sans-serif';
+            ctx.fillStyle = '#0288d1';
+            ctx.textAlign = 'right';
+            ctx.fillText('↔ 水平線', 325, cy - 8);
+            ctx.restore();
+
+            // 2. 瓶身內液體 (剪裁路徑法)
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(rad);
+
+            // 定義寶特瓶內部輪廓剪裁
+            ctx.beginPath();
+            ctx.moveTo(-13, -80);
+            ctx.lineTo(13, -80);
+            ctx.lineTo(13, -58);
+            ctx.lineTo(36, -58);
+            ctx.quadraticCurveTo(40, -58, 40, -50);
+            ctx.lineTo(40, 60);
+            ctx.quadraticCurveTo(40, 68, 30, 68);
+            ctx.lineTo(-30, 68);
+            ctx.quadraticCurveTo(-40, 68, -40, 60);
+            ctx.lineTo(-40, -50);
+            ctx.quadraticCurveTo(-40, -58, -36, -58);
+            ctx.lineTo(-13, -58);
+            ctx.closePath();
+            ctx.clip();
+
+            // 反轉旋轉，使水面保持與畫布水平
+            ctx.rotate(-rad);
+            const grad = ctx.createLinearGradient(0, cy - 80, 0, cy + 80);
+            grad.addColorStop(0, '#4fc3f7');
+            grad.addColorStop(1, '#0288d1');
+            ctx.fillStyle = grad;
+            ctx.fillRect(-200, 0, 400, 200);
+            ctx.restore();
+
+            // 3. 繪製寶特瓶外框與細節
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(rad);
+
+            // 外框線
+            ctx.beginPath();
+            ctx.moveTo(-13, -80);
+            ctx.lineTo(13, -80);
+            ctx.lineTo(13, -58);
+            ctx.lineTo(36, -58);
+            ctx.quadraticCurveTo(40, -58, 40, -50);
+            ctx.lineTo(40, 60);
+            ctx.quadraticCurveTo(40, 68, 30, 68);
+            ctx.lineTo(-30, 68);
+            ctx.quadraticCurveTo(-40, 68, -40, 60);
+            ctx.lineTo(-40, -50);
+            ctx.quadraticCurveTo(-40, -58, -36, -58);
+            ctx.lineTo(-13, -58);
+            ctx.closePath();
+            ctx.strokeStyle = '#0288d1';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+
+            // 容量刻度
+            ctx.beginPath();
+            ctx.moveTo(26, -20); ctx.lineTo(35, -20);
+            ctx.moveTo(26, 0); ctx.lineTo(35, 0);
+            ctx.moveTo(26, 20); ctx.lineTo(35, 20);
+            ctx.strokeStyle = '#0288d1';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            // 紅色瓶蓋
+            ctx.fillStyle = '#ef5350';
+            ctx.beginPath();
+            if (ctx.roundRect) {
+                ctx.roundRect(-18, -94, 36, 15, 4);
+            } else {
+                ctx.rect(-18, -94, 36, 15);
+            }
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        // ==========================================
+        // 活動 1-3：果汁倒來倒去
+        // ==========================================
+        function pourJuice(target) {
+            const wPipi = document.getElementById('water-pipi');
+            const wTeacher = document.getElementById('water-teacher');
+            const wDandan = document.getElementById('water-dandan');
+            const res = document.getElementById('juice-result');
+
+            if (!wPipi || !wTeacher || !wDandan) return;
+
+            if (target === 'pipi') {
+                wTeacher.style.height = '0%';
+                wTeacher.innerHTML = '';
+                wDandan.style.height = '0%';
+                wDandan.innerHTML = '';
+                wPipi.style.height = '80%';
+                wPipi.innerHTML = '滿杯';
+                if (res) res.innerHTML = '🍹 倒給皮皮後，矮胖杯裝滿了！果汁總量沒有變喔！';
+            } else if (target === 'dandan') {
+                wTeacher.style.height = '0%';
+                wTeacher.innerHTML = '';
+                wPipi.style.height = '0%';
+                wPipi.innerHTML = '';
+                wDandan.style.height = '100%';
+                wDandan.innerHTML = '滿杯';
+                if (res) res.innerHTML = '🍹 倒給丹丹後，瘦高杯裝滿了！果汁總量沒有變喔！';
+            } else {
+                wPipi.style.height = '0%';
+                wPipi.innerHTML = '';
+                wDandan.style.height = '0%';
+                wDandan.innerHTML = '';
+                wTeacher.style.height = '80%';
+                wTeacher.innerHTML = '';
+                if (res) res.innerHTML = '🔄 已重新重置倒回老師杯中，請點選按鈕觀察！';
+            }
+        }
+
+        // ==========================================
+        // 活動 2-1：直接比較倒水模擬
+        // ==========================================
+        function simulatePour(type) {
+            const c1 = document.getElementById('cmp-cup1');
+            const c2 = document.getElementById('cmp-cup2');
+            const txt = document.getElementById('cmp-text');
+            const puddle = document.getElementById('cmp-puddle');
+
+            if (type === 1) {
+                c1.style.height = '0%';
+                c1.innerText = '';
+                c2.style.height = '100%';
+                c2.innerHTML = '<span style="color:#ffffff; font-weight:bold; font-size:0.9rem;">滿出來了！</span>';
+                if (puddle) puddle.style.display = 'block';
+                if (txt) txt.innerHTML = '⚠️ 水滿出來流到桌上了！這代表矮廣杯能裝的水比高細杯還多，所以【矮廣杯】容量比較大！';
+            } else {
+                c1.style.height = '100%';
+                c1.innerText = '裝滿水';
+                c2.style.height = '0%';
+                c2.innerText = '';
+                if (puddle) puddle.style.display = 'none';
+                if (txt) txt.innerText = '';
+            }
+        }
+
+        // ==========================================
+        // 活動 2-3 點擊選擇互動邏輯
+        // ==========================================
+        function checkAct23(qNum, isCorrect, cardEl) {
+            const parent = cardEl.parentElement;
+            parent.querySelectorAll('.practice-card').forEach(card => {
+                card.classList.remove('selected-correct', 'selected-wrong');
+            });
+
+            const fb = document.getElementById(`act23-fb-${qNum}`);
+            fb.style.display = 'block';
+
+            if (qNum === 1) {
+                if (isCorrect) {
+                    cardEl.classList.add('selected-correct');
+                    fb.className = 'quiz-feedback correct';
+                    fb.innerHTML = '⭕ <strong>答對了！</strong><br>皮皮點撥：「2 個杯子的水面一樣高時，比較大的杯子（較寬），裝的水比較多喔！」';
+                } else {
+                    cardEl.classList.add('selected-wrong');
+                    fb.className = 'quiz-feedback wrong';
+                    fb.innerHTML = '❌ <strong>再想想看！</strong><br>雖然水面一樣高，但是較寬的杯子底部比較大，所以裝的水比較多喔！';
+                }
+            } else if (qNum === 2) {
+                if (isCorrect) {
+                    cardEl.classList.add('selected-correct');
+                    fb.className = 'quiz-feedback correct';
+                    fb.innerHTML = '⭕ <strong>答對了！</strong><br>美美點撥：「矮寬杯水裝得比較滿且杯子較寬；而高細杯比較細而且水面很低，所以矮寬杯的水比較多喔！」';
+                } else {
+                    cardEl.classList.add('selected-wrong');
+                    fb.className = 'quiz-feedback wrong';
+                    fb.innerHTML = '❌ <strong>再想想看！</strong><br>高細杯雖然看起來高，但它比較細而且水面非常低，所以水其實比較少喔！';
+                }
+            }
+        }
+
+        // ==========================================
+        // 活動 3-1：點數小杯數（逐杯手動點選倒水）
+        // ==========================================
+        let countA_current = 0;
+        let countB_current = 0;
+        const maxA = 5;
+        const maxB = 4;
+
+        function pourSingleCup(type) {
+            if (type === 'A') {
+                if (countA_current < maxA) {
+                    countA_current++;
+                    renderCups('A', countA_current);
+                    updateWaterLevel('A', countA_current, maxA);
+                    if (countA_current === maxA) {
+                        const btn = document.getElementById('btn-pour-A');
+                        btn.disabled = true;
+                        btn.innerHTML = '甲水壺已倒空';
+                        btn.style.background = '#b0bec5';
+                    }
+                }
+            } else if (type === 'B') {
+                if (countB_current < maxB) {
+                    countB_current++;
+                    renderCups('B', countB_current);
+                    updateWaterLevel('B', countB_current, maxB);
+                    if (countB_current === maxB) {
+                        const btn = document.getElementById('btn-pour-B');
+                        btn.disabled = true;
+                        btn.innerHTML = '乙水壺已倒空';
+                        btn.style.background = '#b0bec5';
+                    }
+                }
+            }
+            updateSummaryText();
+        }
+
+        function renderCups(type, count) {
+            const container = document.getElementById(`cups-${type}`);
+            if (!container) return;
+            container.innerHTML = '';
+            for (let i = 1; i <= count; i++) {
+                const cup = document.createElement('div');
+                cup.className = 'mini-cup';
+                if (type === 'B') {
+                    cup.style.borderColor = '#2e7d32';
+                }
+                cup.innerHTML = `<div class="mini-water" style="${type === 'B' ? 'background: #81c784;' : ''}"></div>${i}`;
+                container.appendChild(cup);
+            }
+            const countNum = document.getElementById(`count-num-${type}`);
+            if (countNum) countNum.innerText = count;
+        }
+
+        function updateWaterLevel(type, current, max) {
+            const waterSvg = document.getElementById(`svg-water-${type}`);
+            if (!waterSvg) return;
+            if (type === 'A') {
+                const initY = 60;
+                const initH = 83;
+                const remainRatio = (max - current) / max;
+                const newH = initH * remainRatio;
+                const newY = initY + (initH - newH);
+                waterSvg.setAttribute('height', newH);
+                waterSvg.setAttribute('y', newY);
+            } else if (type === 'B') {
+                const initY = 70;
+                const initH = 73;
+                const remainRatio = (max - current) / max;
+                const newH = initH * remainRatio;
+                const newY = initY + (initH - newH);
+                waterSvg.setAttribute('height', newH);
+                waterSvg.setAttribute('y', newY);
+            }
+        }
+
+        function updateSummaryText() {
+            const res = document.getElementById('unit-comparison-result');
+            if (!res) return;
+            if (countA_current === maxA && countB_current === maxB) {
+                res.innerHTML = `🎉 測驗完成！甲水壺一共倒滿 <span style="color:#1565c0;">${maxA}</span> 杯，乙水壺一共倒滿 <span style="color:#2e7d32;">${maxB}</span> 杯。<br>因為 ${maxA} ＞ ${maxB}，所以【甲水壺】的容量比較大！`;
+            } else {
+                res.innerHTML = `📊 目前甲水壺已倒 <span style="color:#1565c0;">${countA_current}</span> 杯，乙水壺已倒 <span style="color:#2e7d32;">${countB_current}</span> 杯。`;
+            }
+        }
+
+        function resetPouring() {
+            countA_current = 0;
+            countB_current = 0;
+            const containerA = document.getElementById('cups-A');
+            const containerB = document.getElementById('cups-B');
+            if (containerA) containerA.innerHTML = '';
+            if (containerB) containerB.innerHTML = '';
+            
+            const numA = document.getElementById('count-num-A');
+            const numB = document.getElementById('count-num-B');
+            if (numA) numA.innerText = '0';
+            if (numB) numB.innerText = '0';
+
+            const btnA = document.getElementById('btn-pour-A');
+            if (btnA) {
+                btnA.disabled = false;
+                btnA.innerHTML = '<i class="fa-solid fa-plus"></i> 倒滿 1 杯小杯子';
+                btnA.style.background = '#1e88e5';
+            }
+
+            const btnB = document.getElementById('btn-pour-B');
+            if (btnB) {
+                btnB.disabled = false;
+                btnB.innerHTML = '<i class="fa-solid fa-plus"></i> 倒滿 1 杯小杯子';
+                btnB.style.background = '#43a047';
+            }
+
+            updateWaterLevel('A', 0, maxA);
+            updateWaterLevel('B', 0, maxB);
+            updateSummaryText();
+        }
+
+        function explainBrainTeaser(choice) {
+            const res = document.getElementById('brain-result');
+            if (!res) return;
+            res.style.display = 'block';
+            if (choice === 'meimei') {
+                res.className = 'info-box';
+                res.style.background = '#e8f5e9';
+                res.style.color = '#2e7d32';
+                res.innerHTML = '🎉 答對了！美美只用了 <strong>12</strong> 杯就裝滿水桶，代表她的小杯子比較大，所以每一杯裝的水比較多！';
+            } else {
+                res.className = 'info-box';
+                res.style.background = '#ffebee';
+                res.style.color = '#c62828';
+                res.innerHTML = '💡 再想一想喔！妮妮倒了 <strong>15</strong> 杯才裝滿，代表她的杯子比較小，所以需要倒比較多次！因此是<strong>美美的杯子比較大</strong>。';
+            }
+        }
+
+        // ==========================================
+        // 自我挑戰測驗邏輯
+        // ==========================================
+        // 紀錄使用者各題選擇答案 (1-5 題，null 表示未作答，0-2 代表選項索引)
+        const quizUserAnswers = { 1: null, 2: null, 3: null, 4: null, 5: null };
+
+        // 各題正確答案索引 (0-based)
+        const quizCorrectAnswers = { 1: 1, 2: 2, 3: 0, 4: 1, 5: 0 };
+
+        // 各題答案解析
+        const quizExplanations = {
+            1: "「湯碗」可以用來裝水，所以是容器；乒乓球拍與橡皮擦無法裝水喔！",
+            2: "牛奶雖然倒進不同形狀的玻璃杯，但沒有流出來也沒有增加，所以水量還是一樣多（液量守恆）！",
+            3: "甲杯的水全部倒入乙杯會溢出來，代表甲杯能裝的水比乙杯還多，所以甲杯的容量比較大！",
+            4: "乙水壺只能倒滿 3 杯小紙杯，比甲水壺的 5 杯還少，所以乙水壺的容量比較小！",
+            5: "兩杯容器大小相同，甲杯的水面比乙杯低，所以甲杯的水比較少喔！"
+        };
+
+        // 選項點擊選擇
+        function selectQuizOption(qNum, optionIdx, btnEl) {
+            quizUserAnswers[qNum] = optionIdx;
+            
+            // 標示該題按鈕選取狀態
+            const parent = btnEl.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
+            btnEl.classList.add('selected');
+        }
+
+        // 提交答案與結算分數 (滿分 100 分)
+        function submitQuiz() {
+            let totalScore = 0;
+            const pointsPerQuestion = 20;
+
+            for (let q = 1; q <= 5; q++) {
+                const feedbackEl = document.getElementById(`q${q}-feedback`);
+                const userChoice = quizUserAnswers[q];
+                const correctChoice = quizCorrectAnswers[q];
+
+                if (userChoice === null) {
+                    // 未作答時僅顯示黃色系 "未作答。"，不顯示解析與正確答案
+                    feedbackEl.className = 'quiz-feedback unanswered';
+                    feedbackEl.innerHTML = '⚠️ 未作答。';
+                } else if (userChoice === correctChoice) {
+                    // 答對加分並顯示正確解析
+                    totalScore += pointsPerQuestion;
+                    feedbackEl.className = 'quiz-feedback correct';
+                    feedbackEl.innerHTML = `⭕ <strong>答對了！</strong><br>${quizExplanations[q]}`;
+                } else {
+                    // 答錯顯示錯誤提示與解析，無矛盾敘述
+                    feedbackEl.className = 'quiz-feedback wrong';
+                    feedbackEl.innerHTML = `❌ <strong>答錯了。</strong><br>${quizExplanations[q]}`;
+                }
+            }
+
+            // 顯示得分 Banner
+            const scoreBanner = document.getElementById('quiz-score-banner');
+            scoreBanner.style.display = 'block';
+
+            let comment = '';
+            if (totalScore === 100) {
+                comment = '🎉 太棒了！獲得滿分 100 分！你是容量小達人！';
+            } else if (totalScore >= 60) {
+                comment = `👍 表現不錯！獲得 ${totalScore} 分！再複習一下錯題會更棒喔！`;
+            } else {
+                comment = `💪 獲得 ${totalScore} 分！沒關係，建議重新回顧各章節活動再試一次！`;
+            }
+
+            scoreBanner.innerHTML = `🏆 測驗總得分：<span style="font-size: 1.5rem; color: #1e88e5;">${totalScore}</span> / 100 分<br><span style="font-size: 1rem; font-weight: normal; color: #424242; margin-top: 6px; display: inline-block;">${comment}</span>`;
+        }
+
+        // 重新測驗重置
+        function resetQuiz() {
+            for (let q = 1; q <= 5; q++) {
+                quizUserAnswers[q] = null;
+                const feedbackEl = document.getElementById(`q${q}-feedback`);
+                if (feedbackEl) {
+                    feedbackEl.style.display = 'none';
+                    feedbackEl.className = 'quiz-feedback';
+                    feedbackEl.innerHTML = '';
+                }
+            }
+
+            // 取消所有按鈕選取
+            document.querySelectorAll('.quiz-options .option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+
+            // 隱藏得分 Banner
+            const scoreBanner = document.getElementById('quiz-score-banner');
+            if (scoreBanner) {
+                scoreBanner.style.display = 'none';
+                scoreBanner.innerHTML = '';
+            }
+        }
+
+        // ==========================================
+        // 頁面加載完成初始化
+        // ==========================================
+        window.onload = function() {
+            updateTiltBottle(0);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>閒雲數學小棧 - 國小二上數學單元目錄總覽</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            400: '#38bdf8',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans TC"', 'Inter', 'sans-serif'],
+                        rounded: ['Fredoka', '"Noto Sans TC"', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #0d9488 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-modal {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body class="p-3 md:p-6 custom-scrollbar">
+
+    <div class="max-w-6xl mx-auto flex flex-col items-center">
+
+        <!-- Header Bar with Google Drive Logo Image -->
+        <div class="w-full max-w-4xl flex items-center justify-start mb-4 px-2 fade-in">
+            <img src="https://lh3.googleusercontent.com/d/1qUdM3yxfDP9U8S1PAlYScLXLG9riPxMt" alt="閒雲數學小棧Logo" class="h-8 w-auto mr-3 object-contain drop-shadow-md rounded-full bg-white/30 p-1" onerror="this.src='https://placehold.co/40x40/ffffff/333333?text=Logo'">
+            <span class="text-xl md:text-2xl font-bold text-white drop-shadow-lg tracking-wider" style="text-shadow: 1px 1px 3px rgba(0,0,0,0.5);">閒雲數學小棧</span>
+        </div>
+
+        <div class="w-full glass-card rounded-2xl p-6 md:p-8 mb-8 fade-in relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-10 -top-10 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 text-teal-300 text-xs font-semibold tracking-wide border border-teal-400/30 mb-3">
+                        <i class="fa-solid fa-graduation-cap"></i> 國小二年級上學期 數學科
+                    </div>
+                    <h1 class="text-2xl md:text-4xl font-black text-white tracking-tight mb-2">
+                        二上數學各單元互動學習目錄
+                    </h1>
+                    <p class="text-slate-300 text-sm md:text-base max-w-2xl">
+                        統整二上數學所有 10 個核心單元之互動教學網頁。點擊「顯示單元網頁」可展開獨立小節連結，或開啟「簡易教具預覽」進行互動操作。
+                    </p>
+                </div>
+
+                <!-- Learning Progress Widget -->
+                <div class="flex items-center gap-4 bg-slate-900/60 p-4 rounded-xl border border-white/10 shrink-0">
+                    <div class="relative w-16 h-16 flex items-center justify-center">
+                        <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                            <path class="text-slate-700" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path id="progressCircle" class="text-teal-400 transition-all duration-700 ease-out" stroke-dasharray="0, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                        <span id="progressText" class="absolute text-sm font-bold text-teal-300">0%</span>
+                    </div>
+                    <div>
+                        <div class="text-xs text-slate-400 font-medium">學習總進度</div>
+                        <div class="text-lg font-bold text-white"><span id="completedCount">0</span> / <span id="totalCount">10</span> 單元完成</div>
+                        <button onclick="resetProgress()" class="text-[11px] text-slate-400 hover:text-rose-300 underline transition-colors mt-0.5">重置學習紀錄</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-white/10 flex flex-col sm:flex-row gap-3 items-center justify-between">
+                <!-- Search Input -->
+                <div class="relative w-full sm:w-72">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="搜尋單元名稱或小節..." oninput="filterUnits()"
+                           class="w-full bg-slate-900/80 text-sm text-white placeholder-slate-400 pl-10 pr-4 py-2 rounded-xl border border-white/15 focus:outline-none focus:border-teal-400 transition-colors">
+                </div>
+
+                <!-- Category Filters -->
+                <div class="flex items-center gap-1.5 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 custom-scrollbar">
+                    <button onclick="setCategoryFilter('all')" class="cat-btn active bg-teal-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition-all" data-cat="all">全部單元</button>
+                    <button onclick="setCategoryFilter('number')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg font-medium transition-all" data-cat="number">數與運算</button>
+                    <button onclick="setCategoryFilter('measure')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg font-medium transition-all" data-cat="measure">量與時間/容量</button>
+                    <button onclick="setCategoryFilter('geo')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg font-medium transition-all" data-cat="geo">圖形幾何</button>
+                </div>
+
+                <!-- Config Button -->
+                <button onclick="openConfigModal()" class="w-full sm:w-auto text-xs bg-slate-800 hover:bg-slate-700 text-teal-300 border border-teal-500/30 px-3 py-2 rounded-xl font-medium transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-gear"></i> 管理單元網址
+                </button>
+            </div>
+        </div>
+
+        <div id="unitsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full fade-in">
+            <!-- Dynamic Unit Cards Rendered Here -->
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 mb-6 text-center text-xs text-slate-400">
+            <p>© 閒雲數學小棧 - 國小數學數位學習平台 | 專為國小二年級學生設計之數位互動教學系統</p>
+        </footer>
+
+    </div>
+
+    <!-- Config Modal -->
+    <div id="configModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-modal w-full max-w-2xl rounded-2xl p-6 shadow-2xl flex flex-col max-h-[90vh]">
+            <div class="flex items-center justify-between pb-4 border-b border-white/10">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-link text-teal-400"></i> 設定二上各單元與小節對應網址
+                </h3>
+                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-white p-1 text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <p class="text-xs text-slate-300 my-3">
+                在此填入您二上數學各單元與小節對應之獨立網頁網址（預設規範例如：`021/H021-01-1.html`）。
+            </p>
+
+            <div id="configInputsContainer" class="flex-1 overflow-y-auto space-y-3 pr-2 custom-scrollbar my-2">
+                <!-- Inputs rendered via JS -->
+            </div>
+
+            <div class="pt-4 border-t border-white/10 flex items-center justify-end gap-3">
+                <button onclick="closeConfigModal()" class="px-4 py-2 text-xs text-slate-300 hover:bg-slate-800 rounded-xl">取消</button>
+                <button onclick="saveUnitLinks()" class="px-5 py-2 text-xs font-bold bg-teal-500 hover:bg-teal-400 text-slate-950 rounded-xl shadow-lg transition-colors">
+                    <i class="fa-solid fa-floppy-disk mr-1"></i> 儲存網址設定
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Preview Modal -->
+    <div id="previewModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-3 md:p-6 hidden">
+        <div class="glass-modal w-full max-w-3xl rounded-2xl p-5 md:p-6 shadow-2xl flex flex-col max-h-[95vh] relative overflow-hidden">
+            <div class="flex items-center justify-between pb-3 border-b border-white/10">
+                <div class="flex items-center gap-3">
+                    <span id="previewUnitBadge" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-teal-500/20 text-teal-300 border border-teal-400/30">簡易教具預覽</span>
+                    <h3 id="previewUnitTitle" class="text-base md:text-lg font-bold text-white">單元標題</h3>
+                </div>
+                <button onclick="closePreviewModal()" class="text-slate-400 hover:text-white p-1 text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="my-4 flex-1 overflow-y-auto custom-scrollbar flex flex-col items-center justify-center min-h-[380px] bg-slate-950/70 rounded-xl p-4 border border-white/10" id="previewContent">
+                <!-- Interactive Tool Demo loaded here -->
+            </div>
+
+            <div class="pt-3 border-t border-white/10 flex items-center justify-end">
+                <button onclick="closePreviewModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-xs transition-all">
+                    關閉預覽
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 border border-teal-500/50 text-white text-xs px-4 py-3 rounded-xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 z-50 flex items-center gap-2">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+        <span id="toastMsg">設定已成功儲存</span>
+    </div>
+
+    <script>
+        // Curriculum data matching Grade 2 Semester 1 textbook contents exactly
+        const unitsData = [
+            {
+                id: 1,
+                unitNum: "第一單元",
+                title: "200以內的數",
+                category: "number",
+                icon: "fa-cubes-stacked",
+                color: "from-sky-500 to-blue-500",
+                badgeColor: "bg-sky-500/20 text-sky-300 border-sky-400/30",
+                desc: "認識200以內的數，百位、十位與個位位值、點數錢幣與數的大小比較。",
+                tags: ["數到200", "位值表", "付錢點數", "數的大小"],
+                defaultUrl: "021/H021-01.html",
+                interactiveType: "num200",
+                subsections: [
+                    { id: "1-1", title: "數到200", defaultUrl: "021/H021-01-1.html" },
+                    { id: "1-2", title: "幾個百、幾個十、幾個一", defaultUrl: "021/H021-01-2.html" },
+                    { id: "1-3", title: "付錢", defaultUrl: "021/H021-01-3.html" },
+                    { id: "1-4", title: "數的大小比較", defaultUrl: "021/H021-01-4.html" }
+                ]
+            },
+            {
+                id: 2,
+                unitNum: "第二單元",
+                title: "二位數的加減法",
+                category: "number",
+                icon: "fa-calculator",
+                color: "from-blue-500 to-indigo-500",
+                badgeColor: "bg-blue-500/20 text-blue-300 border-blue-400/30",
+                desc: "二位數加法與減法直式運算，包含進位與退位概念及符號比較。",
+                tags: ["二位數加法", "二位數減法", "等於大於小於"],
+                defaultUrl: "021/H021-02.html",
+                interactiveType: "calc2digit",
+                subsections: [
+                    { id: "2-1", title: "二位數的加法", defaultUrl: "021/H021-02-1.html" },
+                    { id: "2-2", title: "二位數的減法", defaultUrl: "021/H021-02-2.html" },
+                    { id: "2-3", title: "等於、大於和小於", defaultUrl: "021/H021-02-3.html" }
+                ]
+            },
+            {
+                id: 3,
+                unitNum: "第三單元",
+                title: "認識公分",
+                category: "measure",
+                icon: "fa-ruler-horizontal",
+                color: "from-teal-500 to-emerald-500",
+                badgeColor: "bg-teal-500/20 text-teal-300 border-teal-400/30",
+                desc: "個別單位比較、認識公分(cm)直尺、量長度與畫指定長度、長度加減計算。",
+                tags: ["個別單位", "公分 cm", "量長度畫長度", "長度加減"],
+                defaultUrl: "021/H021-03.html",
+                interactiveType: "rulerCm",
+                subsections: [
+                    { id: "3-1", title: "個別單位", defaultUrl: "021/H021-03-1.html" },
+                    { id: "3-2", title: "認識公分", defaultUrl: "021/H021-03-2.html" },
+                    { id: "3-3", title: "量一量，畫一畫", defaultUrl: "021/H021-03-3.html" },
+                    { id: "3-4", title: "長度的加減", defaultUrl: "021/H021-03-4.html" }
+                ]
+            },
+            {
+                id: 4,
+                unitNum: "第四單元",
+                title: "加減應用",
+                category: "number",
+                icon: "fa-scale-balanced",
+                color: "from-emerald-500 to-green-500",
+                badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-400/30",
+                desc: "加法與減法的互逆關係（部分與整體）、生活應用解題與答案驗算。",
+                tags: ["加減互逆", "應用題解題", "答案驗算"],
+                defaultUrl: "021/H021-04.html",
+                interactiveType: "addSubRel",
+                subsections: [
+                    { id: "4-1", title: "加法和減法的關係", defaultUrl: "021/H021-04-1.html" },
+                    { id: "4-2", title: "解題和驗算", defaultUrl: "021/H021-04-2.html" }
+                ]
+            },
+            {
+                id: 5,
+                unitNum: "第五單元",
+                title: "容量",
+                category: "measure",
+                icon: "fa-glass-water",
+                color: "from-cyan-500 to-teal-500",
+                badgeColor: "bg-cyan-500/20 text-cyan-300 border-cyan-400/30",
+                desc: "認識容量與容器、直接比較與間接比較（杯數與水位）、生活容量概念。",
+                tags: ["認識容量", "水位比較", "杯數間接比較"],
+                defaultUrl: "021/H021-05.html",
+                interactiveType: "capacity",
+                subsections: [
+                    { id: "5-1", title: "認識容量", defaultUrl: "021/H021-05-1.html" },
+                    { id: "5-2", title: "容量的比較", defaultUrl: "021/H021-05-2.html" }
+                ]
+            },
+            {
+                id: 6,
+                unitNum: "第六單元",
+                title: "加減兩步驟",
+                category: "number",
+                icon: "fa-list-ol",
+                color: "from-amber-500 to-orange-500",
+                badgeColor: "bg-amber-500/20 text-amber-300 border-amber-400/30",
+                desc: "加法兩步驟、減法兩步驟與加減混合兩步驟的文字題理解與連續計算。",
+                tags: ["連加問題", "連減問題", "加減混合兩步驟"],
+                defaultUrl: "021/H021-06.html",
+                interactiveType: "twoSteps",
+                subsections: [
+                    { id: "6-1", title: "加法兩步驟", defaultUrl: "021/H021-06-1.html" },
+                    { id: "6-2", title: "減法兩步驟", defaultUrl: "021/H021-06-2.html" },
+                    { id: "6-3", title: "加減兩步驟", defaultUrl: "021/H021-06-3.html" }
+                ]
+            },
+            {
+                id: 7,
+                unitNum: "第七單元",
+                title: "乘法（一）",
+                category: "number",
+                icon: "fa-xmark",
+                color: "from-rose-500 to-pink-500",
+                badgeColor: "bg-rose-500/20 text-rose-300 border-rose-400/30",
+                desc: "幾的幾倍（連加轉乘法）、2、5、4、8 的乘法口訣與生活情境應用。",
+                tags: ["幾的幾倍", "2與5的乘法", "4與8的乘法", "乘法連加"],
+                defaultUrl: "021/H021-07.html",
+                interactiveType: "multPart1",
+                subsections: [
+                    { id: "7-1", title: "幾的幾倍", defaultUrl: "021/H021-07-1.html" },
+                    { id: "7-2", title: "2和5的乘法", defaultUrl: "021/H021-07-2.html" },
+                    { id: "7-3", title: "4的乘法", defaultUrl: "021/H021-07-3.html" },
+                    { id: "7-4", title: "8的乘法", defaultUrl: "021/H021-07-4.html" },
+                    { id: "7-5", title: "乘法的應用", defaultUrl: "021/H021-07-5.html" }
+                ]
+            },
+            {
+                id: 8,
+                unitNum: "第八單元",
+                title: "時間",
+                category: "measure",
+                icon: "fa-clock",
+                color: "from-violet-500 to-purple-500",
+                badgeColor: "bg-violet-500/20 text-violet-300 border-violet-400/30",
+                desc: "認識鐘面（時針、分針）、報讀幾時幾分、點數經過的時間（長針走幾格）。",
+                tags: ["認識鐘面", "報讀幾時幾分", "經過的時間"],
+                defaultUrl: "021/H021-08.html",
+                interactiveType: "clockTime",
+                subsections: [
+                    { id: "8-1", title: "認識鐘面", defaultUrl: "021/H021-08-1.html" },
+                    { id: "8-2", title: "報讀時刻", defaultUrl: "021/H021-08-2.html" },
+                    { id: "8-3", title: "點數經過的時間", defaultUrl: "021/H021-08-3.html" }
+                ]
+            },
+            {
+                id: 9,
+                unitNum: "第九單元",
+                title: "乘法（二）",
+                category: "number",
+                icon: "fa-asterisk",
+                color: "from-fuchsia-500 to-pink-600",
+                badgeColor: "bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-400/30",
+                desc: "3、6、7、9 的乘法口訣表、倍數遞增規律與乘法文字題綜合解答。",
+                tags: ["3和6的乘法", "7的乘法", "9的乘法", "九九乘法表"],
+                defaultUrl: "021/H021-09.html",
+                interactiveType: "multPart2",
+                subsections: [
+                    { id: "9-1", title: "3的乘法", defaultUrl: "021/H021-09-1.html" },
+                    { id: "9-2", title: "6的乘法", defaultUrl: "021/H021-09-2.html" },
+                    { id: "9-3", title: "7的乘法", defaultUrl: "021/H021-09-3.html" },
+                    { id: "9-4", title: "9的乘法", defaultUrl: "021/H021-09-4.html" },
+                    { id: "9-5", title: "乘法的應用", defaultUrl: "021/H021-09-5.html" }
+                ]
+            },
+            {
+                id: 10,
+                unitNum: "第十單元",
+                title: "面的大小比較",
+                category: "geo",
+                icon: "fa-vector-square",
+                color: "from-sky-500 to-teal-600",
+                badgeColor: "bg-sky-500/20 text-sky-300 border-sky-400/30",
+                desc: "平面的概念、面的直接比較（重疊比大小）與間接比較（數個數/覆蓋方格）。",
+                tags: ["面的概念", "直接重疊比較", "間接方格比較"],
+                defaultUrl: "021/H021-10.html",
+                interactiveType: "areaCompare",
+                subsections: [
+                    { id: "10-1", title: "面的直接比較", defaultUrl: "021/H021-10-1.html" },
+                    { id: "10-2", title: "面的間接比較", defaultUrl: "021/H021-10-2.html" }
+                ]
+            }
+        ];
+
+        let unitUrls = {};
+        let completedUnits = {};
+        let expandedSubsections = {};
+        let currentFilter = 'all';
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadSavedData();
+            renderUnits();
+            updateProgressStats();
+        });
+
+        function loadSavedData() {
+            try {
+                const savedUrls = localStorage.getItem('math2a_unit_urls');
+                if (savedUrls) {
+                    unitUrls = JSON.parse(savedUrls);
+                } else {
+                    unitsData.forEach(u => {
+                        unitUrls[u.id] = u.defaultUrl;
+                        if (u.subsections) {
+                            u.subsections.forEach(sub => {
+                                unitUrls[sub.id] = sub.defaultUrl;
+                            });
+                        }
+                    });
+                }
+
+                const savedCompleted = localStorage.getItem('math2a_completed_units');
+                if (savedCompleted) {
+                    completedUnits = JSON.parse(savedCompleted);
+                }
+            } catch (e) {
+                console.error("Local storage error", e);
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('math2a_unit_urls', JSON.stringify(unitUrls));
+            localStorage.setItem('math2a_completed_units', JSON.stringify(completedUnits));
+        }
+
+        function renderUnits() {
+            const grid = document.getElementById('unitsGrid');
+            grid.innerHTML = '';
+
+            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+
+            const filtered = unitsData.filter(unit => {
+                const matchesCat = (currentFilter === 'all') || (unit.category === currentFilter);
+                const matchesSearch = unit.title.toLowerCase().includes(searchVal) || 
+                                      unit.unitNum.toLowerCase().includes(searchVal) ||
+                                      unit.desc.toLowerCase().includes(searchVal) ||
+                                      unit.tags.some(t => t.toLowerCase().includes(searchVal)) ||
+                                      (unit.subsections && unit.subsections.some(s => s.id.toLowerCase().includes(searchVal) || s.title.toLowerCase().includes(searchVal)));
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 text-slate-400">
+                        <i class="fa-solid fa-magnifying-glass text-3xl mb-2 opacity-50"></i>
+                        <p>找不到符合條件的單元或小節</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filtered.forEach(unit => {
+                const isCompleted = !!completedUnits[unit.id];
+                const isExpanded = !!expandedSubsections[unit.id];
+                const unitUrl = unitUrls[unit.id] || unit.defaultUrl;
+
+                let subHtml = '';
+                if (unit.subsections && unit.subsections.length > 0) {
+                    subHtml = `
+                        <div id="sub_section_${unit.id}" class="${isExpanded ? 'block' : 'hidden'} mt-3 pt-3 border-t border-white/10 transition-all">
+                            <div class="text-[11px] font-bold text-teal-300/90 mb-2 flex items-center justify-between">
+                                <span><i class="fa-solid fa-layer-group mr-1"></i>涵蓋小節：</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-1.5">
+                                ${unit.subsections.map(sub => `
+                                    <div class="px-2 py-1.5 bg-slate-900/90 text-teal-200 border border-white/10 rounded-lg flex flex-col justify-center">
+                                        <span class="text-[10px] font-extrabold text-teal-400">${sub.id}</span>
+                                        <span class="truncate w-full text-[11px] font-medium text-slate-300">${sub.title}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const card = document.createElement('div');
+                card.className = `glass-card rounded-2xl p-5 flex flex-col justify-between relative overflow-hidden group ${isCompleted ? 'border-emerald-500/40 bg-slate-900/40' : ''}`;
+
+                card.innerHTML = `
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${unit.color} opacity-10 rounded-bl-full pointer-events-none group-hover:opacity-20 transition-opacity"></div>
+                    
+                    <div>
+                        <!-- Header / Unit Number -->
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 rounded-lg text-xs font-bold border ${unit.badgeColor}">
+                                ${unit.unitNum}
+                            </span>
+                            <button onclick="toggleCompleted('${unit.id}')" title="切換完成狀態" class="flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full transition-all ${isCompleted ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/30' : 'bg-slate-800 text-slate-400 hover:text-slate-200 border border-white/5'}">
+                                <i class="fa-solid ${isCompleted ? 'fa-circle-check text-emerald-400' : 'fa-circle'}"></i>
+                                <span>${isCompleted ? '已標記完成' : '標記完成'}</span>
+                            </button>
+                        </div>
+
+                        <!-- Title & Icon -->
+                        <div class="flex items-start gap-3 mb-3">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br ${unit.color} flex items-center justify-center text-white text-lg shadow-md shrink-0 mt-0.5">
+                                <i class="fa-solid ${unit.icon}"></i>
+                            </div>
+                            <div>
+                                <a href="${unitUrl}" target="_blank" title="點擊開啟 ${unit.unitNum}：${unit.title} 頁面" class="text-lg font-bold text-white hover:text-teal-300 transition-colors inline-flex items-center gap-1.5 group/title">
+                                    <span>${unit.title}</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs text-teal-400 opacity-70 group-hover/title:opacity-100 transition-opacity"></i>
+                                </a>
+                                <p class="text-xs text-slate-300 mt-1 line-clamp-2 leading-relaxed">
+                                    ${unit.desc}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Tags -->
+                        <div class="flex flex-wrap gap-1.5 mb-3 mt-2">
+                            ${unit.tags.map(tag => `<span class="text-[11px] bg-slate-900/60 text-slate-300 px-2 py-0.5 rounded-md border border-white/5"># ${tag}</span>`).join('')}
+                        </div>
+                    </div>
+
+                    <div>
+                        <!-- Main Action Buttons -->
+                        <div class="pt-3 border-t border-white/10 flex items-center gap-2">
+                            <button onclick="openPreview('${unit.id}')" class="flex-1 text-xs py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl transition-all border border-white/10 flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-eye text-teal-400"></i> 簡易教具預覽
+                            </button>
+                            <button onclick="toggleSubsections('${unit.id}')" class="flex-1 text-xs py-2 px-3 bg-gradient-to-r ${unit.color} hover:brightness-110 text-white font-bold rounded-xl shadow-md transition-all flex items-center justify-center">
+                                <span>顯示單元網頁</span>
+                            </button>
+                        </div>
+
+                        <!-- Subsections Area -->
+                        ${subHtml}
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function toggleSubsections(unitId) {
+            expandedSubsections[unitId] = !expandedSubsections[unitId];
+            const subElem = document.getElementById(`sub_section_${unitId}`);
+            if (subElem) {
+                if (expandedSubsections[unitId]) {
+                    subElem.classList.remove('hidden');
+                    subElem.classList.add('block');
+                } else {
+                    subElem.classList.add('hidden');
+                    subElem.classList.remove('block');
+                }
+            }
+        }
+
+        function toggleCompleted(unitId) {
+            completedUnits[unitId] = !completedUnits[unitId];
+            saveData();
+            renderUnits();
+            updateProgressStats();
+            showToast(completedUnits[unitId] ? "已將單元標記為完成！" : "已取消單元完成標記");
+        }
+
+        function updateProgressStats() {
+            const mainUnits = unitsData.filter(u => typeof u.id === 'number');
+            const total = mainUnits.length;
+            const completedCount = mainUnits.filter(u => completedUnits[u.id]).length;
+            const percent = Math.round((completedCount / total) * 100);
+
+            document.getElementById('totalCount').innerText = total;
+            document.getElementById('completedCount').innerText = completedCount;
+            document.getElementById('progressText').innerText = `${percent}%`;
+
+            const circle = document.getElementById('progressCircle');
+            circle.setAttribute('stroke-dasharray', `${percent}, 100`);
+        }
+
+        function resetProgress() {
+            completedUnits = {};
+            saveData();
+            renderUnits();
+            updateProgressStats();
+            showToast("學習紀錄已重置");
+        }
+
+        function setCategoryFilter(cat) {
+            currentFilter = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.dataset.cat === cat) {
+                    btn.className = "cat-btn active bg-teal-500 text-white text-xs px-3 py-1.5 rounded-lg font-medium transition-all shadow-md";
+                } else {
+                    btn.className = "cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 text-xs px-3 py-1.5 rounded-lg font-medium transition-all";
+                }
+            });
+            renderUnits();
+        }
+
+        function filterUnits() {
+            renderUnits();
+        }
+
+        function openConfigModal() {
+            const container = document.getElementById('configInputsContainer');
+            container.innerHTML = '';
+
+            unitsData.forEach(u => {
+                const currentUrl = unitUrls[u.id] || u.defaultUrl;
+                const div = document.createElement('div');
+                div.className = "bg-slate-900/70 p-3.5 rounded-xl border border-white/10 flex flex-col gap-2.5";
+
+                div.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <div class="sm:w-1/3">
+                            <span class="text-xs font-bold text-teal-300">${u.unitNum}</span>
+                            <div class="text-sm font-semibold text-white truncate">${u.title}</div>
+                        </div>
+                        <input type="text" id="url_input_${u.id}" value="${currentUrl}" placeholder="網址，例如：021/H021-0${u.id}.html"
+                               class="sm:w-2/3 bg-slate-950 text-xs text-white px-3 py-2 rounded-lg border border-white/15 focus:outline-none focus:border-teal-400 font-mono">
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            document.getElementById('configModal').classList.remove('hidden');
+        }
+
+        function closeConfigModal() {
+            document.getElementById('configModal').classList.add('hidden');
+        }
+
+        function saveUnitLinks() {
+            unitsData.forEach(u => {
+                const input = document.getElementById(`url_input_${u.id}`);
+                if (input) {
+                    unitUrls[u.id] = input.value.trim() || u.defaultUrl;
+                }
+            });
+            saveData();
+            renderUnits();
+            closeConfigModal();
+            showToast("單元網址設定已儲存");
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 2500);
+        }
+
+        function openPreview(unitId) {
+            const unit = unitsData.find(u => String(u.id) === String(unitId));
+            if (!unit) return;
+
+            document.getElementById('previewUnitTitle').innerText = `${unit.unitNum}：${unit.title}`;
+
+            const contentArea = document.getElementById('previewContent');
+            contentArea.innerHTML = '';
+
+            switch (unit.interactiveType) {
+                case 'num200':
+                    contentArea.innerHTML = renderNum200Demo();
+                    initNum200Logic();
+                    break;
+                case 'calc2digit':
+                    contentArea.innerHTML = renderCalc2DigitDemo();
+                    initCalc2DigitLogic();
+                    break;
+                case 'rulerCm':
+                    contentArea.innerHTML = renderRulerCmDemo();
+                    initRulerCmLogic();
+                    break;
+                case 'addSubRel':
+                    contentArea.innerHTML = renderAddSubRelDemo();
+                    initAddSubRelLogic();
+                    break;
+                case 'capacity':
+                    contentArea.innerHTML = renderCapacityDemo();
+                    initCapacityLogic();
+                    break;
+                case 'twoSteps':
+                    contentArea.innerHTML = renderTwoStepsDemo();
+                    initTwoStepsLogic();
+                    break;
+                case 'multPart1':
+                    contentArea.innerHTML = renderMultPart1Demo();
+                    initMultPart1Logic();
+                    break;
+                case 'clockTime':
+                    contentArea.innerHTML = renderClockTimeDemo();
+                    initClockTimeLogic();
+                    break;
+                case 'multPart2':
+                    contentArea.innerHTML = renderMultPart2Demo();
+                    initMultPart2Logic();
+                    break;
+                case 'areaCompare':
+                    contentArea.innerHTML = renderAreaCompareDemo();
+                    initAreaCompareLogic();
+                    break;
+                default:
+                    contentArea.innerHTML = `<p class="text-slate-400 text-sm">此單元互動教具載入中...</p>`;
+            }
+
+            document.getElementById('previewModal').classList.remove('hidden');
+        }
+
+        function closePreviewModal() {
+            document.getElementById('previewModal').classList.add('hidden');
+        }
+
+        // -------------------------------------------------------------
+        // Unit 1: 200以內的數
+        // -------------------------------------------------------------
+        function renderNum200Demo() {
+            return `
+                <div class="w-full flex flex-col items-center text-center">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-xs text-slate-300">請輸入 1~200 的數：</span>
+                        <input type="number" id="num200Input" value="158" min="1" max="200" class="w-20 bg-slate-900 text-sky-300 font-mono text-center font-bold px-2 py-1 rounded-lg border border-sky-500/40 text-sm">
+                        <button id="num200RandBtn" class="bg-slate-800 hover:bg-slate-700 text-xs px-2.5 py-1.5 rounded-lg text-slate-300 border border-white/10"><i class="fa-solid fa-dice"></i> 隨機數</button>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 w-full max-w-md my-2">
+                        <div class="bg-blue-950/80 p-3 rounded-xl border border-blue-500/30">
+                            <div class="text-xs font-bold text-blue-300">百位 (100元/百塊)</div>
+                            <div id="u1DigitHu" class="text-2xl font-black text-white font-mono my-1">1</div>
+                            <div id="u1MoneyHu" class="text-xs flex flex-wrap gap-1 justify-center min-h-[36px] items-center"></div>
+                        </div>
+                        <div class="bg-teal-950/80 p-3 rounded-xl border border-teal-500/30">
+                            <div class="text-xs font-bold text-teal-300">十位 (10元/十桿)</div>
+                            <div id="u1DigitTe" class="text-2xl font-black text-white font-mono my-1">5</div>
+                            <div id="u1MoneyTe" class="text-xs flex flex-wrap gap-1 justify-center min-h-[36px] items-center"></div>
+                        </div>
+                        <div class="bg-amber-950/80 p-3 rounded-xl border border-amber-500/30">
+                            <div class="text-xs font-bold text-amber-300">個位 (1元/個積木)</div>
+                            <div id="u1DigitUn" class="text-2xl font-black text-white font-mono my-1">8</div>
+                            <div id="u1MoneyUn" class="text-xs flex flex-wrap gap-1 justify-center min-h-[36px] items-center"></div>
+                        </div>
+                    </div>
+
+                    <div id="u1Breakdown" class="text-xs text-sky-200 bg-slate-900/80 px-4 py-2 rounded-xl border border-white/10 mt-2 font-mono">
+                        158 = 1個百 + 5個十 + 8個一
+                    </div>
+                </div>
+            `;
+        }
+
+        function initNum200Logic() {
+            const input = document.getElementById('num200Input');
+            const randBtn = document.getElementById('num200RandBtn');
+
+            const update = () => {
+                let val = parseInt(input.value) || 0;
+                if (val > 200) val = 200;
+                if (val < 1) val = 1;
+
+                const hu = Math.floor(val / 100);
+                const te = Math.floor((val % 100) / 10);
+                const un = val % 10;
+
+                document.getElementById('u1DigitHu').innerText = hu;
+                document.getElementById('u1DigitTe').innerText = te;
+                document.getElementById('u1DigitUn').innerText = un;
+
+                document.getElementById('u1MoneyHu').innerHTML = hu > 0 ? `<span class="bg-blue-600/40 border border-blue-400 text-blue-200 px-2 py-0.5 rounded text-xs font-bold">100</span>`.repeat(hu) : '<span class="text-slate-600">-</span>';
+                document.getElementById('u1MoneyTe').innerHTML = te > 0 ? `<span class="bg-teal-600/40 border border-teal-400 text-teal-200 px-1.5 py-0.5 rounded text-[10px] font-bold">10</span>`.repeat(te) : '<span class="text-slate-600">-</span>';
+                document.getElementById('u1MoneyUn').innerHTML = un > 0 ? `<span class="bg-amber-600/40 border border-amber-400 text-amber-200 px-1.5 py-0.5 rounded text-[10px] font-bold">1</span>`.repeat(un) : '<span class="text-slate-600">-</span>';
+
+                document.getElementById('u1Breakdown').innerText = `${val} = ${hu} 個百 + ${te} 個十 + ${un} 個一 (${hu*100} + ${te*10} + ${un})`;
+            };
+
+            if (input) input.oninput = update;
+            if (randBtn) {
+                randBtn.onclick = () => {
+                    input.value = Math.floor(Math.random() * 190) + 10;
+                    update();
+                };
+            }
+            update();
+        }
+
+        // -------------------------------------------------------------
+        // Unit 2: 二位數的加減法
+        // -------------------------------------------------------------
+        function renderCalc2DigitDemo() {
+            return `
+                <div class="w-full flex flex-col items-center text-center">
+                    <div class="flex gap-2 mb-3 bg-slate-900/90 p-1.5 rounded-xl border border-white/10">
+                        <button onclick="switchU2Op('+')" id="u2BtnAdd" class="px-3 py-1 rounded-lg text-xs font-bold bg-blue-500 text-white">2-1 二位數加法</button>
+                        <button onclick="switchU2Op('-')" id="u2BtnSub" class="px-3 py-1 rounded-lg text-xs font-bold text-slate-300">2-2 二位數減法</button>
+                    </div>
+
+                    <div class="flex items-center gap-2 mb-3">
+                        <input type="number" id="u2NumA" value="48" min="10" max="99" class="w-16 bg-slate-900 text-blue-300 font-mono text-center font-bold px-2 py-1 rounded-lg border border-blue-500/40 text-base">
+                        <span id="u2OpSign" class="text-white font-bold text-lg">+</span>
+                        <input type="number" id="u2NumB" value="27" min="1" max="99" class="w-16 bg-slate-900 text-blue-300 font-mono text-center font-bold px-2 py-1 rounded-lg border border-blue-500/40 text-base">
+                        <button id="u2RandBtn" class="bg-slate-800 hover:bg-slate-700 text-xs px-2.5 py-1.5 rounded-lg text-slate-300 border border-white/10"><i class="fa-solid fa-dice"></i> 出題</button>
+                    </div>
+
+                    <div class="bg-slate-900/90 p-4 rounded-2xl border border-blue-500/30 font-mono text-2xl shadow-inner inline-block min-w-[200px]">
+                        <div class="grid grid-cols-3 gap-2 text-xs text-slate-400 font-sans border-b border-white/10 pb-1 mb-1 text-center font-bold">
+                            <span>百位</span><span>十位</span><span>個位</span>
+                        </div>
+                        <div id="u2CarryRow" class="grid grid-cols-3 gap-2 text-xs font-bold text-amber-400 text-center min-h-[20px]"></div>
+                        <div id="u2RowA" class="grid grid-cols-3 gap-2 text-white font-bold text-center"></div>
+                        <div id="u2RowB" class="grid grid-cols-3 gap-2 text-blue-300 font-bold border-b-2 border-white/40 pb-1.5 my-1 text-center"></div>
+                        <div id="u2RowAns" class="grid grid-cols-3 gap-2 text-amber-300 font-black text-center pt-1"></div>
+                    </div>
+
+                    <div id="u2Tip" class="text-xs text-blue-200 mt-3 bg-slate-900/80 p-2.5 rounded-xl border border-white/10 max-w-md w-full text-left"></div>
+                </div>
+            `;
+        }
+
+        let u2Op = '+';
+        function switchU2Op(op) {
+            u2Op = op;
+            document.getElementById('u2BtnAdd').className = op === '+' ? "px-3 py-1 rounded-lg text-xs font-bold bg-blue-500 text-white" : "px-3 py-1 rounded-lg text-xs font-bold text-slate-300";
+            document.getElementById('u2BtnSub').className = op === '-' ? "px-3 py-1 rounded-lg text-xs font-bold bg-blue-500 text-white" : "px-3 py-1 rounded-lg text-xs font-bold text-slate-300";
+            document.getElementById('u2OpSign').innerText = op;
+            if (typeof updateU2 === 'function') updateU2();
+        }
+
+        function initCalc2DigitLogic() {
+            const numA = document.getElementById('u2NumA');
+            const numB = document.getElementById('u2NumB');
+            const randBtn = document.getElementById('u2RandBtn');
+
+            window.updateU2 = () => {
+                let a = parseInt(numA.value) || 0;
+                let b = parseInt(numB.value) || 0;
+
+                if (u2Op === '-' && a < b) {
+                    const temp = a; a = b; b = temp;
+                    numA.value = a; numB.value = b;
+                }
+
+                let ans = u2Op === '+' ? (a + b) : (a - b);
+                const strA = String(a).padStart(3, ' ');
+                const strB = String(b).padStart(3, ' ');
+                const strAns = String(ans).padStart(3, ' ');
+
+                document.getElementById('u2RowA').innerHTML = strA.split('').map(c => `<span>${c===' '?'&nbsp;':c}</span>`).join('');
+                document.getElementById('u2RowB').innerHTML = `<span class="text-blue-400 font-extrabold">${u2Op}</span>` + strB.substring(1).split('').map(c => `<span>${c===' '?'&nbsp;':c}</span>`).join('');
+                document.getElementById('u2RowAns').innerHTML = strAns.split('').map(c => `<span>${c===' '?'&nbsp;':c}</span>`).join('');
+
+                if (u2Op === '+') {
+                    const unAdd = (a % 10) + (b % 10);
+                    const carry = unAdd >= 10 ? 1 : 0;
+                    document.getElementById('u2CarryRow').innerHTML = `<span></span><span>${carry?1:''}</span><span></span>`;
+                    document.getElementById('u2Tip').innerHTML = `<b>加法進位說明：</b><br>個位相加：${a%10} + ${b%10} = ${unAdd} ${carry?'(滿十向十位進 1)':''}<br>計算結果：<span class="text-amber-300 font-bold">${a} + ${b} = ${ans}</span>`;
+                } else {
+                    const borrow = (a % 10) < (b % 10) ? 1 : 0;
+                    document.getElementById('u2CarryRow').innerHTML = `<span></span><span>${borrow?'-1':''}</span><span>${borrow?'10':''}</span>`;
+                    document.getElementById('u2Tip').innerHTML = `<b>減法退位說明：</b><br>個位比較：${a%10} - ${b%10} ${borrow?'不夠減，從十位借 1 當 10':'夠減'}<br>計算結果：<span class="text-amber-300 font-bold">${a} - ${b} = ${ans}</span>`;
+                }
+            };
+
+            if (numA) numA.oninput = window.updateU2;
+            if (numB) numB.oninput = window.updateU2;
+            if (randBtn) {
+                randBtn.onclick = () => {
+                    numA.value = Math.floor(Math.random() * 70) + 20;
+                    numB.value = Math.floor(Math.random() * 40) + 5;
+                    window.updateU2();
+                };
+            }
+            window.updateU2();
+        }
+
+        // -------------------------------------------------------------
+        // Unit 3: 認識公分
+        // -------------------------------------------------------------
+        function renderRulerCmDemo() {
+            return `
+                <div class="w-full flex flex-col items-center text-center">
+                    <div class="text-xs text-slate-300 mb-2 font-bold"><i class="fa-solid fa-ruler text-teal-400 mr-1"></i>3-2 & 3-3 公分刻度直尺與測量：</div>
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-xs text-slate-300">拖動設定物體長度 (1~15 cm)：</span>
+                        <input type="range" id="u3CmRange" min="1" max="15" value="8" class="w-40 accent-teal-400">
+                        <span id="u3CmVal" class="text-sm font-mono font-bold text-teal-300 w-16">8 cm</span>
+                    </div>
+
+                    <div class="w-full bg-slate-900/90 p-4 rounded-2xl border border-teal-500/30 my-2 flex flex-col items-center justify-center">
+                        <div id="u3ObjectBar" class="h-6 bg-amber-400/90 rounded border border-amber-300 mb-2 flex items-center justify-center text-xs font-bold text-slate-950 transition-all" style="width: 160px;">
+                            物體：8 公分
+                        </div>
+
+                        <div class="relative w-[320px] h-20 bg-amber-100 rounded-lg border-2 border-amber-700 p-2 shadow-md">
+                            <svg id="u3CmSvg" width="300" height="60" viewBox="0 0 300 60" class="w-full h-full">
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div id="u3Info" class="text-xs text-teal-200 bg-slate-900/80 px-4 py-2 rounded-xl border border-white/10 mt-1">
+                        起點對準 0 刻度，終點指著 8，長度就是 8 公分 (cm)。
+                    </div>
+                </div>
+            `;
+        }
+
+        function initRulerCmLogic() {
+            const range = document.getElementById('u3CmRange');
+            const valDisp = document.getElementById('u3CmVal');
+            const objBar = document.getElementById('u3ObjectBar');
+            const svg = document.getElementById('u3CmSvg');
+            const info = document.getElementById('u3Info');
+
+            const draw = () => {
+                const cm = parseInt(range.value) || 1;
+                valDisp.innerText = `${cm} cm`;
+                objBar.style.width = `${cm * 18}px`;
+                objBar.innerText = `物體長度：${cm} 公分`;
+
+                let svgContent = `<rect x="0" y="0" width="300" height="55" fill="#fef3c7" rx="4"/>`;
+                for (let i = 0; i <= 15; i++) {
+                    const x = i * 18 + 15;
+                    svgContent += `<line x1="${x}" y1="0" x2="${x}" y2="20" stroke="#0f172a" stroke-width="2"/>`;
+                    svgContent += `<text x="${x}" y="36" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">${i}${i===15?' cm':''}</text>`;
+                    if (i < 15) {
+                        const midX = x + 9;
+                        svgContent += `<line x1="${midX}" y1="0" x2="${midX}" y2="10" stroke="#64748b" stroke-width="1"/>`;
+                    }
+                }
+
+                const endX = cm * 18 + 15;
+                svgContent += `<line x1="${endX}" y1="0" x2="${endX}" y2="45" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="2,2"/>`;
+
+                svg.innerHTML = svgContent;
+                info.innerHTML = `從刻度 0 到刻度 <b class="text-amber-300 font-bold">${cm}</b>，此物體長度為 <b class="text-teal-300 font-bold">${cm} 公分</b> (${cm} cm)。`;
+            };
+
+            if (range) range.oninput = draw;
+            draw();
+        }
+
+        // -------------------------------------------------------------
+        // Unit 4: 加減應用
+        // -------------------------------------------------------------
+        function renderAddSubRelDemo() {
+            return `
+                <div class="w-full flex flex-col items-center text-center">
+                    <div class="text-xs text-slate-300 mb-2 font-bold"><i class="fa-solid fa-scale-balanced text-emerald-400 mr-1"></i>4-1 & 4-2 部分與整體（加減互逆）：</div>
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="flex flex-col items-center">
+                            <span class="text-xs text-emerald-300 font-bold">部分 A</span>
+                            <input type="number" id="u4PartA" value="25" min="1" max="99" class="w-16 bg-slate-900 text-emerald-300 font-mono text-center font-bold px-2 py-1 rounded-lg border border-emerald-500/40 text-sm">
+                        </div>
+                        <span class="text-lg text-white font-bold mt-3">+</span>
+                        <div class="flex flex-col items-center">
+                            <span class="text-xs text-emerald-300 font-bold">部分 B</span>
+                            <input type="number" id="u4PartB" value="18" min="1" max="99" class="w-16 bg-slate-900 text-emerald-300 font-mono text-center font-bold px-2 py-1 rounded-lg border border-emerald-500/40 text-sm">
+                        </div>
+                        <span class="text-lg text-white font-bold mt-3">=</span>
+                        <div class="flex flex-col items-center">
+                            <span class="text-xs text-amber-300 font-bold">整體 C</span>
+                            <span id="u4TotalC" class="text-lg font-black text-amber-300 font-mono mt-1">43</span>
+                        </div>
+                    </div>
+
+                    <div class="w-full max-w-sm bg-slate-900/90 p-4 rounded-2xl border border-emerald-500/30 my-2">
+                        <div class="w-full bg-amber-500/30 border border-amber-400 py-2 rounded-xl text-amber-200 font-bold text-sm mb-2">
+                            整體 (Total) = <span id="u4VisC">43</span>
+                        </div>
+                        <div class="flex gap-2">
+                            <div id="u4VisA" class="bg-emerald-500/30 border border-emerald-400 py-2 rounded-xl text-emerald-200 font-bold text-xs flex-1">
+                                部分 A = 25
+                            </div>
+                            <div id="u4VisB" class="bg-teal-500/30 border border-teal-400 py-2 rounded-xl text-teal-200 font-bold text-xs flex-1">
+                                部分 B = 18
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="u4FormulaGroup" class="text-xs text-slate-200 bg-slate-900/80 p-3 rounded-xl border border-white/10 space-y-1 text-left max-w-md w-full font-mono">
+                    </div>
+                </div>
+            `;
+        }
+
+        function initAddSubRelLogic() {
+            const partA = document.getElementById('u4PartA');
+            const partB = document.getElementById('u4PartB');
+
+            const update = () => {
+                const a = parseInt(partA.value) || 0;
+                const b = parseInt(partB.value) || 0;
+                const c = a + b;
+
+                document.getElementById('u4TotalC').innerText = c;
+                document.getElementById('u4VisC').innerText = c;
+                document.getElementById('u4VisA').innerText = `部分 A = ${a}`;
+                document.getElementById('u4VisB').innerText = `部分 B = ${b}`;
+
+                document.getElementById('u4FormulaGroup').innerHTML = `
+                    <div class="text-amber-300 font-bold mb-1">加減互逆家族算式：</div>
+                    <div>1. 加法求整體：<span class="text-emerald-300 font-bold">${a} + ${b} = ${c}</span></div>
+                    <div>2. 減法求部分A：<span class="text-cyan-300 font-bold">${c} - ${b} = ${a}</span> (解題驗算)</div>
+                    <div>3. 減法求部分B：<span class="text-cyan-300 font-bold">${c} - ${a} = ${b}</span> (解題驗算)</div>
+                `;
+            };
+
+            if (partA) partA.oninput = update;
+            if (partB) partB.oninput = update;
+            update();
+        }
+
+        // -------------------------------------------------------------
+        // Unit 5: 容量
+        // -------------------------------------------------------------
+        function renderCapacityDemo() {
+            return `
+                <div class="w-full flex flex-col items-center text-center">
+                    <div class="text-xs text-slate-300 mb-2 font-bold"><i class="fa-solid fa-glass-water text-cyan-400 mr-1"></i>5-1 & 5-2 水位與容量比較：</div>
+                    
+                    <div class="grid grid-cols-2 gap-4 my-2 max-w-sm w-full">
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-cyan-500/30 flex flex-col items-center">
+                            <span class="text-xs text-cyan-300 font-bold mb-1">容器甲</span>
+                            <div class="relative w-16 h-32 bg-slate-800 rounded-b-xl border-2 border-slate-500 overflow-hidden flex items-end">
+                                <div id="u5WaterA" class="w-full bg-cyan-500/80 transition-all duration-300" style="height: 60%;"></div>
+                            </div>
+                            <input type="range" id="u5RangeA" min="10" max="100" value="60" class="w-24 mt-2 accent-cyan-400">
+                            <span id="u5ValA" class="text-xs text-cyan-200 mt-1 font-bold">60% 水量</span>
+                        </div>
+
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-teal-500/30 flex flex-col items-center">
+                            <span class="text-xs text-teal-300 font-bold mb-1">容器乙</span>
+                            <div class="relative w-16 h-32 bg-slate-800 rounded-b-xl border-2 border-slate-500 overflow-hidden flex items-end">
+                                <div id="u5WaterB" class="w-full bg-teal-500/80 transition-all duration-300" style="height: 40%;"></div>
+                            </div>
+                            <input type="range" id="u5RangeB" min="10" max="100" value="40" class="w-24 mt-2 accent-teal-400">
+                            <span id="u5ValB" class="text-xs text-teal-200 mt-1 font-bold">40% 水量</span>
+                        </div>
+                    </div>
+
+                    <div id="u5CompareRes" class="text-xs text-cyan-200 bg-slate-900/80 px-4 py-2 rounded-xl border border-white/10 mt-1">
+                        容器甲的水位比容器乙高，所以甲的水量比較多！
+                    </div>
+                </div>
+            `;
+        }
+
+        function initCapacityLogic() {
+            const rangeA = document.getElementById('u5RangeA');
+            const rangeB = document.getElementById('u5RangeB');
+
+            const update = () => {
+                const vA = parseInt(rangeA.value) || 0;
+                const vB = parseInt(rangeB.value) || 0;
+
+                document.getElementById('u5WaterA').style.height = `${vA}%`;
+                document.getElementById('u5WaterB').style.height = `${vB}%`;
+                document.getElementById('u5ValA').innerText = `${vA}% 水量`;
+                document.getElementById('u5ValB').innerText = `${vB}% 水量`;
+
+                const res = document.getElementById('u5CompareRes');
+                if (vA > vB) {
+                    res.innerHTML = `容量比較結果：<b class="text-cyan-300">容器甲 (${vA}%) &gt; 容器乙 (${vB}%)</b>，甲的水量較多！`;
+                } else if (vA < vB) {
+                    res.innerHTML = `容量比較結果：<b class="text-teal-300">容器甲 (${vA}%) &lt; 容器乙 (${vB}%)</b>，乙的水量較多！`;
+                } else {
+                    res.innerHTML = `容量比較結果：<b class="text-amber-300">容器甲 (${vA}%) = 容器乙 (${vB}%)</b>，兩容器水量一樣多！`;
+                }
+            };
+
+            if (rangeA) rangeA.oninput = update;
+            if (rangeB) rangeB.oninput = update;
+            update();
+        }
+
+        // -------------------------------------------------------------
+        // Unit 6: 加減兩步驟
+        // -------------------------------------------------------------
+        function renderTwoStepsDemo() {
+            return `
+                <div class="w-full flex flex-col items-center text-center">
+                    <div class="text-xs text-slate-300 mb-2 font-bold"><i class="fa-solid fa-list-ol text-amber-400 mr-1"></i>6-1~6-3 兩步驟應用問題解題流程：</div>
+                    
+                    <div class="text-xs text-amber-200 bg-slate-900/90 p-3 rounded-xl border border-amber-500/30 mb-3 max-w-md">
+                        題目：小明有 <b>35</b> 顆糖果，媽媽再給他 <b>20</b> 顆，接著他吃了 <b>12</b> 顆，還剩下幾顆糖果？
+                    </div>
+
+                    <div class="flex items-center gap-2 my-2">
+                        <div class="bg-blue-950 p-2.5 rounded-xl border border-blue-500/40 text-center">
+                            <div class="text-[10px] text-blue-300 font-bold">第一步驟 (先算)</div>
+                            <div class="text-sm font-bold text-white font-mono mt-1">35 + 20 = 55</div>
+                        </div>
+                        <i class="fa-solid fa-arrow-right text-amber-400"></i>
+                        <div class="bg-emerald-950 p-2.5 rounded-xl border border-emerald-500/40 text-center">
+                            <div class="text-[10px] text-emerald-300 font-bold">第二步驟 (再算)</div>
+                            <div class="text-sm font-bold text-white font-mono mt-1">55 - 12 = 43</div>
+                        </div>
+                    </div>
+
+                    <div class="text-xs text-amber-300 font-bold bg-slate-900 px-4 py-2 rounded-xl border border-white/10 mt-2">
+                        答：剩下 43 顆糖果
+                    </div>
+                </div>
+            `;
+        }
+
+        function initTwoStepsLogic() {}
+
+        // -------------------------------------------------------------
+        // Unit 7: 乘法（一）
+        // -------------------------------------------------------------
+        function renderMultPart1Demo() {
+            return `
+                <div class="w-full flex flex-col items-center text-center">
+                    <div class="text-xs text-slate-300 mb-2 font-bold"><i class="fa-solid fa-xmark text-rose-400 mr-1"></i>7-1~7-4 幾的幾倍與連加轉換：</div>
+                    
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-xs text-slate-300">基數：</span>
+                        <select id="u7Base" class="bg-slate-900 text-rose-300 text-xs font-bold px-2 py-1 rounded-lg border border-rose-500/40">
+                            <option value="2">2 的倍數</option>
+                            <option value="5">5 的倍數</option>
+                            <option value="4">4 的倍數</option>
+                            <option value="8">8 的倍數</option>
+                        </select>
+                        <span class="text-xs text-slate-300">幾倍 (1~9)：</span>
+                        <input type="number" id="u7Times" value="4" min="1" max="9" class="w-12 bg-slate-900 text-rose-300 font-mono text-center font-bold px-1.5 py-1 rounded-lg border border-rose-500/40 text-xs">
+                    </div>
+
+                    <div id="u7ArrayGrid" class="flex flex-wrap gap-2 justify-center max-w-md bg-slate-900/90 p-3.5 rounded-2xl border border-rose-500/30 my-1 min-h-[80px] items-center">
+                    </div>
+
+                    <div id="u7MultFormula" class="text-xs text-rose-200 font-mono bg-slate-900/80 px-4 py-2 rounded-xl border border-white/10 mt-2">
+                    </div>
+                </div>
+            `;
+        }
+
+        function initMultPart1Logic() {
+            const baseSel = document.getElementById('u7Base');
+            const timesIn = document.getElementById('u7Times');
+            const grid = document.getElementById('u7ArrayGrid');
+            const formula = document.getElementById('u7MultFormula');
+
+            const update = () => {
+                const base = parseInt(baseSel.value) || 2;
+                const times = parseInt(timesIn.value) || 1;
+                const total = base * times;
+
+                let html = "";
+                for (let i = 0; i < times; i++) {
+                    html += `
+                        <div class="bg-rose-950/90 border border-rose-400/60 p-2 rounded-xl flex flex-col items-center shadow-md">
+                            <span class="text-[10px] text-rose-300 font-bold mb-1 border-b border-rose-500/30 w-full text-center">第 ${i+1} 組 (${base})</span>
+                            <div class="flex items-center gap-1">
+                                ${'<div class="w-4 h-4 rounded-full bg-rose-500/40 border border-rose-300"></div>'.repeat(base)}
+                            </div>
+                        </div>
+                    `;
+                }
+                grid.innerHTML = html;
+
+                const addStr = Array(times).fill(base).join(' + ');
+                formula.innerHTML = `<b>${base} 的 ${times} 倍</b>：${addStr} = <span class="text-amber-300 font-bold">${total}</span><br><span class="text-rose-300 font-bold text-sm">乘法算式：${base} × ${times} = ${total}</span>`;
+            };
+
+            if (baseSel) baseSel.onchange = update;
+            if (timesIn) timesIn.oninput = update;
+            update();
+        }
+
+        // -------------------------------------------------------------
+        // Unit 8: 時間
+        // -------------------------------------------------------------
+        function renderClockTimeDemo() {
+            return `
+                <div class="w-full flex flex-col items-center text-center">
+                    <div class="text-xs text-slate-300 mb-2 font-bold"><i class="fa-solid fa-clock text-violet-400 mr-1"></i>8-1 & 8-2 鐘面報讀幾時幾分：</div>
+                    
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="text-xs text-slate-300">小時 (時)：</span>
+                        <input type="range" id="u8Hour" min="1" max="12" value="8" class="w-24 accent-violet-400">
+                        <span class="text-xs text-slate-300">分鐘 (分)：</span>
+                        <input type="range" id="u8Min" min="0" max="55" step="5" value="25" class="w-24 accent-violet-400">
+                    </div>
+
+                    <div class="bg-slate-900/90 p-3 rounded-2xl border border-violet-500/30 my-1 flex justify-center items-center">
+                        <svg id="u8ClockSvg" width="180" height="180" viewBox="0 0 180 180">
+                        </svg>
+                    </div>
+
+                    <div id="u8TimeText" class="text-xs text-violet-200 font-mono bg-slate-900/80 px-4 py-2 rounded-xl border border-white/10 mt-2 font-bold">
+                        報讀時刻：8 時 25 分
+                    </div>
+                </div>
+            `;
+        }
+
+        function initClockTimeLogic() {
+            const hRange = document.getElementById('u8Hour');
+            const mRange = document.getElementById('u8Min');
+            const svg = document.getElementById('u8ClockSvg');
+            const text = document.getElementById('u8TimeText');
+
+            const drawClock = () => {
+                const h = parseInt(hRange.value) || 8;
+                const m = parseInt(mRange.value) || 0;
+
+                text.innerText = `報讀時刻：${h} 時 ${m===0?'00':m} 分`;
+
+                let clockSvg = `<circle cx="90" cy="90" r="80" fill="#f8fafc" stroke="#7c3aed" stroke-width="5"/>`;
+                for (let i = 1; i <= 12; i++) {
+                    const angle = (i * 30 - 90) * (Math.PI / 180);
+                    const tx = 90 + 62 * Math.cos(angle);
+                    const ty = 90 + 62 * Math.sin(angle) + 4;
+                    clockSvg += `<text x="${tx}" y="${ty}" font-size="12" font-weight="bold" fill="#0f172a" text-anchor="middle">${i}</text>`;
+                }
+
+                // Hour Hand
+                const hAngle = ((h % 12) * 30 + m * 0.5 - 90) * (Math.PI / 180);
+                const hx = 90 + 40 * Math.cos(hAngle);
+                const hy = 90 + 40 * Math.sin(hAngle);
+                clockSvg += `<line x1="90" y1="90" x2="${hx}" y2="${hy}" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>`;
+
+                // Minute Hand
+                const mAngle = (m * 6 - 90) * (Math.PI / 180);
+                const mx = 90 + 58 * Math.cos(mAngle);
+                const my = 90 + 58 * Math.sin(mAngle);
+                clockSvg += `<line x1="90" y1="90" x2="${mx}" y2="${my}" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"/>`;
+
+                clockSvg += `<circle cx="90" cy="90" r="5" fill="#dc2626"/>`;
+
+                svg.innerHTML = clockSvg;
+            };
+
+            if (hRange) hRange.oninput = drawClock;
+            if (mRange) mRange.oninput = drawClock;
+            drawClock();
+        }
+
+        // -------------------------------------------------------------
+        // Unit 9: 乘法（二）
+        // -------------------------------------------------------------
+        function renderMultPart2Demo() {
+            return `
+                <div class="w-full flex flex-col items-center text-center">
+                    <div class="text-xs text-slate-300 mb-2 font-bold"><i class="fa-solid fa-asterisk text-fuchsia-400 mr-1"></i>9-1~9-4 乘法卡片九九乘法表：</div>
+                    
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="text-xs text-slate-300">選擇乘數：</span>
+                        <select id="u9SelBase" class="bg-slate-900 text-fuchsia-300 text-xs font-bold px-2 py-1 rounded-lg border border-fuchsia-500/40">
+                            <option value="3">3 的乘法</option>
+                            <option value="6">6 的乘法</option>
+                            <option value="7">7 的乘法</option>
+                            <option value="9">9 的乘法</option>
+                        </select>
+                    </div>
+
+                    <div id="u9CardsGrid" class="grid grid-cols-3 gap-2 w-full max-w-sm my-1">
+                    </div>
+                </div>
+            `;
+        }
+
+        function initMultPart2Logic() {
+            const sel = document.getElementById('u9SelBase');
+            const grid = document.getElementById('u9CardsGrid');
+
+            const update = () => {
+                const b = parseInt(sel.value) || 3;
+                let html = "";
+                for (let i = 1; i <= 9; i++) {
+                    html += `
+                        <div class="bg-fuchsia-950/80 p-2 rounded-xl border border-fuchsia-500/30 text-center">
+                            <div class="text-[10px] text-fuchsia-300 font-mono">${b} × ${i}</div>
+                            <div class="text-sm font-black text-amber-300 font-mono">${b * i}</div>
+                        </div>
+                    `;
+                }
+                grid.innerHTML = html;
+            };
+
+            if (sel) sel.onchange = update;
+            update();
+        }
+
+        // -------------------------------------------------------------
+        // Unit 10: 面的大小比較
+        // -------------------------------------------------------------
+        function renderAreaCompareDemo() {
+            return `
+                <div class="w-full flex flex-col items-center text-center">
+                    <div class="text-xs text-slate-300 mb-2 font-bold"><i class="fa-solid fa-vector-square text-sky-400 mr-1"></i>10-1 & 10-2 面的重疊與方格比較：</div>
+                    
+                    <div class="grid grid-cols-2 gap-4 my-2 max-w-sm w-full">
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-sky-500/30 flex flex-col items-center">
+                            <span class="text-xs text-sky-300 font-bold mb-1">圖形甲 (覆蓋方格)</span>
+                            <div class="grid grid-cols-3 gap-1 bg-slate-800 p-2 rounded-lg my-2">
+                                ${'<div class="w-5 h-5 bg-sky-500 rounded-sm"></div>'.repeat(6)}
+                            </div>
+                            <span class="text-xs text-sky-200 font-bold">佔 6 個方格</span>
+                        </div>
+
+                        <div class="bg-slate-900/90 p-3 rounded-xl border border-teal-500/30 flex flex-col items-center">
+                            <span class="text-xs text-teal-300 font-bold mb-1">圖形乙 (覆蓋方格)</span>
+                            <div class="grid grid-cols-3 gap-1 bg-slate-800 p-2 rounded-lg my-2">
+                                ${'<div class="w-5 h-5 bg-teal-500 rounded-sm"></div>'.repeat(8)}
+                            </div>
+                            <span class="text-xs text-teal-200 font-bold">佔 8 個方格</span>
+                        </div>
+                    </div>
+
+                    <div class="text-xs text-sky-200 bg-slate-900/80 px-4 py-2 rounded-xl border border-white/10 mt-1">
+                        比較結果：<b>圖形乙 (8格) &gt; 圖形甲 (6格)</b>，圖形乙的面積比較大！
+                    </div>
+                </div>
+            `;
+        }
+
+        function initAreaCompareLogic() {}
+    </script>
+</body>
+</html>

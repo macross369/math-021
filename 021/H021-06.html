@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>國小數學 2上 第六單元：加減兩步驟互動探究網頁</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Noto Sans TC -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 25%, #311042 50%, #6b21a8 75%, #a21caf 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #1e293b;
+        }
+
+        /* 新海誠風格夢幻天空雲霧光暈效果 */
+        .shinkai-bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.25) 0%, transparent 40%),
+                radial-gradient(circle at 80% 30%, rgba(244, 114, 182, 0.25) 0%, transparent 45%),
+                radial-gradient(circle at 50% 80%, rgba(251, 146, 60, 0.2) 0%, transparent 50%);
+        }
+
+        /* 玻璃擬態卡片容器 */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-radius: 1.25rem;
+        }
+
+        .glass-tab {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(8px);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .glass-tab.active {
+            background: rgba(255, 255, 255, 0.95);
+            color: #4c1d95;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* 國小數學標準直式分數樣式規範 */
+        .vertical-fraction {
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+            font-size: 0.95em;
+        }
+
+        .vertical-fraction .integer {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-right: 3px;
+        }
+
+        .vertical-fraction .frac-body {
+            display: inline-flex;
+            flex-direction: column;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .vertical-fraction .numerator {
+            border-bottom: 2px solid currentColor;
+            padding: 0 4px;
+            line-height: 1.1;
+        }
+
+        .vertical-fraction .denominator {
+            padding: 0 4px;
+            line-height: 1.1;
+        }
+
+        /* 動態氣球與球體樣式 */
+        .ball {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: white;
+            box-shadow: inset -2px -2px 6px rgba(0,0,0,0.3), 0 4px 6px rgba(0,0,0,0.1);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 線段圖動態條狀 */
+        .tape-segment {
+            transition: width 0.4s ease, background-color 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            height: 36px;
+            border-radius: 8px;
+        }
+
+        /* 自訂漂亮的滑桿軌道 */
+        input[type=range] {
+            accent-color: #8b5cf6;
+        }
+
+        /* 選擇題按鈕選項 */
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+        .option-btn:hover {
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body class="relative min-h-screen pb-12">
+    <div class="shinkai-bg-glow"></div>
+
+    <div class="relative z-10 max-w-6xl mx-auto px-4 pt-6">
+        <!-- 頂部標題與新海誠天空風格 Banner -->
+        <header class="text-center mb-8 glass-card p-6 border-pink-200/50">
+            <div class="inline-block px-4 py-1 rounded-full bg-indigo-100 text-indigo-800 text-sm font-bold mb-2">
+                <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> 國小二上數學 (六) 互動學習網頁
+            </div>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-900 via-purple-800 to-pink-700 mb-2">
+                第六單元：加減兩步驟觀念探索
+            </h1>
+            <p class="text-slate-600 font-medium text-sm md:text-base">
+                透過拉動滑桿與圖形變幻，動態觀察「先算什麼」與「再算什麼」的數學魔術！
+            </p>
+        </header>
+
+        <!-- 多標籤頁按鈕區塊 -->
+        <nav class="flex flex-wrap gap-2 md:gap-4 justify-center mb-8" id="tab-navigation">
+            <button onclick="switchTab('tab1')" id="btn-tab1" class="glass-tab active px-5 py-3 rounded-xl text-base font-semibold flex items-center gap-2">
+                <i class="fa-solid fa-circle-plus"></i> 6-1 加法兩步驟
+            </button>
+            <button onclick="switchTab('tab2')" id="btn-tab2" class="glass-tab px-5 py-3 rounded-xl text-base font-semibold flex items-center gap-2">
+                <i class="fa-solid fa-circle-minus"></i> 6-2 減法兩步驟
+            </button>
+            <button onclick="switchTab('tab3')" id="btn-tab3" class="glass-tab px-5 py-3 rounded-xl text-base font-semibold flex items-center gap-2">
+                <i class="fa-solid fa-repeat"></i> 6-3 加減兩步驟混合
+            </button>
+            <button onclick="switchTab('tab4')" id="btn-tab4" class="glass-tab px-5 py-3 rounded-xl text-base font-semibold flex items-center gap-2">
+                <i class="fa-solid fa-trophy"></i> 自我挑戰
+            </button>
+        </nav>
+
+        <!-- 主體內容容器 -->
+        <main id="main-content">
+
+            <!-- TAB 1: 加法兩步驟 -->
+            <section id="tab1" class="space-y-8">
+                <!-- 單元導引說明 -->
+                <div class="glass-card p-6">
+                    <h2 class="text-2xl font-bold text-indigo-900 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-cubes text-indigo-600"></i> 單元 6-1：兩步驟加法與湊十技巧
+                    </h2>
+                    <p class="text-slate-700 leading-relaxed mb-4">
+                        當我們需要把三個數字加起來時，可以先算前兩個數，再算第三個數；或者觀察有沒有可以「湊成整十」的數先算，計算會更快速喔！
+                    </p>
+
+                    <!-- 探索 1: 罐子裡的彩球 (添加型兩步驟) -->
+                    <div class="bg-indigo-50/80 rounded-xl p-5 border border-indigo-100 mb-6">
+                        <h3 class="text-lg font-bold text-indigo-900 mb-3 flex items-center gap-2">
+                            <span class="bg-indigo-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-sm">1</span>
+                            探索一：罐子裡的彩球 (添加型加法)
+                        </h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <!-- 控制器 -->
+                            <div class="space-y-4 bg-white p-4 rounded-xl shadow-sm">
+                                <div>
+                                    <label class="font-bold text-slate-700 text-sm flex justify-between">
+                                        <span>原本的紅球：</span>
+                                        <span id="t1-red-val" class="text-red-500 font-extrabold text-base">12 個</span>
+                                    </label>
+                                    <input type="range" id="t1-red" min="5" max="25" value="12" class="w-full mt-1" oninput="updateTab1()">
+                                </div>
+                                <div>
+                                    <label class="font-bold text-slate-700 text-sm flex justify-between">
+                                        <span>先放進黃球：</span>
+                                        <span id="t1-yellow-val" class="text-amber-500 font-extrabold text-base">8 個</span>
+                                    </label>
+                                    <input type="range" id="t1-yellow" min="2" max="20" value="8" class="w-full mt-1" oninput="updateTab1()">
+                                </div>
+                                <div>
+                                    <label class="font-bold text-slate-700 text-sm flex justify-between">
+                                        <span>再放進綠球：</span>
+                                        <span id="t1-green-val" class="text-emerald-500 font-extrabold text-base">4 個</span>
+                                    </label>
+                                    <input type="range" id="t1-green" min="1" max="15" value="4" class="w-full mt-1" oninput="updateTab1()">
+                                </div>
+                            </div>
+
+                            <!-- 即時圖形展示區 -->
+                            <div class="md:col-span-2 bg-white p-4 rounded-xl shadow-sm flex flex-col justify-between">
+                                <div>
+                                    <div class="text-sm font-bold text-slate-500 mb-2">罐子裡的球球動態展示區：</div>
+                                    <div id="t1-ball-container" class="flex flex-wrap gap-2 p-3 bg-slate-100 rounded-lg min-h-[100px] max-h-[160px] overflow-y-auto">
+                                        <!-- JS 動態生成球 -->
+                                    </div>
+                                </div>
+                                <!-- 算式步驟卡 -->
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                                    <div class="bg-indigo-100/70 p-3 rounded-lg border border-indigo-200">
+                                        <div class="text-xs font-bold text-indigo-700 mb-1">【先算】紅球 + 黃球</div>
+                                        <div id="t1-step1" class="text-lg font-black text-indigo-900">12 + 8 = 20</div>
+                                        <div class="text-xs text-indigo-600 mt-1">紅球和黃球共有 20 個</div>
+                                    </div>
+                                    <div class="bg-purple-100/70 p-3 rounded-lg border border-purple-200">
+                                        <div class="text-xs font-bold text-purple-700 mb-1">【再算】加上綠球</div>
+                                        <div id="t1-step2" class="text-lg font-black text-purple-900">20 + 4 = 24</div>
+                                        <div class="text-xs text-purple-600 mt-1">現在共有 24 個球</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 探索 2: 三數相加與「湊十魔法」 (併加型) -->
+                    <div class="bg-pink-50/80 rounded-xl p-5 border border-pink-100">
+                        <h3 class="text-lg font-bold text-pink-900 mb-3 flex items-center gap-2">
+                            <span class="bg-pink-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-sm">2</span>
+                            探索二：三數相加的巧算魔法 (湊十法)
+                        </h3>
+                        <p class="text-sm text-slate-600 mb-4">
+                            項鍊有 <strong>12顆藍珠子</strong>、<strong>16顆黃珠子</strong> 和 <strong>8顆紅珠子</strong>，共有幾顆珠子？
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <!-- 方法一：按照順序算 -->
+                            <div class="bg-white p-4 rounded-xl border-2 border-slate-200">
+                                <span class="bg-slate-200 text-slate-700 text-xs px-2 py-1 rounded font-bold">方法 A：按順序算</span>
+                                <div class="mt-3 space-y-2 text-sm">
+                                    <p>先算：<span class="font-bold text-blue-600">12 (藍)</span> + <span class="font-bold text-amber-500">16 (黃)</span> = <span class="font-bold text-indigo-700">28</span></p>
+                                    <p>再算：<span class="font-bold text-indigo-700">28</span> + <span class="font-bold text-red-500">8 (紅)</span> = <span class="font-bold text-xl text-purple-800">36</span></p>
+                                </div>
+                            </div>
+
+                            <!-- 方法二：先湊成整十 -->
+                            <div class="bg-white p-4 rounded-xl border-2 border-pink-300 shadow-sm relative overflow-hidden">
+                                <div class="absolute top-0 right-0 bg-pink-500 text-white text-xs px-2 py-0.5 rounded-bl font-bold">推薦！超快！</div>
+                                <span class="bg-pink-100 text-pink-700 text-xs px-2 py-1 rounded font-bold">方法 B：先湊成整十 (12 + 8)</span>
+                                <div class="mt-3 space-y-2 text-sm">
+                                    <p>先算：<span class="font-bold text-blue-600">12 (藍)</span> + <span class="font-bold text-red-500">8 (紅)</span> = <span class="font-bold text-emerald-600">20 (整十數!)</span></p>
+                                    <p>再算：<span class="font-bold text-emerald-600">20</span> + <span class="font-bold text-amber-500">16 (黃)</span> = <span class="font-bold text-xl text-purple-800">36</span></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 項鍊珠子圖像展示區塊 (比例無拉桿適應) -->
+                        <div class="bg-white p-3 md:p-4 rounded-xl border border-pink-200 mb-4 text-center shadow-sm">
+                            <div class="text-sm md:text-base font-bold text-slate-700 mb-2">
+                                項鍊珠子圖像展示：<span class="text-blue-600">12顆藍珠</span> + <span class="text-amber-500">16顆黃珠</span> + <span class="text-rose-500">8顆紅珠</span> = <span class="text-purple-800 font-extrabold">36顆</span>
+                            </div>
+                            <div class="w-full flex flex-col items-center justify-center gap-1.5 py-1">
+                                <!-- 第一排珠子 (12顆藍珠 + 14顆黃珠) -->
+                                <div class="w-full flex items-center justify-center gap-0.5 sm:gap-1">
+                                    <!-- 12顆藍珠 -->
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-blue-500 shadow-sm border border-blue-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-blue-500 shadow-sm border border-blue-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-blue-500 shadow-sm border border-blue-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-blue-500 shadow-sm border border-blue-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-blue-500 shadow-sm border border-blue-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-blue-500 shadow-sm border border-blue-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-blue-500 shadow-sm border border-blue-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-blue-500 shadow-sm border border-blue-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-blue-500 shadow-sm border border-blue-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-blue-500 shadow-sm border border-blue-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-blue-500 shadow-sm border border-blue-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-blue-500 shadow-sm border border-blue-600"></div>
+                                    <!-- 14顆黃珠 -->
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                </div>
+                                <!-- 第二排珠子 (2顆黃珠 + 8顆紅珠) -->
+                                <div class="w-full flex items-center justify-center gap-0.5 sm:gap-1">
+                                    <!-- 2顆黃珠 -->
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-amber-400 shadow-sm border border-amber-500"></div>
+                                    <!-- 8顆紅珠 -->
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-rose-500 shadow-sm border border-rose-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-rose-500 shadow-sm border border-rose-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-rose-500 shadow-sm border border-rose-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-rose-500 shadow-sm border border-rose-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-rose-500 shadow-sm border border-rose-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-rose-500 shadow-sm border border-rose-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-rose-500 shadow-sm border border-rose-600"></div>
+                                    <div class="w-[3%] max-w-[20px] min-w-[7px] aspect-square rounded-full bg-rose-500 shadow-sm border border-rose-600"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-xl text-center text-sm font-bold text-indigo-900 border border-indigo-100">
+                            💡 小結語：三個數相加時，先加哪兩個數，答案都一樣！先湊成整十會算得又快又準喔！
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: 減法兩步驟 -->
+            <section id="tab2" class="space-y-8 hidden">
+                <div class="glass-card p-6">
+                    <h2 class="text-2xl font-bold text-indigo-900 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-scissors text-pink-600"></i> 單元 6-2：兩步驟減法與線段圖探究
+                    </h2>
+                    <p class="text-slate-700 leading-relaxed mb-4">
+                        連續減去兩個數量時，可以「分兩次減」，也可以「把要減的數量先加起來，再一次減掉」喔！
+                    </p>
+
+                    <!-- 探索 1: 緞帶裁剪 (連續減去) -->
+                    <div class="bg-amber-50/80 rounded-xl p-5 border border-amber-100 mb-6">
+                        <h3 class="text-lg font-bold text-amber-900 mb-3 flex items-center gap-2">
+                            <span class="bg-amber-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-sm">1</span>
+                            探索一：剪緞帶實驗 (連減問題)
+                        </h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <div class="space-y-4 bg-white p-4 rounded-xl shadow-sm">
+                                <div>
+                                    <label class="font-bold text-slate-700 text-sm flex justify-between">
+                                        <span>緞帶總長度：</span>
+                                        <span id="t2-total-val" class="text-indigo-600 font-extrabold text-base">30 cm</span>
+                                    </label>
+                                    <input type="range" id="t2-total" min="20" max="50" value="30" class="w-full mt-1" oninput="updateTab2()">
+                                </div>
+                                <div>
+                                    <label class="font-bold text-slate-700 text-sm flex justify-between">
+                                        <span>先剪掉：</span>
+                                        <span id="t2-cut1-val" class="text-red-500 font-extrabold text-base">10 cm</span>
+                                    </label>
+                                    <input type="range" id="t2-cut1" min="1" max="15" value="10" class="w-full mt-1" oninput="updateTab2()">
+                                </div>
+                                <div>
+                                    <label class="font-bold text-slate-700 text-sm flex justify-between">
+                                        <span>再剪掉：</span>
+                                        <span id="t2-cut2-val" class="text-orange-500 font-extrabold text-base">5 cm</span>
+                                    </label>
+                                    <input type="range" id="t2-cut2" min="1" max="15" value="5" class="w-full mt-1" oninput="updateTab2()">
+                                </div>
+                            </div>
+
+                            <!-- 動態線段圖視覺回饋 -->
+                            <div class="md:col-span-2 bg-white p-4 rounded-xl shadow-sm flex flex-col justify-between">
+                                <div>
+                                    <div class="text-sm font-bold text-slate-500 mb-2">緞帶長度變化線段圖：</div>
+                                    
+                                    <!-- 總長度條 -->
+                                    <div class="mb-2">
+                                        <div class="text-xs text-slate-600 mb-1">原本全長 (<span id="t2-tape-total-label">30</span> cm)：</div>
+                                        <div class="w-full bg-slate-200 h-8 rounded-lg overflow-hidden flex">
+                                            <div id="t2-bar-cut1" class="tape-segment bg-red-400" style="width: 33%;">先剪</div>
+                                            <div id="t2-bar-cut2" class="tape-segment bg-orange-400" style="width: 17%;">再剪</div>
+                                            <div id="t2-bar-remain" class="tape-segment bg-emerald-500" style="width: 50%;">剩下</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                                    <div class="bg-red-50 p-3 rounded-lg border border-red-200">
+                                        <div class="text-xs font-bold text-red-700 mb-1">【先算】第一次剪掉後剩餘</div>
+                                        <div id="t2-step1" class="text-lg font-black text-red-900">30 - 10 = 20</div>
+                                        <div class="text-xs text-red-600 mt-1">剩下 20 cm</div>
+                                    </div>
+                                    <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
+                                        <div class="text-xs font-bold text-emerald-700 mb-1">【再算】第二次剪掉後最後剩餘</div>
+                                        <div id="t2-step2" class="text-lg font-black text-emerald-900">20 - 5 = 15</div>
+                                        <div class="text-xs text-emerald-600 mt-1">最後還剩下 15 cm</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 探索 2: 買東西的兩種算法 (先加再減 vs 連減) -->
+                    <div class="bg-purple-50/80 rounded-xl p-5 border border-purple-100">
+                        <h3 class="text-lg font-bold text-purple-900 mb-3 flex items-center gap-2">
+                            <span class="bg-purple-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-sm">2</span>
+                            探索二：買東西找零錢 (兩種解題思維比較)
+                        </h3>
+                        <p class="text-sm text-slate-600 mb-4">
+                            妮妮帶了 <strong>90 元</strong>，買了一個 <strong>25 元麵包</strong> 和一瓶 <strong>35 元牛奶</strong>，請問還剩下多少元？
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- 皮皮的做法 (連減/逐一付款) -->
+                            <div class="bg-pink-50/50 p-4 rounded-xl border-2 border-pink-200">
+                                <div class="font-bold text-pink-700 text-base border-b border-pink-200 pb-2 mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-user text-pink-500"></i> 皮皮的做法（逐一付款）
+                                </div>
+                                <div class="space-y-3 text-sm">
+                                    <div class="p-3 bg-white rounded-lg border border-pink-100 shadow-sm">
+                                        <span class="text-xs text-slate-500 font-semibold block mb-1">先算買麵包後剩下的錢：</span>
+                                        <span class="text-base text-slate-700">90 - 25 = <strong class="font-bold text-slate-900">65</strong> 元</span>
+                                    </div>
+                                    <div class="p-3 bg-white rounded-lg border border-pink-100 shadow-sm">
+                                        <span class="text-xs text-slate-500 font-semibold block mb-1">再算買牛奶後剩下的錢：</span>
+                                        <span class="text-base text-slate-700">65 - 35 = <strong class="font-bold text-pink-600">30</strong> 元</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 美美的做法 (先加再減/先合算再一起付) -->
+                            <div class="bg-emerald-50/40 p-4 rounded-xl border-2 border-emerald-200">
+                                <div class="font-bold text-emerald-800 text-base border-b border-emerald-200 pb-2 mb-3 flex items-center justify-between">
+                                    <span class="flex items-center gap-2">
+                                        <i class="fa-solid fa-user-check text-emerald-600"></i> 美美的做法（先合算再一起付）
+                                    </span>
+                                    <span class="bg-emerald-200 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-bold">推薦好算！</span>
+                                </div>
+                                <div class="space-y-3 text-sm">
+                                    <div class="p-3 bg-white rounded-lg border border-emerald-100 shadow-sm">
+                                        <span class="text-xs text-slate-500 font-semibold block mb-1">先算麵包和牛奶一共多少錢：</span>
+                                        <span class="text-base text-slate-700">25 + 35 = <strong class="font-bold text-slate-900">60</strong> 元</span>
+                                    </div>
+                                    <div class="p-3 bg-white rounded-lg border border-emerald-100 shadow-sm">
+                                        <span class="text-xs text-slate-500 font-semibold block mb-1">再算付錢後剩下的錢：</span>
+                                        <span class="text-base text-slate-700">90 - 60 = <strong class="font-bold text-emerald-600">30</strong> 元</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 提示小卡：連減先加再減技巧 -->
+                        <div class="mt-4 p-3 bg-amber-50/90 rounded-full border border-amber-200 text-center text-sm font-bold text-amber-900 shadow-sm flex items-center justify-center gap-2">
+                            <span class="text-amber-500 text-base">⭐</span>
+                            <span>計算連減題目時，先把要減的兩個數「先加起來再減」，有時候會算得更快喔！</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: 加減混合兩步驟 -->
+            <section id="tab3" class="space-y-8 hidden">
+                <div class="glass-card p-6">
+                    <h2 class="text-2xl font-bold text-indigo-900 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-right-left text-emerald-600"></i> 單元 6-3：加與減生活情境混合兩步驟
+                    </h2>
+                    <p class="text-slate-700 leading-relaxed mb-4">
+                        生活中有時候會「先增加再減少」，或者「先減少再增加」，只要一步步算出來就能輕鬆解題！
+                    </p>
+
+                    <!-- 情境 1: 教室裡的人數 (先加後減) -->
+                    <div class="bg-emerald-50/80 rounded-xl p-5 border border-emerald-100 mb-6">
+                        <h3 class="text-lg font-bold text-emerald-900 mb-3 flex items-center gap-2">
+                            <span class="bg-emerald-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-sm">1</span>
+                            情境一：教室動態人數 (先加後減)
+                        </h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                            <div class="space-y-4 bg-white p-4 rounded-xl shadow-sm">
+                                <div>
+                                    <label class="font-bold text-slate-700 text-sm flex justify-between">
+                                        <span>男生人數：</span>
+                                        <span id="t3-boys-val" class="text-blue-600 font-extrabold text-base">15 人</span>
+                                    </label>
+                                    <input type="range" id="t3-boys" min="5" max="25" value="15" class="w-full mt-1" oninput="updateTab3()">
+                                </div>
+                                <div>
+                                    <label class="font-bold text-slate-700 text-sm flex justify-between">
+                                        <span>女生人數：</span>
+                                        <span id="t3-girls-val" class="text-pink-600 font-extrabold text-base">13 人</span>
+                                    </label>
+                                    <input type="range" id="t3-girls" min="5" max="25" value="13" class="w-full mt-1" oninput="updateTab3()">
+                                </div>
+                                <div>
+                                    <label class="font-bold text-slate-700 text-sm flex justify-between">
+                                        <span>後來離開：</span>
+                                        <span id="t3-leave-val" class="text-amber-600 font-extrabold text-base">7 人</span>
+                                    </label>
+                                    <input type="range" id="t3-leave" min="1" max="20" value="7" class="w-full mt-1" oninput="updateTab3()">
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-2 bg-white p-4 rounded-xl shadow-sm flex flex-col justify-between">
+                                <div class="space-y-3">
+                                    <div class="text-sm font-bold text-slate-600">問題：教室裡現在還有幾個人？</div>
+                                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                                        <span class="text-xs font-bold text-blue-700 block mb-1">【先算】教室原本共有幾個人（男生 + 女生）</span>
+                                        <div id="t3-step1" class="text-lg font-black">
+                                            <span class="text-blue-600">15</span> + <span class="text-pink-600">13</span> = <span class="text-emerald-600">28</span> 人
+                                        </div>
+                                    </div>
+                                    <div class="bg-amber-50 p-3 rounded-lg border border-amber-200">
+                                        <span class="text-xs font-bold text-amber-700 block mb-1">【再算】扣掉離開的人數</span>
+                                        <div id="t3-step2" class="text-lg font-black">
+                                            <span class="text-emerald-600">28</span> - <span class="text-amber-600">7</span> = <span class="text-rose-600">21</span> 人
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 p-3 bg-emerald-100/90 border-2 border-emerald-300 text-emerald-900 rounded-xl text-center font-bold shadow-sm">
+                                    答：教室裡現在還有 <span id="t3-final-ans" class="text-rose-600 text-xl font-black">21</span> 人
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 情境 2: 合買禮物 (合買不夠/先加後比較) -->
+                    <div class="bg-teal-50/80 rounded-xl p-5 border border-teal-100">
+                        <h3 class="text-lg font-bold text-teal-900 mb-3 flex items-center gap-2">
+                            <span class="bg-teal-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-sm">2</span>
+                            情境二：兄弟合買禮物送媽媽 (先加後減)
+                        </h3>
+                        <p class="text-sm text-slate-600 mb-4">
+                            小甲有 <strong class="text-orange-600">35 元</strong>，哥哥有 <strong class="text-rose-600">45 元</strong>，兩個人想合買一個 <strong>95 元的胸針</strong> 送給媽媽，還不夠幾元？
+                        </p>
+
+                        <!-- 線段比較圖形區塊 -->
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-teal-200 mb-4 space-y-3">
+                            <div class="flex items-center gap-2">
+                                <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-700 shrink-0">胸針價格 (95元)</span>
+                                <div class="flex-1 bg-slate-100 border border-slate-200 rounded-lg py-1.5 text-center text-xs sm:text-sm font-bold text-slate-600">
+                                    目標：95 元
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-24 sm:w-28 text-xs sm:text-sm font-bold text-slate-700 shrink-0">兩人合買的錢</span>
+                                <div class="flex-1 flex gap-1 items-center">
+                                    <div class="w-[37%] bg-orange-500 text-white font-bold py-1.5 rounded-lg text-center text-xs sm:text-sm shadow-sm">
+                                        小甲 35元
+                                    </div>
+                                    <div class="w-[47%] bg-rose-500 text-white font-bold py-1.5 rounded-lg text-center text-xs sm:text-sm shadow-sm">
+                                        哥哥 45元
+                                    </div>
+                                    <div class="w-[16%] bg-amber-100 border-2 border-dashed border-amber-400 text-amber-800 font-bold py-1 text-center text-xs sm:text-sm rounded-lg">
+                                        還不夠?
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pt-1 text-center border-t border-dashed border-slate-200">
+                                <div class="text-xs sm:text-sm font-extrabold text-orange-900">
+                                    兩人共有 = <span class="text-orange-600">35</span> + <span class="text-rose-600">45</span> = <span class="text-teal-700">80</span> 元
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-teal-200">
+                                <div class="text-xs font-bold text-teal-600 mb-1">第一步【先算兩人共有多少元】</div>
+                                <div class="text-lg font-extrabold text-slate-800"><span class="text-orange-600">35</span> + <span class="text-rose-600">45</span> = <span class="text-teal-600">80</span> 元</div>
+                            </div>
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-teal-200">
+                                <div class="text-xs font-bold text-teal-600 mb-1">第二步【再算還不夠多少元】</div>
+                                <div class="text-lg font-extrabold text-slate-800">95 - <span class="text-teal-600">80</span> = <span class="text-blue-600">15</span> 元</div>
+                            </div>
+                        </div>
+
+                        <!-- 答案總結區塊 -->
+                        <div class="p-3 bg-teal-100/90 border-2 border-teal-300 text-teal-900 rounded-xl text-center font-bold shadow-sm">
+                            答：還不夠 <span class="text-blue-600 text-xl font-black">15</span> 元
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: 自我挑戰 (全 5 題選擇題) -->
+            <section id="tab4" class="space-y-8 hidden">
+                <div class="glass-card p-6">
+                    <div class="flex justify-between items-center mb-6 border-b pb-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-indigo-900 flex items-center gap-2">
+                                <i class="fa-solid fa-trophy text-indigo-600"></i> 自我挑戰
+                            </h2>
+                            <p class="text-sm text-slate-600 mt-1">共 5 題單選題，請點選正確答案後按下「提交答案」！</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-slate-500 font-bold block">得分紀錄</span>
+                            <span id="quiz-score" class="text-3xl font-black text-indigo-600">0 / 100</span>
+                        </div>
+                    </div>
+
+                    <!-- 測驗題目清單 -->
+                    <div class="space-y-6" id="quiz-container">
+                        
+                        <!-- 題目 1 (選擇題) -->
+                        <div class="bg-white/90 p-5 rounded-xl shadow-sm border border-slate-200">
+                            <div class="font-bold text-slate-800 mb-3 flex items-start gap-2">
+                                <span class="bg-indigo-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-sm shrink-0 mt-0.5">1</span>
+                                <span>小明原有 15 元，爸爸給他 8 元後，媽媽再給他 7 元。小明現在有幾元？</span>
+                            </div>
+                            <div class="ml-8 space-y-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="q1-options">
+                                    <button onclick="selectOption(1, 0)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (A) 23 元
+                                    </button>
+                                    <button onclick="selectOption(1, 1)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (B) 30 元
+                                    </button>
+                                    <button onclick="selectOption(1, 2)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (C) 25 元
+                                    </button>
+                                    <button onclick="selectOption(1, 3)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (D) 35 元
+                                    </button>
+                                </div>
+                                <div id="q1-feedback" class="hidden p-3 rounded-lg text-sm"></div>
+                            </div>
+                        </div>
+
+                        <!-- 題目 2 (選擇題) -->
+                        <div class="bg-white/90 p-5 rounded-xl shadow-sm border border-slate-200">
+                            <div class="font-bold text-slate-800 mb-3 flex items-start gap-2">
+                                <span class="bg-indigo-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-sm shrink-0 mt-0.5">2</span>
+                                <span>媽媽買了一箱芒果。送給外婆 15 顆，又送給阿姨 13 顆，剩下 24 顆留給家人，這箱芒果原本有幾顆？</span>
+                            </div>
+                            <div class="ml-8 space-y-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="q2-options">
+                                    <button onclick="selectOption(2, 0)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (A) 28 顆
+                                    </button>
+                                    <button onclick="selectOption(2, 1)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (B) 42 顆
+                                    </button>
+                                    <button onclick="selectOption(2, 2)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (C) 52 顆
+                                    </button>
+                                    <button onclick="selectOption(2, 3)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (D) 62 顆
+                                    </button>
+                                </div>
+                                <div id="q2-feedback" class="hidden p-3 rounded-lg text-sm"></div>
+                            </div>
+                        </div>
+
+                        <!-- 題目 3 (選擇題) -->
+                        <div class="bg-white/90 p-5 rounded-xl shadow-sm border border-slate-200">
+                            <div class="font-bold text-slate-800 mb-3 flex items-start gap-2">
+                                <span class="bg-indigo-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-sm shrink-0 mt-0.5">3</span>
+                                <span>公車上有 25 個人，有 8 個人先下車，後來又有 7 個人下車，公車上還有多少個人？</span>
+                            </div>
+                            <div class="ml-8 space-y-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="q3-options">
+                                    <button onclick="selectOption(3, 0)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (A) 10 人
+                                    </button>
+                                    <button onclick="selectOption(3, 1)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (B) 17 人
+                                    </button>
+                                    <button onclick="selectOption(3, 2)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (C) 12 人
+                                    </button>
+                                    <button onclick="selectOption(3, 3)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (D) 15 人
+                                    </button>
+                                </div>
+                                <div id="q3-feedback" class="hidden p-3 rounded-lg text-sm"></div>
+                            </div>
+                        </div>
+
+                        <!-- 題目 4 (選擇題) -->
+                        <div class="bg-white/90 p-5 rounded-xl shadow-sm border border-slate-200">
+                            <div class="font-bold text-slate-800 mb-3 flex items-start gap-2">
+                                <span class="bg-indigo-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-sm shrink-0 mt-0.5">4</span>
+                                <span>商店裡共有 60 罐果汁，其中有 24 罐柳橙汁和 16 罐葡萄汁，其他都是蘋果汁。蘋果汁有幾罐？</span>
+                            </div>
+                            <div class="ml-8 space-y-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="q4-options">
+                                    <button onclick="selectOption(4, 0)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (A) 40 罐
+                                    </button>
+                                    <button onclick="selectOption(4, 1)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (B) 36 罐
+                                    </button>
+                                    <button onclick="selectOption(4, 2)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (C) 20 罐
+                                    </button>
+                                    <button onclick="selectOption(4, 3)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (D) 24 罐
+                                    </button>
+                                </div>
+                                <div id="q4-feedback" class="hidden p-3 rounded-lg text-sm"></div>
+                            </div>
+                        </div>
+
+                        <!-- 題目 5 (選擇題) -->
+                        <div class="bg-white/90 p-5 rounded-xl shadow-sm border border-slate-200">
+                            <div class="font-bold text-slate-800 mb-3 flex items-start gap-2">
+                                <span class="bg-indigo-600 text-white rounded-full w-6 h-6 inline-flex items-center justify-center text-sm shrink-0 mt-0.5">5</span>
+                                <span>冰箱裡原有 24 顆雞蛋，做蛋糕用掉 10 顆後，媽媽又放進 8 顆，冰箱裡現在有幾顆雞蛋？</span>
+                            </div>
+                            <div class="ml-8 space-y-3">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="q5-options">
+                                    <button onclick="selectOption(5, 0)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (A) 14 顆
+                                    </button>
+                                    <button onclick="selectOption(5, 1)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (B) 22 顆
+                                    </button>
+                                    <button onclick="selectOption(5, 2)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (C) 32 顆
+                                    </button>
+                                    <button onclick="selectOption(5, 3)" class="option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium">
+                                        (D) 18 顆
+                                    </button>
+                                </div>
+                                <div id="q5-feedback" class="hidden p-3 rounded-lg text-sm"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- 測驗操作按鈕 (提交答案 / 重新測驗) -->
+                    <div class="flex justify-center items-center gap-4 mt-8 pt-4 border-t border-slate-200">
+                        <button onclick="submitQuiz()" class="w-40 sm:w-48 py-3 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-base flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> 提交答案
+                        </button>
+                        <button onclick="resetQuiz()" class="w-40 sm:w-48 py-3 bg-slate-500 hover:bg-slate-600 active:scale-95 text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all text-base flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-rotate-right"></i> 重新測驗
+                        </button>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // 頁籤切換邏輯
+        function switchTab(tabId) {
+            const tabs = ['tab1', 'tab2', 'tab3', 'tab4'];
+            tabs.forEach(id => {
+                const el = document.getElementById(id);
+                const btn = document.getElementById('btn-' + id);
+                if (id === tabId) {
+                    el.classList.remove('hidden');
+                    btn.classList.add('active');
+                } else {
+                    el.classList.add('hidden');
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // TAB 1 動態更新邏輯
+        function updateTab1() {
+            const red = parseInt(document.getElementById('t1-red').value);
+            const yellow = parseInt(document.getElementById('t1-yellow').value);
+            const green = parseInt(document.getElementById('t1-green').value);
+
+            document.getElementById('t1-red-val').innerText = red + ' 個';
+            document.getElementById('t1-yellow-val').innerText = yellow + ' 個';
+            document.getElementById('t1-green-val').innerText = green + ' 個';
+
+            const step1Sum = red + yellow;
+            const totalSum = step1Sum + green;
+
+            document.getElementById('t1-step1').innerText = `${red} + ${yellow} = ${step1Sum}`;
+            document.getElementById('t1-step2').innerText = `${step1Sum} + ${green} = ${totalSum}`;
+
+            // 動態產生彩球圖案
+            const container = document.getElementById('t1-ball-container');
+            container.innerHTML = '';
+
+            for (let i = 0; i < red; i++) {
+                const b = document.createElement('div');
+                b.className = 'ball bg-red-500';
+                b.innerText = '紅';
+                container.appendChild(b);
+            }
+            for (let i = 0; i < yellow; i++) {
+                const b = document.createElement('div');
+                b.className = 'ball bg-amber-400';
+                b.innerText = '黃';
+                container.appendChild(b);
+            }
+            for (let i = 0; i < green; i++) {
+                const b = document.createElement('div');
+                b.className = 'ball bg-emerald-500';
+                b.innerText = '綠';
+                container.appendChild(b);
+            }
+        }
+
+        // TAB 2 動態更新邏輯
+        function updateTab2() {
+            const total = parseInt(document.getElementById('t2-total').value);
+            let cut1 = parseInt(document.getElementById('t2-cut1').value);
+            let cut2 = parseInt(document.getElementById('t2-cut2').value);
+
+            // 防呆保護：剪掉總長不能超過總長
+            if (cut1 + cut2 > total - 2) {
+                cut1 = Math.floor(total * 0.4);
+                cut2 = Math.floor(total * 0.3);
+                document.getElementById('t2-cut1').value = cut1;
+                document.getElementById('t2-cut2').value = cut2;
+            }
+
+            document.getElementById('t2-total-val').innerText = total + ' cm';
+            document.getElementById('t2-cut1-val').innerText = cut1 + ' cm';
+            document.getElementById('t2-cut2-val').innerText = cut2 + ' cm';
+            document.getElementById('t2-tape-total-label').innerText = total;
+
+            const remain1 = total - cut1;
+            const finalRemain = remain1 - cut2;
+
+            document.getElementById('t2-step1').innerText = `${total} - ${cut1} = ${remain1}`;
+            document.getElementById('t2-step2').innerText = `${remain1} - ${cut2} = ${finalRemain}`;
+
+            // 更新線段條寬度百分比
+            const pctCut1 = (cut1 / total) * 100;
+            const pctCut2 = (cut2 / total) * 100;
+            const pctRemain = (finalRemain / total) * 100;
+
+            document.getElementById('t2-bar-cut1').style.width = pctCut1 + '%';
+            document.getElementById('t2-bar-cut1').innerText = cut1 + 'cm';
+
+            document.getElementById('t2-bar-cut2').style.width = pctCut2 + '%';
+            document.getElementById('t2-bar-cut2').innerText = cut2 + 'cm';
+
+            document.getElementById('t2-bar-remain').style.width = pctRemain + '%';
+            document.getElementById('t2-bar-remain').innerText = '剩' + finalRemain + 'cm';
+        }
+
+        // TAB 3 動態更新邏輯
+        function updateTab3() {
+            const boys = parseInt(document.getElementById('t3-boys').value);
+            const girls = parseInt(document.getElementById('t3-girls').value);
+            let leave = parseInt(document.getElementById('t3-leave').value);
+
+            const totalClass = boys + girls;
+            if (leave >= totalClass) {
+                leave = totalClass - 1;
+                document.getElementById('t3-leave').value = leave;
+            }
+
+            document.getElementById('t3-boys-val').innerText = boys + ' 人';
+            document.getElementById('t3-girls-val').innerText = girls + ' 人';
+            document.getElementById('t3-leave-val').innerText = leave + ' 人';
+
+            const remain = totalClass - leave;
+
+            document.getElementById('t3-step1').innerHTML = `<span class="text-blue-600">${boys}</span> + <span class="text-pink-600">${girls}</span> = <span class="text-emerald-600">${totalClass}</span> 人`;
+            document.getElementById('t3-step2').innerHTML = `<span class="text-emerald-600">${totalClass}</span> - <span class="text-amber-600">${leave}</span> = <span class="text-rose-600">${remain}</span> 人`;
+            document.getElementById('t3-final-ans').innerText = remain;
+        }
+
+        // 測驗題庫資料 (正確答案索引、解析、提示)
+        const quizData = {
+            1: {
+                correct: 1,
+                explanation: '先算 15 + 8 = 23，再算 23 + 7 = 30 元。（也可以先算 8 + 7 = 15，再算 15 + 15 = 30 湊十算得更快！）',
+                hint: '提示：先算爸爸給錢後的總數 (15+8)，再加上媽媽給的 7 元喔！'
+            },
+            2: {
+                correct: 2,
+                explanation: '先算送人的總數 15 + 13 = 28 顆，再算原本總數 28 + 24 = 52 顆。',
+                hint: '提示：送給外婆的 + 送給阿姨的 + 剩下的 = 原本全部的芒果。'
+            },
+            3: {
+                correct: 0,
+                explanation: '先算第一次下車後 25 - 8 = 17 人，再算第二次下車後 17 - 7 = 10 人。',
+                hint: '提示：連續有兩批人下車，要連續扣掉兩次喔！'
+            },
+            4: {
+                correct: 2,
+                explanation: '先算柳橙與葡萄共有 24 + 16 = 40 罐，再用全部 60 - 40 = 20 罐。',
+                hint: '提示：可以先把柳橙汁和葡萄汁合起來，再從全部 60 罐裡面扣掉。'
+            },
+            5: {
+                correct: 1,
+                explanation: '先算用掉後 24 - 10 = 14 顆，再算放進後 14 + 8 = 22 顆。',
+                hint: '提示：先做蛋糕扣掉 10 顆，媽媽又買回放進 8 顆，要加上去喔！'
+            }
+        };
+
+        // 學生選取的答案紀錄 (預設未選為 undefined)
+        let userSelections = {};
+
+        // 點擊選擇選項 (預覽選取狀態，尚未提交)
+        function selectOption(qNum, selectedIndex) {
+            userSelections[qNum] = selectedIndex;
+            const optionsContainer = document.getElementById(`q${qNum}-options`);
+            const buttons = optionsContainer.querySelectorAll('button');
+            
+            buttons.forEach((btn, idx) => {
+                if (idx === selectedIndex) {
+                    btn.className = "option-btn border-2 border-indigo-500 bg-indigo-50/80 text-indigo-900 font-bold rounded-lg p-2.5 text-left shadow-sm";
+                } else {
+                    btn.className = "option-btn border-2 border-slate-200 bg-white hover:border-indigo-300 rounded-lg p-2.5 text-left text-slate-700 font-medium";
+                }
+            });
+        }
+
+        // 提交答案，進行評分與反饋顯示
+        function submitQuiz() {
+            let totalScore = 0;
+
+            for (let qNum = 1; qNum <= 5; qNum++) {
+                const data = quizData[qNum];
+                const selectedIndex = userSelections[qNum];
+                const optionsContainer = document.getElementById(`q${qNum}-options`);
+                const buttons = optionsContainer.querySelectorAll('button');
+                const fb = document.getElementById(`q${qNum}-feedback`);
+                fb.classList.remove('hidden');
+
+                if (selectedIndex === undefined) {
+                    // 未作答狀態：黃色系提示「未作答。」，不給正確答案也不給其他說明
+                    buttons.forEach((btn) => {
+                        btn.className = "option-btn border-2 border-slate-200 bg-slate-50/50 rounded-lg p-2.5 text-left text-slate-500 font-medium";
+                    });
+                    fb.className = "p-3 rounded-lg text-sm bg-amber-100 text-amber-900 font-bold border border-amber-300";
+                    fb.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-600 mr-1"></i> 未作答。`;
+                } else {
+                    // 已作答狀態：分別高亮選項與顯示詳細說明
+                    buttons.forEach((btn, idx) => {
+                        if (idx === selectedIndex) {
+                            if (selectedIndex === data.correct) {
+                                btn.className = "option-btn border-2 border-emerald-500 bg-emerald-50 text-emerald-900 font-bold rounded-lg p-2.5 text-left";
+                            } else {
+                                btn.className = "option-btn border-2 border-rose-500 bg-rose-50 text-rose-900 font-bold rounded-lg p-2.5 text-left";
+                            }
+                        } else if (idx === data.correct) {
+                            btn.className = "option-btn border-2 border-emerald-400 bg-emerald-50/50 text-emerald-800 rounded-lg p-2.5 text-left";
+                        } else {
+                            btn.className = "option-btn border-2 border-slate-200 bg-white opacity-60 rounded-lg p-2.5 text-left";
+                        }
+                    });
+
+                    if (selectedIndex === data.correct) {
+                        totalScore += 20; // 每題 20 分，滿分 100 分
+                        fb.className = "p-3 rounded-lg text-sm bg-emerald-100 text-emerald-800 font-bold border border-emerald-300";
+                        fb.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-1"></i> 太棒了！答對了！<br><span class="text-xs font-normal">解析：${data.explanation}</span>`;
+                    } else {
+                        fb.className = "p-3 rounded-lg text-sm bg-rose-100 text-rose-800 font-bold border border-rose-300";
+                        fb.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 mr-1"></i> 答錯了，再試試看喔！<br><span class="text-xs font-normal">${data.hint}</span>`;
+                    }
+                }
+            }
+
+            // 更新滿分 100 分的總得分 UI
+            document.getElementById('quiz-score').innerText = `${totalScore} / 100`;
+        }
+
+        // 重新測驗：重置所有選項狀態與得分
+        function resetQuiz() {
+            userSelections = {};
+            for (let qNum = 1; qNum <= 5; qNum++) {
+                const optionsContainer = document.getElementById(`q${qNum}-options`);
+                const buttons = optionsContainer.querySelectorAll('button');
+                const fb = document.getElementById(`q${qNum}-feedback`);
+
+                buttons.forEach((btn) => {
+                    btn.className = "option-btn border-2 border-slate-200 hover:border-indigo-400 rounded-lg p-2.5 text-left text-slate-700 font-medium";
+                });
+
+                fb.className = "hidden p-3 rounded-lg text-sm";
+                fb.innerHTML = "";
+            }
+            document.getElementById('quiz-score').innerText = "0 / 100";
+        }
+
+        // 初始化繪製
+        window.onload = function() {
+            updateTab1();
+            updateTab2();
+            updateTab3();
+        };
+    </script>
+</body>
+</html>
