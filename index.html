@@ -870,7 +870,21 @@
                 const strB = String(b).padStart(3, ' ');
                 const strAns = String(ans).padStart(3, ' ');
 
-                document.getElementById('u2RowA').innerHTML = strA.split('').map(c => `<span>${c===' '?'&nbsp;':c}</span>`).join('');
+                const te = Math.floor((a % 100) / 10);
+                const borrow = (u2Op === '-' && (a % 10) < (b % 10)) ? 1 : 0;
+
+                let rowAHtml = '';
+                strA.split('').forEach((c, idx) => {
+                    if (c === ' ') {
+                        rowAHtml += `<span>&nbsp;</span>`;
+                    } else if (idx === 1 && borrow) {
+                        rowAHtml += `<span class="text-white line-through decoration-amber-400 decoration-2">${c}</span>`;
+                    } else {
+                        rowAHtml += `<span>${c}</span>`;
+                    }
+                });
+                document.getElementById('u2RowA').innerHTML = rowAHtml;
+
                 document.getElementById('u2RowB').innerHTML = `<span class="text-blue-400 font-extrabold">${u2Op}</span>` + strB.substring(1).split('').map(c => `<span>${c===' '?'&nbsp;':c}</span>`).join('');
                 document.getElementById('u2RowAns').innerHTML = strAns.split('').map(c => `<span>${c===' '?'&nbsp;':c}</span>`).join('');
 
@@ -880,8 +894,7 @@
                     document.getElementById('u2CarryRow').innerHTML = `<span></span><span>${carry?1:''}</span><span></span>`;
                     document.getElementById('u2Tip').innerHTML = `<b>加法進位說明：</b><br>個位相加：${a%10} + ${b%10} = ${unAdd} ${carry?'(滿十向十位進 1)':''}<br>計算結果：<span class="text-amber-300 font-bold">${a} + ${b} = ${ans}</span>`;
                 } else {
-                    const borrow = (a % 10) < (b % 10) ? 1 : 0;
-                    document.getElementById('u2CarryRow').innerHTML = `<span></span><span>${borrow?'-1':''}</span><span>${borrow?'10':''}</span>`;
+                    document.getElementById('u2CarryRow').innerHTML = `<span></span><span>${borrow ? (te - 1) : ''}</span><span>${borrow ? '10' : ''}</span>`;
                     document.getElementById('u2Tip').innerHTML = `<b>減法退位說明：</b><br>個位比較：${a%10} - ${b%10} ${borrow?'不夠減，從十位借 1 當 10':'夠減'}<br>計算結果：<span class="text-amber-300 font-bold">${a} - ${b} = ${ans}</span>`;
                 }
             };
@@ -907,17 +920,13 @@
                     <div class="text-xs text-slate-300 mb-2 font-bold"><i class="fa-solid fa-ruler text-teal-400 mr-1"></i>3-2 & 3-3 公分刻度直尺與測量：</div>
                     <div class="flex items-center gap-2 mb-3">
                         <span class="text-xs text-slate-300">拖動設定物體長度 (1~15 cm)：</span>
-                        <input type="range" id="u3CmRange" min="1" max="15" value="8" class="w-40 accent-teal-400">
+                        <input type="range" id="u3CmRange" min="1" max="15" value="8" class="w-44 accent-teal-400">
                         <span id="u3CmVal" class="text-sm font-mono font-bold text-teal-300 w-16">8 cm</span>
                     </div>
 
-                    <div class="w-full bg-slate-900/90 p-4 rounded-2xl border border-teal-500/30 my-2 flex flex-col items-center justify-center">
-                        <div id="u3ObjectBar" class="h-6 bg-amber-400/90 rounded border border-amber-300 mb-2 flex items-center justify-center text-xs font-bold text-slate-950 transition-all" style="width: 160px;">
-                            物體：8 公分
-                        </div>
-
-                        <div class="relative w-[320px] h-20 bg-amber-100 rounded-lg border-2 border-amber-700 p-2 shadow-md">
-                            <svg id="u3CmSvg" width="300" height="60" viewBox="0 0 300 60" class="w-full h-full">
+                    <div class="w-full max-w-[430px] bg-slate-900/90 p-3.5 rounded-2xl border border-teal-500/30 my-2 flex flex-col items-center justify-center">
+                        <div class="w-full overflow-x-auto custom-scrollbar flex justify-center">
+                            <svg id="u3CmSvg" width="410" height="85" viewBox="0 0 410 85" class="max-w-full h-auto">
                             </svg>
                         </div>
                     </div>
@@ -932,32 +941,54 @@
         function initRulerCmLogic() {
             const range = document.getElementById('u3CmRange');
             const valDisp = document.getElementById('u3CmVal');
-            const objBar = document.getElementById('u3ObjectBar');
             const svg = document.getElementById('u3CmSvg');
             const info = document.getElementById('u3Info');
 
             const draw = () => {
                 const cm = parseInt(range.value) || 1;
                 valDisp.innerText = `${cm} cm`;
-                objBar.style.width = `${cm * 18}px`;
-                objBar.innerText = `物體長度：${cm} 公分`;
+                
+                const step = 24; // 24px per cm spacing
+                const startX = 20; // Tick '0' is exactly at x = 20px
+                const endX = startX + cm * step;
 
-                let svgContent = `<rect x="0" y="0" width="300" height="55" fill="#fef3c7" rx="4"/>`;
+                let svgContent = `
+                    <!-- Object Bar starting precisely at x = startX (Tick 0) -->
+                    <rect x="${startX}" y="2" width="${cm * step}" height="26" fill="#f59e0b" stroke="#b45309" stroke-width="1.5" rx="5"/>
+                    <text x="${startX + (cm * step) / 2}" y="19" font-size="11" font-weight="bold" fill="#0f172a" text-anchor="middle">物體長度：${cm} 公分</text>
+
+                    <!-- Red Dashed Guideline at End -->
+                    <line x1="${endX}" y1="2" x2="${endX}" y2="80" stroke="#dc2626" stroke-width="2" stroke-dasharray="3,3"/>
+
+                    <!-- Ruler Body -->
+                    <rect x="5" y="34" width="400" height="46" fill="#fef3c7" stroke="#b45309" stroke-width="2" rx="6"/>
+                `;
+
                 for (let i = 0; i <= 15; i++) {
-                    const x = i * 18 + 15;
-                    svgContent += `<line x1="${x}" y1="0" x2="${x}" y2="20" stroke="#0f172a" stroke-width="2"/>`;
-                    svgContent += `<text x="${x}" y="36" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">${i}${i===15?' cm':''}</text>`;
+                    const x = startX + i * step;
+                    // Major tick
+                    svgContent += `<line x1="${x}" y1="34" x2="${x}" y2="52" stroke="#0f172a" stroke-width="2"/>`;
+                    
+                    // Text labels
+                    if (i === 15) {
+                        svgContent += `<text x="${x}" y="67" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">15</text>`;
+                        svgContent += `<text x="${x + 15}" y="67" font-size="8.5" font-weight="bold" fill="#0f172a">cm</text>`;
+                    } else {
+                        svgContent += `<text x="${x}" y="67" font-size="10" font-weight="bold" fill="#0f172a" text-anchor="middle">${i}</text>`;
+                    }
+
+                    // Half cm tick
                     if (i < 15) {
-                        const midX = x + 9;
-                        svgContent += `<line x1="${midX}" y1="0" x2="${midX}" y2="10" stroke="#64748b" stroke-width="1"/>`;
+                        const midX = x + step / 2;
+                        svgContent += `<line x1="${midX}" y1="34" x2="${midX}" y2="44" stroke="#64748b" stroke-width="1.2"/>`;
                     }
                 }
 
-                const endX = cm * 18 + 15;
-                svgContent += `<line x1="${endX}" y1="0" x2="${endX}" y2="45" stroke="#dc2626" stroke-width="2.5" stroke-dasharray="2,2"/>`;
+                // End indicator dot
+                svgContent += `<circle cx="${endX}" cy="34" r="3" fill="#dc2626"/>`;
 
                 svg.innerHTML = svgContent;
-                info.innerHTML = `從刻度 0 到刻度 <b class="text-amber-300 font-bold">${cm}</b>，此物體長度為 <b class="text-teal-300 font-bold">${cm} 公分</b> (${cm} cm)。`;
+                info.innerHTML = `起點對準刻度 0，終點對準刻度 <b class="text-amber-300 font-bold">${cm}</b>，此物體長度為 <b class="text-teal-300 font-bold">${cm} 公分</b> (${cm} cm)。`;
             };
 
             if (range) range.oninput = draw;
